@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
+import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeepassHeader;
 import de.slackspace.openkeepass.util.ByteUtils;
 
@@ -40,7 +41,10 @@ public class KeepassDatabaseReaderTest {
 		FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
 		KeepassDatabase reader = KeepassDatabase.getInstance(file);
 		
-		reader.openDatabase("abcdefg");
+		KeePassFile database = reader.openDatabase("abcdefg");
+		Assert.assertNotNull(database);
+		
+		Assert.assertEquals("TestDatabase", database.getMeta().getDatabaseName());
 	}
 	
 	@Test(expected=UnsupportedOperationException.class) 

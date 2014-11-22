@@ -11,8 +11,10 @@ import java.util.zip.GZIPInputStream;
 
 import de.slackspace.openkeepass.crypto.Decrypter;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
+import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeepassHeader;
 import de.slackspace.openkeepass.exception.KeepassDatabaseUnreadable;
+import de.slackspace.openkeepass.parser.XmlParser;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.StreamUtils;
@@ -34,6 +36,7 @@ public class KeepassDatabase {
 	
 	private KeepassHeader keepassHeader = new KeepassHeader();
 	private Decrypter decrypter = new Decrypter();
+	private XmlParser xmlParser = new XmlParser();
 	private byte[] keepassFile;
 	
 	private KeepassDatabase(InputStream inputStream) {
@@ -109,7 +112,7 @@ public class KeepassDatabase {
 		}
 	}
 
-	public void openDatabase(String password) {
+	public KeePassFile openDatabase(String password) {
 		try {
 			byte[] aesDecryptedDbFile = decrypter.decryptDatabase(password, keepassHeader, keepassFile);
 			
@@ -133,7 +136,7 @@ public class KeepassDatabase {
 				decompressed = StreamUtils.toByteArray(gzipInputStream);
 			}
 			
-			
+			return xmlParser.parse(new ByteArrayInputStream(decompressed));
 		} catch (IOException e) {
 			throw new RuntimeException("Could not open database file", e);
 		}

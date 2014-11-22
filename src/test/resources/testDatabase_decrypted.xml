@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<KeePassFile>
+	<Meta>
+		<Generator>KeePass</Generator>
+		<DatabaseName>TestDatabase</DatabaseName>
+		<DatabaseNameChanged>2014-11-22T09:59:39Z</DatabaseNameChanged>
+		<DatabaseDescription>Just a sample db</DatabaseDescription>
+		<DatabaseDescriptionChanged>2014-11-22T09:59:39Z</DatabaseDescriptionChanged>
+		<DefaultUserName />
+		<DefaultUserNameChanged>2014-11-22T09:58:56Z</DefaultUserNameChanged>
+		<MaintenanceHistoryDays>365</MaintenanceHistoryDays>
+		<Color />
+		<MasterKeyChanged>2014-11-22T09:58:56Z</MasterKeyChanged>
+		<MasterKeyChangeRec>-1</MasterKeyChangeRec>
+		<MasterKeyChangeForce>-1</MasterKeyChangeForce>
+		<MemoryProtection>
+			<ProtectTitle>False</ProtectTitle>
+			<ProtectUserName>False</ProtectUserName>
+			<ProtectPassword>True</ProtectPassword>
+			<ProtectURL>False</ProtectURL>
+			<ProtectNotes>False</ProtectNotes>
+		</MemoryProtection>
+		<RecycleBinEnabled>True</RecycleBinEnabled>
+		<RecycleBinUUID>AAAAAAAAAAAAAAAAAAAAAA==</RecycleBinUUID>
+		<RecycleBinChanged>2014-11-22T09:58:56Z</RecycleBinChanged>
+		<EntryTemplatesGroup>AAAAAAAAAAAAAAAAAAAAAA==</EntryTemplatesGroup>
+		<EntryTemplatesGroupChanged>2014-11-22T09:58:56Z</EntryTemplatesGroupChanged>
+		<HistoryMaxItems>10</HistoryMaxItems>
+		<HistoryMaxSize>6291456</HistoryMaxSize>
+		<LastSelectedGroup>FqvMJ8yjlUSAEt9OmNSj2A==</LastSelectedGroup>
+		<LastTopVisibleGroup>lrvwrN235EeO4+OOgFEjRw==</LastTopVisibleGroup>
+		<Binaries />
+		<CustomData />
+	</Meta>
+	<Root>
+		<Group>
+			<UUID>lrvwrN235EeO4+OOgFEjRw==</UUID>
+			<Name>testDatabase</Name>
+			<Notes />
+			<IconID>49</IconID>
+			<Times>
+				<LastModificationTime>2014-11-22T09:58:56Z</LastModificationTime>
+				<CreationTime>2014-11-22T09:58:56Z</CreationTime>
+				<LastAccessTime>2014-11-22T09:59:53Z</LastAccessTime>
+				<ExpiryTime>2014-11-22T09:58:13Z</ExpiryTime>
+				<Expires>False</Expires>
+				<UsageCount>8</UsageCount>
+				<LocationChanged>2014-11-22T09:58:56Z</LocationChanged>
+			</Times>
+			<IsExpanded>True</IsExpanded>
+			<DefaultAutoTypeSequence />
+			<EnableAutoType>null</EnableAutoType>
+			<EnableSearching>null</EnableSearching>
+			<LastTopVisibleEntry>AAAAAAAAAAAAAAAAAAAAAA==</LastTopVisibleEntry>
+			<Entry>
+				<UUID>libdLW88cU6BvrPQlvKqMA==</UUID>
+				<IconID>0</IconID>
+				<ForegroundColor />
+				<BackgroundColor />
+				<OverrideURL />
+				<Tags />
+				<Times>
+					<LastModificationTime>2014-11-22T09:59:39Z</LastModificationTime>
+					<CreationTime>2014-11-22T09:59:39Z</CreationTime>
+					<LastAccessTime>2014-11-22T09:59:45Z</LastAccessTime>
+					<ExpiryTime>2014-11-22T09:58:13Z</ExpiryTime>
+					<Expires>False</Expires>
+					<UsageCount>1</UsageCount>
+					<LocationChanged>2014-11-22T09:59:39Z</LocationChanged>
+				</Times>
+				<String>
+					<Key>Notes</Key>
+					<Value>Notes</Value>
+				</String>
+				<String>
+					<Key>Password</Key>
+					<Value Protected="True">U39tKvVEn9E=</Value>
+				</String>
+				<String>
+					<Key>Title</Key>
+					<Value>Sample Entry</Value>
+				</String>
+				<String>
+					<Key>URL</Key>
+					<Value>http://keepass.info/</Value>
+				</String>
+				<String>
+					<Key>UserName</Key>
+					<Value>User Name</Value>
+				</String>
+				<AutoType>
+					<Enabled>True</Enabled>
+					<DataTransferObfuscation>0</DataTransferObfuscation>
+					<Association>
+						<Window>Target Window</Window>
+						<KeystrokeSequence>{USERNAME}{TAB}{PASSWORD}{TAB}{ENTER}</KeystrokeSequence>
+					</Association>
+				</AutoType>
+				<History />
+			</Entry>
+			<Entry>
+				<UUID>H73fzVL/HUuy6Cf2ceTqIg==</UUID>
+				<IconID>0</IconID>
+				<ForegroundColor />
+				<BackgroundColor />
+				<OverrideURL />
+				<Tags />
+				<Times>
+					<LastModificationTime>2014-11-22T09:59:39Z</LastModificationTime>
+					<CreationTime>2014-11-22T09:59:39Z</CreationTime>
+					<LastAccessTime>2014-11-22T09:59:48Z</LastAccessTime>
+					<ExpiryTime>2014-11-22T09:58:13Z</ExpiryTime>
+					<Expires>False</Expires>
+					<UsageCount>1</UsageCount>
+					<LocationChanged>2014-11-22T09:59:39Z</LocationChanged>
+				</Times>
+				<String>
+					<Key>Password</Key>
+					<Value Protected="True">WF6UJaw=</Value>
+				</String>
+				<String>
+					<Key>Title</Key>
+					<Value>Sample Entry #2</Value>
+				</String>
+				<String>
+					<Key>URL</Key>
+					<Value>http://keepass.info/help/kb/kb090406_testform.html</Value>
+				</String>
+				<String>
+					<Key>UserName</Key>
+					<Value>Michael321</Value>
+				</String>
+				<AutoType>
+					<Enabled>True</Enabled>
+					<DataTransferObfuscation>0</DataTransferObfuscation>
+					<Association>
+						<Window>Test Form - KeePass*</Window>
+						<KeystrokeSequence />
+					</Association>
+				</AutoType>
+				<History />
+			</Entry>
+			<Group>
+				<UUID>FqvMJ8yjlUSAEt9OmNSj2A==</UUID>
+				<Name>General</Name>
+				<Notes />
+				<IconID>48</IconID>
+				<Times>
+					<LastModificationTime>2014-11-22T09:59:39Z</LastModificationTime>
+					<CreationTime>2014-11-22T09:59:39Z</CreationTime>
+					<LastAccessTime>2014-11-22T09:59:53Z</LastAccessTime>
+					<ExpiryTime>2014-11-22T09:58:13Z</ExpiryTime>
+					<Expires>False</Expires>
+					<UsageCount>3</UsageCount>
+					<LocationChanged>2014-11-22T09:59:39Z</LocationChanged>
+				</Times>
+				<IsExpanded>True</IsExpanded>
+				<DefaultAutoTypeSequence />
+				<EnableAutoType>null</EnableAutoType>
+				<EnableSearching>null</EnableSearching>
+				<LastTopVisibleEntry>qBsmvOKmC0qRyIJOa2iARA==</LastTopVisibleEntry>
+				<Entry>
+					<UUID>qBsmvOKmC0qRyIJOa2iARA==</UUID>
+					<IconID>0</IconID>
+					<ForegroundColor />
+					<BackgroundColor />
+					<OverrideURL />
+					<Tags />
+					<Times>
+						<LastModificationTime>2014-11-22T10:00:20Z</LastModificationTime>
+						<CreationTime>2014-11-22T09:59:55Z</CreationTime>
+						<LastAccessTime>2014-11-22T10:00:20Z</LastAccessTime>
+						<ExpiryTime>2014-11-22T09:58:13Z</ExpiryTime>
+						<Expires>False</Expires>
+						<UsageCount>1</UsageCount>
+						<LocationChanged>2014-11-22T09:59:55Z</LocationChanged>
+					</Times>
+					<String>
+						<Key>Notes</Key>
+						<Value>Just a sample note</Value>
+					</String>
+					<String>
+						<Key>Password</Key>
+						<Value Protected="True">eh+khWVYN73GMA1d8g61X8Uh6Ck=</Value>
+					</String>
+					<String>
+						<Key>Title</Key>
+						<Value>MyEntry</Value>
+					</String>
+					<String>
+						<Key>URL</Key>
+						<Value>http://google.com</Value>
+					</String>
+					<String>
+						<Key>UserName</Key>
+						<Value>MyUser</Value>
+					</String>
+					<AutoType>
+						<Enabled>True</Enabled>
+						<DataTransferObfuscation>0</DataTransferObfuscation>
+					</AutoType>
+					<History />
+				</Entry>
+			</Group>
+			<Group>
+				<UUID>rXt7D+EM/0qW1rgPB4g5nw==</UUID>
+				<Name>Windows</Name>
+				<Notes />
+				<IconID>38</IconID>
+				<Times>
+					<LastModificationTime>2014-11-22T09:59:39Z</LastModificationTime>
+					<CreationTime>2014-11-22T09:59:39Z</CreationTime>
+					<LastAccessTime>2014-11-22T09:59:51Z</LastAccessTime>
+					<ExpiryTime>2014-11-22T09:58:13Z</ExpiryTime>
+					<Expires>False</Expires>
+					<UsageCount>1</UsageCount>
+					<LocationChanged>2014-11-22T09:59:39Z</LocationChanged>
+				</Times>
+				<IsExpanded>True</IsExpanded>
+				<DefaultAutoTypeSequence />
+				<EnableAutoType>null</EnableAutoType>
+				<EnableSearching>null</EnableSearching>
+				<LastTopVisibleEntry>AAAAAAAAAAAAAAAAAAAAAA==</LastTopVisibleEntry>
+			</Group>
+			<Group>
+				<UUID>DwdAaKn4tEyXFlU56/2UBQ==</UUID>
+				<Name>Network</Name>
+				<Notes />
+				<IconID>3</IconID>
+				<Times>
+					<LastModificationTime>2014-11-22T09:59:39Z</LastModificationTime>
+					<CreationTime>2014-11-22T09:59:39Z</CreationTime>
+					<LastAccessTime>2014-11-22T09:59:39Z</LastAccessTime>
+					<ExpiryTime>2014-11-22T09:58:13Z</ExpiryTime>
+					<Expires>False</Expires>
+					<UsageCount>0</UsageCount>
+					<LocationChanged>2014-11-22T09:59:39Z</LocationChanged>
+				</Times>
+				<IsExpanded>True</IsExpanded>
+				<DefaultAutoTypeSequence />
+				<EnableAutoType>null</EnableAutoType>
+				<EnableSearching>null</EnableSearching>
+				<LastTopVisibleEntry>AAAAAAAAAAAAAAAAAAAAAA==</LastTopVisibleEntry>
+			</Group>
+			<Group>
+				<UUID>COgUrPt5P0676DeyZn/auQ==</UUID>
+				<Name>Internet</Name>
+				<Notes />
+				<IconID>1</IconID>
+				<Times>
+					<LastModificationTime>2014-11-22T09:59:39Z</LastModificationTime>
+					<CreationTime>2014-11-22T09:59:39Z</CreationTime>
+					<LastAccessTime>2014-11-22T09:59:52Z</LastAccessTime>
+					<ExpiryTime>2014-11-22T09:58:13Z</ExpiryTime>
+					<Expires>False</Expires>
+					<UsageCount>2</UsageCount>
+					<LocationChanged>2014-11-22T09:59:39Z</LocationChanged>
+				</Times>
+				<IsExpanded>True</IsExpanded>
+				<DefaultAutoTypeSequence />
+				<EnableAutoType>null</EnableAutoType>
+				<EnableSearching>null</EnableSearching>
+				<LastTopVisibleEntry>AAAAAAAAAAAAAAAAAAAAAA==</LastTopVisibleEntry>
+			</Group>
+			<Group>
+				<UUID>/xWfOfnC6ki76sNhrZR7rw==</UUID>
+				<Name>eMail</Name>
+				<Notes />
+				<IconID>19</IconID>
+				<Times>
+					<LastModificationTime>2014-11-22T09:59:39Z</LastModificationTime>
+					<CreationTime>2014-11-22T09:59:39Z</CreationTime>
+					<LastAccessTime>2014-11-22T09:59:39Z</LastAccessTime>
+					<ExpiryTime>2014-11-22T09:58:13Z</ExpiryTime>
+					<Expires>False</Expires>
+					<UsageCount>0</UsageCount>
+					<LocationChanged>2014-11-22T09:59:39Z</LocationChanged>
+				</Times>
+				<IsExpanded>True</IsExpanded>
+				<DefaultAutoTypeSequence />
+				<EnableAutoType>null</EnableAutoType>
+				<EnableSearching>null</EnableSearching>
+				<LastTopVisibleEntry>AAAAAAAAAAAAAAAAAAAAAA==</LastTopVisibleEntry>
+			</Group>
+			<Group>
+				<UUID>Rdjt21Jla0+E5Q9ElJHw1g==</UUID>
+				<Name>Homebanking</Name>
+				<Notes />
+				<IconID>37</IconID>
+				<Times>
+					<LastModificationTime>2014-11-22T09:59:39Z</LastModificationTime>
+					<CreationTime>2014-11-22T09:59:39Z</CreationTime>
+					<LastAccessTime>2014-11-22T09:59:52Z</LastAccessTime>
+					<ExpiryTime>2014-11-22T09:58:13Z</ExpiryTime>
+					<Expires>False</Expires>
+					<UsageCount>1</UsageCount>
+					<LocationChanged>2014-11-22T09:59:39Z</LocationChanged>
+				</Times>
+				<IsExpanded>True</IsExpanded>
+				<DefaultAutoTypeSequence />
+				<EnableAutoType>null</EnableAutoType>
+				<EnableSearching>null</EnableSearching>
+				<LastTopVisibleEntry>AAAAAAAAAAAAAAAAAAAAAA==</LastTopVisibleEntry>
+			</Group>
+		</Group>
+		<DeletedObjects />
+	</Root>
+</KeePassFile>
