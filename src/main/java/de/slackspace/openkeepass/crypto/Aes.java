@@ -20,6 +20,15 @@ public class Aes {
 	private static final String KEY_ALGORITHM = "AES";
 	
 	public static byte[] decrypt(byte[] key, byte[] ivRaw, byte[] encryptedData) {
+		if(key == null) {
+			throw new IllegalArgumentException("Key must not be null");
+		}
+		if(ivRaw == null) {
+			throw new IllegalArgumentException("IV must not be null");
+		}
+		if(encryptedData == null) {
+			throw new IllegalArgumentException("EncryptedData must not be null");
+		}
 		
 		try {
 			Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
@@ -41,8 +50,18 @@ public class Aes {
 			throw createCryptoException(e);
 		}
 	}
-
+	
 	public static byte[] transformKey(byte[] key, byte[] data, long rounds) {
+		if(key == null) {
+			throw new IllegalArgumentException("Key must not be null");
+		}
+		if(data == null) {
+			throw new IllegalArgumentException("Data must not be null");
+		}
+		if(rounds < 1) {
+			throw new IllegalArgumentException("Rounds must be > 1");
+		}
+		
 		try {
 			Cipher c = Cipher.getInstance("AES/ECB/NoPadding");
 			Key aesKey = new SecretKeySpec(key, KEY_ALGORITHM);
