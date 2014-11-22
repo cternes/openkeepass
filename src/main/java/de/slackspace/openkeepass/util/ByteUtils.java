@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class ByteUtil {
+public class ByteUtils {
 
 	public static byte[] hexStringToByteArray(String s) {
 	    int len = s.length();
@@ -35,8 +35,6 @@ public class ByteUtil {
 		byte[] bytesToRead =  new byte[4];
 		inputStream.read(bytesToRead);
 		
-		System.out.println(toHexString(bytesToRead));
-
 		ByteBuffer buffer = ByteBuffer.wrap(bytesToRead);
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 		
@@ -46,6 +44,6 @@ public class ByteUtil {
 	public static int readUnsignedInt(InputStream inputStream) throws IOException {
 		int value = readInt(inputStream);
 		
-		return ByteUtil.toUnsignedInt(value);
+		return ByteUtils.toUnsignedInt(value);
 	}
 }

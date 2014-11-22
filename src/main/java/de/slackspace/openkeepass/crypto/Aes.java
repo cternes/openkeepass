@@ -59,7 +59,7 @@ public class Aes {
 		} catch (NoSuchPaddingException e) {
 			throw new RuntimeException(e);
 		} catch (InvalidKeyException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException("The key has the wrong size. Have you installed Java Cryptography Extension (JCE)?", e);
 		} catch (ShortBufferException e) {
 			throw new RuntimeException(e);
 		}

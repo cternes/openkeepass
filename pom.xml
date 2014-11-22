@@ -9,7 +9,6 @@
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
-		<commonsio.version>2.4</commonsio.version>
 		<bouncycastle.version>1.51</bouncycastle.version>
 	</properties>
 
@@ -18,11 +17,6 @@
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
 			<version>${bouncycastle.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>${commonsio.version}</version>
 		</dependency>
 		<dependency>
             <groupId>junit</groupId>

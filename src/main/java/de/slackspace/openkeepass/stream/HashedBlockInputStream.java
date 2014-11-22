@@ -6,9 +6,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-import org.apache.commons.io.IOUtils;
-
-import de.slackspace.openkeepass.util.ByteUtil;
+import de.slackspace.openkeepass.util.ByteUtils;
+import de.slackspace.openkeepass.util.StreamUtils;
 
 public class HashedBlockInputStream extends InputStream {
 
@@ -69,19 +68,19 @@ public class HashedBlockInputStream extends InputStream {
 
 		bufferPos = 0;
 		
-		long index = ByteUtil.readUnsignedInt(baseStream);
+		long index = ByteUtils.readUnsignedInt(baseStream);
 		if (index != bufferIndex) {
 			throw new IOException("Invalid data format");
 		}
 		bufferIndex++;
 
 		byte[] storedHash = new byte[32];
-		IOUtils.read(baseStream, storedHash);
+		StreamUtils.read(baseStream, storedHash);
 		if (storedHash == null || storedHash.length != HASH_SIZE) {
 			throw new IOException("Invalid data format");
 		}
 
-		int bufferSize = ByteUtil.readInt(baseStream);
+		int bufferSize = ByteUtils.readInt(baseStream);
 		if (bufferSize < 0) {
 			throw new IOException("Invalid data format");
 		}
@@ -99,7 +98,7 @@ public class HashedBlockInputStream extends InputStream {
 		}
 
 		buffer = new byte[bufferSize];
-		IOUtils.read(baseStream, buffer);
+		StreamUtils.read(baseStream, buffer);
 		if (buffer == null || buffer.length != bufferSize) {
 			throw new IOException("Invalid data format");
 		}
