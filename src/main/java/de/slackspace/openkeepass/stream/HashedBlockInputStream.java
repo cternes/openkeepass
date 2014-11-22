@@ -58,10 +58,6 @@ public class HashedBlockInputStream extends InputStream {
 		return length;
 	}
 
-	/**
-	 * @return false, when the end of the source stream is reached
-	 * @throws IOException
-	 */
 	private boolean ReadHashedBlock() throws IOException {
 		if (atEnd)
 			return false;

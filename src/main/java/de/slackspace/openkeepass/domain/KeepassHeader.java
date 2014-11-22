@@ -40,8 +40,7 @@ public class KeepassHeader {
 	}
 
 	private void setInnerRandomStreamId(byte[] value) {
-		ByteBuffer buffer = ByteBuffer.wrap(value);
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
+		ByteBuffer buffer = wrapInBuffer(value);
 		int intValue = buffer.getInt();
 		crsAlgorithm = CrsAlgorithm.parseValue(intValue);
 	}
@@ -59,8 +58,7 @@ public class KeepassHeader {
 	}
 
 	private void setTransformRounds(byte[] value) {
-		ByteBuffer buffer = ByteBuffer.wrap(value);
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
+		ByteBuffer buffer = wrapInBuffer(value);
 		transformRounds  = buffer.getLong();
 	}
 
@@ -73,8 +71,7 @@ public class KeepassHeader {
 	}
 
 	private void setCompressionFlag(byte[] value) {
-		ByteBuffer buffer = ByteBuffer.wrap(value);
-		buffer.order(ByteOrder.LITTLE_ENDIAN);
+		ByteBuffer buffer = wrapInBuffer(value);
 		int intValue = buffer.getInt();
 		
 		compression = CompressionAlgorithm.parseValue(intValue);
@@ -129,5 +126,11 @@ public class KeepassHeader {
 	
 	public byte[] getProtectedStreamKey() {
 		return protectedStreamKey;
+	}
+	
+	private ByteBuffer wrapInBuffer(byte[] value) {
+		ByteBuffer buffer = ByteBuffer.wrap(value);
+		buffer.order(ByteOrder.LITTLE_ENDIAN);
+		return buffer;
 	}
 }

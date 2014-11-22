@@ -9,7 +9,7 @@ public enum CompressionAlgorithm {
 		switch (value) {
 			case 0: return None;
 			case 1: return Gzip;
-			default: throw new IllegalArgumentException(String.format("Value %i is not a valid CompressionAlgorithm", value));
+			default: throw new IllegalArgumentException(String.format("Value %d is not a valid CompressionAlgorithm", value));
 		}
 	}
 }
