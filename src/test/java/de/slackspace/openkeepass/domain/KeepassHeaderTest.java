@@ -2,10 +2,10 @@ package de.slackspace.openkeepass.domain;
 
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 import junit.framework.Assert;
 
-import org.bouncycastle.util.Arrays;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.util.ByteUtils;
@@ -20,7 +20,7 @@ public class KeepassHeaderTest {
 	@Test
 	public void whenCipherIsSetToByteArrayShouldReturnHeaderWithCipher() {
 		KeepassHeader header = createHeaderAndSetValue(2, ByteUtils.hexStringToByteArray("31C1F2E6BF714350BE5805216AFC5AFF"));
-		Assert.assertTrue("Cipher must be 31C1F2E6BF714350BE5805216AFC5AFF", Arrays.areEqual(ByteUtils.hexStringToByteArray("31C1F2E6BF714350BE5805216AFC5AFF"), header.getCipher()));
+		Assert.assertTrue("Cipher must be 31C1F2E6BF714350BE5805216AFC5AFF", Arrays.equals(ByteUtils.hexStringToByteArray("31C1F2E6BF714350BE5805216AFC5AFF"), header.getCipher()));
 	}
 	
 	@Test(expected=BufferUnderflowException.class)
