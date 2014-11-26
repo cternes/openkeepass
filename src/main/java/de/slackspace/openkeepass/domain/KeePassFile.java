@@ -6,16 +6,23 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
+import de.slackspace.openkeepass.crypto.Salsa20;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class KeePassFile {
+public class KeePassFile implements KeePassFileElement {
 
 	@XmlElement(name = "Meta")
 	private Meta meta;
 	
 	@XmlElement(name = "Root")
 	private Group root;
+	
+	@XmlTransient
+	private ProtectedStringCrypto protectedStringCrypto;
 
 	public Meta getMeta() {
 		return meta;
@@ -41,5 +48,14 @@ public class KeePassFile {
 			return root.getGroups().get(0).getEntries();
 		}
 		return null;
+	}
+	
+	public void init(ProtectedStringCrypto protectedStringCrypto) {
+		this.protectedStringCrypto = protectedStringCrypto;
+		root.setParent(this);
+	}
+	
+	public ProtectedStringCrypto getProtectedStringCrypto() {
+		return protectedStringCrypto;
 	}
 }

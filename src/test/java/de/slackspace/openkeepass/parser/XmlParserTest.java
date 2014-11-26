@@ -8,16 +8,20 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.KeePassFile;
+import de.slackspace.openkeepass.util.ByteUtils;
 
 public class XmlParserTest {
 
+	private byte[] protectedStreamKey = ByteUtils.hexStringToByteArray("ec77a2169769734c5d26e5341401f8d7b11052058f8455d314879075d0b7e257");
+	
 	@Test
 	public void whenInputIsValidKeePassXmlShouldParseFileAndReturnCorrectMetadata() throws FileNotFoundException {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
-		KeePassFile keePassFile = new XmlParser().parse(fileInputStream);
+		KeePassFile keePassFile = new XmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
 		Assert.assertEquals("TestDatabase", keePassFile.getMeta().getDatabaseName());
 		Assert.assertEquals("Just a sample db", keePassFile.getMeta().getDatabaseDescription());
 	}
@@ -25,7 +29,7 @@ public class XmlParserTest {
 	@Test
 	public void whenInputIsValidKeePassXmlShouldParseFileAndReturnCorrectGroups() throws FileNotFoundException {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
-		KeePassFile keePassFile = new XmlParser().parse(fileInputStream);
+		KeePassFile keePassFile = new XmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
 		
 		List<Group> groups = keePassFile.getGroups();
 		Assert.assertNotNull(groups);
@@ -53,7 +57,7 @@ public class XmlParserTest {
 	@Test
 	public void whenInputIsValidKeePassXmlShouldParseFileAndReturnCorrectEntries() throws FileNotFoundException {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
-		KeePassFile keePassFile = new XmlParser().parse(fileInputStream);
+		KeePassFile keePassFile = new XmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
 		
 		List<Entry> entries = keePassFile.getEntries();
 		Assert.assertNotNull(entries);
@@ -65,6 +69,6 @@ public class XmlParserTest {
 		Assert.assertEquals("http://keepass.info/", entries.get(0).getUrl());
 		Assert.assertEquals("User Name", entries.get(0).getUsername());
 		Assert.assertEquals("Notes", entries.get(0).getNotes());
-//		Assert.assertEquals("Password", entries.get(0).getPassword());
+		Assert.assertEquals("Password", entries.get(0).getPassword());
 	}
 }

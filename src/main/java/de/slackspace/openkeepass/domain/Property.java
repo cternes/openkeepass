@@ -4,17 +4,23 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Property {
+public class Property implements KeePassFileElement {
 
+	@XmlTransient
+	private KeePassFileElement parent;
+	
 	@XmlElement(name = "Key")
 	private String key;
 	
 	@XmlElement(name = "Value")
-	private String value;
-
+	private PropertyValue propertyValue;
+	
 	public String getKey() {
 		return key;
 	}
@@ -24,10 +30,25 @@ public class Property {
 	}
 
 	public String getValue() {
-		return value;
+		if(isProtected()) {
+			ProtectedStringCrypto crypto = getProtectedStringCrypto();
+			if(crypto != null) {
+				return crypto.decrypt(propertyValue.getValue());
+			}
+		}
+		return propertyValue.getValue();
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public boolean isProtected() {
+		return propertyValue.isProtected();
+	}
+
+	public void setParent(KeePassFileElement element) {
+		this.parent = element;
+	}
+
+	@Override
+	public ProtectedStringCrypto getProtectedStringCrypto() {
+		return parent.getProtectedStringCrypto();
 	}
 }

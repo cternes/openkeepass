@@ -10,7 +10,10 @@ import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 
 import de.slackspace.openkeepass.crypto.Decrypter;
+import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
+import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
+import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeepassHeader;
 import de.slackspace.openkeepass.exception.KeepassDatabaseUnreadable;
@@ -31,8 +34,6 @@ public class KeepassDatabase {
 	
 	// KeePass version signature length in bytes 
 	public static final int VERSION_SIGNATURE_LENGTH = 12;
-	
-	private static final String SALSA20IV = "E830094B97205D2A";
 	
 	private KeepassHeader keepassHeader = new KeepassHeader();
 	private Decrypter decrypter = new Decrypter();
@@ -136,7 +137,15 @@ public class KeepassDatabase {
 				decompressed = StreamUtils.toByteArray(gzipInputStream);
 			}
 			
-			return xmlParser.parse(new ByteArrayInputStream(decompressed));
+			ProtectedStringCrypto protectedStringCrypto;
+			if(keepassHeader.getCrsAlgorithm().equals(CrsAlgorithm.Salsa20)) {
+				protectedStringCrypto = Salsa20.createInstance(keepassHeader.getProtectedStreamKey());
+			}
+			else {
+				throw new UnsupportedOperationException("Only Salsa20 is supported as CrsAlgorithm at the moment!");
+			}
+			
+			return xmlParser.parse(new ByteArrayInputStream(decompressed), protectedStringCrypto);
 		} catch (IOException e) {
 			throw new RuntimeException("Could not open database file", e);
 		}

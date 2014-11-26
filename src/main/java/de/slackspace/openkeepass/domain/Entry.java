@@ -6,11 +6,17 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Entry {
+public class Entry implements KeePassFileElement {
 
+	@XmlTransient
+	private KeePassFileElement parent;
+	
 	@XmlElement(name = "UUID")
 	private String uuid;
 	
@@ -60,6 +66,19 @@ public class Entry {
 			}
 		}
 		return null;
+	}
+
+	public void setParent(KeePassFileElement element) {
+		this.parent = element;
+		
+		for (Property property : properties) {
+			property.setParent(this);
+		}
+	}
+
+	@Override
+	public ProtectedStringCrypto getProtectedStringCrypto() {
+		return parent.getProtectedStringCrypto();
 	}
 	
 }
