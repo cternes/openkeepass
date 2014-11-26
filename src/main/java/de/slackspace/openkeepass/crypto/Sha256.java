@@ -7,6 +7,10 @@ import java.security.NoSuchAlgorithmException;
 public class Sha256 {
 
 	public static byte[] hash(String text) {
+		if(text == null) {
+			throw new IllegalArgumentException("Text must not be null");
+		}
+		
 		try {
 			return hash(text.getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
@@ -15,6 +19,10 @@ public class Sha256 {
 	}
 	
 	public static byte[] hash(byte[] bytes) {
+		if(bytes == null) {
+			throw new IllegalArgumentException("Bytes must not be null");
+		}
+		
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 			md.update(bytes);
