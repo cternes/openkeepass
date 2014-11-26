@@ -23,22 +23,30 @@ public class Salsa20 implements ProtectedStringCrypto {
 	}
 	
 	public static Salsa20 createInstance(byte[] protectedStreamKey) {
+		if(protectedStreamKey == null) {
+			throw new IllegalArgumentException("ProtectedStreamKey must not be null");
+		}
+		
 		Salsa20 salsa20 = new Salsa20();
 		salsa20.initialize(protectedStreamKey);
 
 		return salsa20;
 	}
 
-	public String decrypt(String protectedPassword) {
-		byte[] protectedPwdBuffer = Base64.decode(protectedPassword.getBytes());
-		byte[] plainTextPassword = new byte[protectedPwdBuffer.length];
+	public String decrypt(String protectedString) {
+		if(protectedString == null) {
+			throw new IllegalArgumentException("ProtectedString must not be null");
+		}
 		
-		salsa20Engine.processBytes(protectedPwdBuffer, 0, protectedPwdBuffer.length, plainTextPassword, 0);
+		byte[] protectedBuffer = Base64.decode(protectedString.getBytes());
+		byte[] plainText = new byte[protectedBuffer.length];
+		
+		salsa20Engine.processBytes(protectedBuffer, 0, protectedBuffer.length, plainText, 0);
 		
 		try { 
-			return new String(plainTextPassword, "UTF-8");
+			return new String(plainText, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new UnsupportedOperationException("The enconding is not supported");
+			throw new UnsupportedOperationException("The encoding UTF-8 is not supported");
 		}
 	}
 	
