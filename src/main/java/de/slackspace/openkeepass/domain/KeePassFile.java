@@ -36,14 +36,14 @@ public class KeePassFile implements KeePassFileElement {
 		return root;
 	}
 	
-	public List<Group> getGroups() {
+	public List<Group> getTopGroups() {
 		if(root != null && root.getGroups() != null && root.getGroups().size() == 1) {
 			return root.getGroups().get(0).getGroups();
 		}
 		return null;
 	}
 	
-	public List<Entry> getEntries() {
+	public List<Entry> getTopEntries() {
 		if(root != null && root.getGroups() != null && root.getGroups().size() == 1) {
 			return root.getGroups().get(0).getEntries();
 		}

@@ -2,10 +2,13 @@ package de.slackspace.openkeepass.parser;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 
 import junit.framework.Assert;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.crypto.Salsa20;
@@ -17,13 +20,30 @@ import de.slackspace.openkeepass.util.ByteUtils;
 public class XmlParserTest {
 
 	private byte[] protectedStreamKey = ByteUtils.hexStringToByteArray("ec77a2169769734c5d26e5341401f8d7b11052058f8455d314879075d0b7e257");
+	private static SimpleDateFormat dateFormatter;
+	
+	@BeforeClass
+	public static void init() {
+		// make sure we use UTC time
+		dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		dateFormatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+	}
 	
 	@Test
 	public void whenInputIsValidKeePassXmlShouldParseFileAndReturnCorrectMetadata() throws FileNotFoundException {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
 		KeePassFile keePassFile = new XmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
+		Assert.assertEquals("KeePass", keePassFile.getMeta().getGenerator());
 		Assert.assertEquals("TestDatabase", keePassFile.getMeta().getDatabaseName());
 		Assert.assertEquals("Just a sample db", keePassFile.getMeta().getDatabaseDescription());
+		Assert.assertEquals("2014-11-22 18:59:39", dateFormatter.format(keePassFile.getMeta().getDatabaseNameChanged().getTime()));
+		Assert.assertEquals("2014-11-22 18:59:39", dateFormatter.format(keePassFile.getMeta().getDatabaseDescriptionChanged().getTime()));
+		Assert.assertEquals(365, keePassFile.getMeta().getMaintenanceHistoryDays());
+		Assert.assertEquals(true, keePassFile.getMeta().getRecycleBinEnabled());
+		Assert.assertEquals("AAAAAAAAAAAAAAAAAAAAAA==", keePassFile.getMeta().getRecycleBinUuid()); 
+		Assert.assertEquals("2014-11-22 18:58:56", dateFormatter.format(keePassFile.getMeta().getRecycleBinChanged().getTime()));
+		Assert.assertEquals(10, keePassFile.getMeta().getHistoryMaxItems());
+		Assert.assertEquals(6291456, keePassFile.getMeta().getHistoryMaxSize());
 	}
 	
 	@Test
@@ -31,7 +51,7 @@ public class XmlParserTest {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
 		KeePassFile keePassFile = new XmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
 		
-		List<Group> groups = keePassFile.getGroups();
+		List<Group> groups = keePassFile.getTopGroups();
 		Assert.assertNotNull(groups);
 		
 		Assert.assertEquals(6, groups.size());
@@ -59,7 +79,7 @@ public class XmlParserTest {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
 		KeePassFile keePassFile = new XmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
 		
-		List<Entry> entries = keePassFile.getEntries();
+		List<Entry> entries = keePassFile.getTopEntries();
 		Assert.assertNotNull(entries);
 		
 		Assert.assertEquals(2, entries.size());
