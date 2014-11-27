@@ -12,7 +12,7 @@ import org.junit.Test;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.KeePassFile;
-import de.slackspace.openkeepass.domain.KeepassHeader;
+import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.util.ByteUtils;
 
 public class KeepassDatabaseReaderTest {
@@ -22,7 +22,7 @@ public class KeepassDatabaseReaderTest {
 		FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
 		
 		KeepassDatabase reader = KeepassDatabase.getInstance(file);
-		KeepassHeader header = reader.getHeader();
+		KeePassHeader header = reader.getHeader();
 		
 		Assert.assertTrue(Arrays.equals(ByteUtils.hexStringToByteArray("31C1F2E6BF714350BE5805216AFC5AFF"), header.getCipher()));
 		Assert.assertEquals(CompressionAlgorithm.Gzip, header.getCompression());

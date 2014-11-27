@@ -5,13 +5,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import de.slackspace.openkeepass.domain.KeepassHeader;
+import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.reader.KeepassDatabase;
 import de.slackspace.openkeepass.util.StreamUtils;
 
 public class Decrypter {
 
-	public byte[] decryptDatabase(String password, KeepassHeader header, byte[] database) throws IOException {
+	public byte[] decryptDatabase(String password, KeePassHeader header, byte[] database) throws IOException {
 		byte[] aesKey = createAesKey(password, header);
 		
 		BufferedInputStream bufferedInputStream = new BufferedInputStream(new ByteArrayInputStream(database));
@@ -22,7 +22,7 @@ public class Decrypter {
 		return Aes.decrypt(aesKey, header.getEncryptionIV(), payload);
 	}
 	
-	private byte[] createAesKey(String password, KeepassHeader header) {
+	private byte[] createAesKey(String password, KeePassHeader header) {
 		byte[] hashedPwd = Sha256.hash(password);
 		byte[] doubleHashedPwd = Sha256.hash(hashedPwd);
 		

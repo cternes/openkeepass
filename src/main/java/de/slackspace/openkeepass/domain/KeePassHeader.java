@@ -3,7 +3,7 @@ package de.slackspace.openkeepass.domain;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class KeepassHeader {
+public class KeePassHeader {
 
 	private int headerSize = 0;
 	private byte[] cipher;

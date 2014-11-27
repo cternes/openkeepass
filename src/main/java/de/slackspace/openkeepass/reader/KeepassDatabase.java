@@ -15,7 +15,7 @@ import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.KeePassFile;
-import de.slackspace.openkeepass.domain.KeepassHeader;
+import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.exception.KeepassDatabaseUnreadable;
 import de.slackspace.openkeepass.parser.XmlParser;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
@@ -35,7 +35,7 @@ public class KeepassDatabase {
 	// KeePass version signature length in bytes 
 	public static final int VERSION_SIGNATURE_LENGTH = 12;
 	
-	private KeepassHeader keepassHeader = new KeepassHeader();
+	private KeePassHeader keepassHeader = new KeePassHeader();
 	private Decrypter decrypter = new Decrypter();
 	private XmlParser xmlParser = new XmlParser();
 	private byte[] keepassFile;
@@ -151,7 +151,7 @@ public class KeepassDatabase {
 		}
 	}
 
-	public KeepassHeader getHeader() {
+	public KeePassHeader getHeader() {
 		return keepassHeader;
 	}
 	
