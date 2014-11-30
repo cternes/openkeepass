@@ -1,5 +1,6 @@
 package de.slackspace.openkeepass.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -21,7 +22,13 @@ public class Entry implements KeePassFileElement {
 	private String uuid;
 	
 	@XmlElement(name = "String")
-	private Set<Property> properties;
+	private Set<Property> properties = new HashSet<Property>();
+	
+	Entry() { }
+	
+	public Entry(String uuid) {
+		setUuid(uuid);
+	}
 
 	public String getUuid() {
 		return uuid;
@@ -59,15 +66,6 @@ public class Entry implements KeePassFileElement {
 		return getValueFromProperty("UserName");
 	}
 	
-	private String getValueFromProperty(String name) {
-		for (Property property : properties) {
-			if(property.getKey().equalsIgnoreCase(name)) {
-				return property.getValue();
-			}
-		}
-		return null;
-	}
-
 	public void setParent(KeePassFileElement element) {
 		this.parent = element;
 		
@@ -81,4 +79,22 @@ public class Entry implements KeePassFileElement {
 		return parent.getProtectedStringCrypto();
 	}
 	
+	private String getValueFromProperty(String name) {
+		Property property = getPropertyByName(name);
+		if(property != null) {
+			return property.getValue();
+		}
+
+		return null;
+	}
+	
+	private Property getPropertyByName(String name) {
+		for (Property property : properties) {
+			if(property.getKey().equalsIgnoreCase(name)) {
+				return property;
+			}
+		}
+		
+		return null;
+	}
 }

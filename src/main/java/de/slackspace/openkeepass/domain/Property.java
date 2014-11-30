@@ -21,6 +21,13 @@ public class Property implements KeePassFileElement {
 	@XmlElement(name = "Value")
 	private PropertyValue propertyValue;
 	
+	Property() { }
+	
+	public Property(String key, String value, boolean isProtected) {
+		setKey(key);
+		setValue(new PropertyValue(isProtected, value));
+	}
+	
 	public String getKey() {
 		return key;
 	}
@@ -37,6 +44,10 @@ public class Property implements KeePassFileElement {
 			}
 		}
 		return propertyValue.getValue();
+	}
+	
+	public void setValue(PropertyValue value) {
+		this.propertyValue = value;
 	}
 
 	public boolean isProtected() {

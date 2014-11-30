@@ -1,5 +1,6 @@
 package de.slackspace.openkeepass.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -24,10 +25,10 @@ public class Group implements KeePassFileElement {
 	private String name;
 	
 	@XmlElement(name = "Group")
-	private List<Group> groups;
+	private List<Group> groups = new ArrayList<Group>();
 	
 	@XmlElement(name = "Entry")
-	private List<Entry> entries;
+	private List<Entry> entries = new ArrayList<Entry>();
 	
 	public String getUuid() {
 		return uuid;

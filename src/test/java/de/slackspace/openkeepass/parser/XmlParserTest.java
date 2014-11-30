@@ -31,8 +31,7 @@ public class XmlParserTest {
 	
 	@Test
 	public void whenInputIsValidKeePassXmlShouldParseFileAndReturnCorrectMetadata() throws FileNotFoundException {
-		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
-		KeePassFile keePassFile = new XmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
+		KeePassFile keePassFile = parseKeePassXml();
 		Assert.assertEquals("KeePass", keePassFile.getMeta().getGenerator());
 		Assert.assertEquals("TestDatabase", keePassFile.getMeta().getDatabaseName());
 		Assert.assertEquals("Just a sample db", keePassFile.getMeta().getDatabaseDescription());
@@ -48,8 +47,7 @@ public class XmlParserTest {
 	
 	@Test
 	public void whenInputIsValidKeePassXmlShouldParseFileAndReturnCorrectGroups() throws FileNotFoundException {
-		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
-		KeePassFile keePassFile = new XmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
+		KeePassFile keePassFile = parseKeePassXml();
 		
 		List<Group> groups = keePassFile.getTopGroups();
 		Assert.assertNotNull(groups);
@@ -76,8 +74,7 @@ public class XmlParserTest {
 	
 	@Test
 	public void whenInputIsValidKeePassXmlShouldParseFileAndReturnCorrectEntries() throws FileNotFoundException {
-		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
-		KeePassFile keePassFile = new XmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
+		KeePassFile keePassFile = parseKeePassXml();
 		
 		List<Entry> entries = keePassFile.getTopEntries();
 		Assert.assertNotNull(entries);
@@ -90,5 +87,38 @@ public class XmlParserTest {
 		Assert.assertEquals("User Name", entries.get(0).getUsername());
 		Assert.assertEquals("Notes", entries.get(0).getNotes());
 		Assert.assertEquals("Password", entries.get(0).getPassword());
+	}
+	
+	@Test
+	public void whenUsingGetEntriesShouldReturnAllEntries() throws FileNotFoundException {
+		KeePassFile keePassFile = parseKeePassXml();
+		
+		List<Entry> entries = keePassFile.getEntries();
+		Assert.assertEquals(3, entries.size());
+	}
+	
+	@Test
+	public void whenUsingGetEntriesByTitleExactlyShouldReturnAllEntriesWithGivenTitle() throws FileNotFoundException {
+		KeePassFile keePassFile = parseKeePassXml();
+		
+		List<Entry> entries = keePassFile.getEntriesByTitle("Sample Entry", true);
+		Assert.assertEquals(1, entries.size());
+		Assert.assertEquals("Sample Entry", entries.get(0).getTitle());
+	}
+	
+	@Test
+	public void whenUsingGetEntriesByTitleLooselyShouldReturnAllEntriesWithGivenTitle() throws FileNotFoundException {
+		KeePassFile keePassFile = parseKeePassXml();
+		
+		List<Entry> entries = keePassFile.getEntriesByTitle("Sample Entry", false);
+		Assert.assertEquals(2, entries.size());
+		Assert.assertEquals("Sample Entry", entries.get(0).getTitle());
+		Assert.assertEquals("Sample Entry #2", entries.get(1).getTitle());
+	}
+
+	private KeePassFile parseKeePassXml() throws FileNotFoundException {
+		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
+		KeePassFile keePassFile = new XmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
+		return keePassFile;
 	}
 }
