@@ -11,12 +11,24 @@ import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
+import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.util.ByteUtils;
 
 public class KeepassDatabaseReaderTest {
 
+	@Test
+	public void whenGettingEntriesByTitleShouldReturnMatchingEntries() throws FileNotFoundException {
+		FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
+		
+		KeepassDatabase reader = KeepassDatabase.getInstance(file);
+		KeePassFile database = reader.openDatabase("abcdefg");
+		
+		Entry entry = database.getEntryByTitle("MyEntry");
+		Assert.assertEquals("1v4QKuIUT6HHRkbq0MPL", entry.getPassword());
+	}
+	
 	@Test
 	public void whenKeePassFileIsV2ShouldReadHeader() throws IOException {
 		FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");

@@ -52,6 +52,16 @@ public class KeePassFile implements KeePassFileElement {
 		return new ArrayList<Entry>();
 	}
 	
+	public Entry getEntryByTitle(String title) {
+		List<Entry> entries = getEntriesByTitle(title, true);
+		
+		if(entries != null) {
+			return entries.get(0);
+		}
+		
+		return null;
+	}
+	
 	public List<Entry> getEntriesByTitle(final String title, final boolean matchExactly) {
 		List<Entry> allEntries = new ArrayList<Entry>();
 		

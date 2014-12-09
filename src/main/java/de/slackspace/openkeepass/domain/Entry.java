@@ -15,6 +15,12 @@ import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Entry implements KeePassFileElement {
 
+	private static final String USER_NAME = "UserName";
+	private static final String NOTES = "Notes";
+	private static final String URL = "URL";
+	private static final String PASSWORD = "Password";
+	private static final String TITLE = "Title";
+
 	@XmlTransient
 	private KeePassFileElement parent;
 	
@@ -47,23 +53,51 @@ public class Entry implements KeePassFileElement {
 	}
 	
 	public String getTitle() {
-		return getValueFromProperty("Title");
+		return getValueFromProperty(TITLE);
+	}
+	
+	public void setTitle(String title) {
+		setValue(TITLE, title);
 	}
 	
 	public String getPassword() {
-		return getValueFromProperty("Password");
+		return getValueFromProperty(PASSWORD);
+	}
+	
+	public void setPassword(String password) {
+		setValue(PASSWORD, password);
 	}
 	
 	public String getUrl() {
-		return getValueFromProperty("URL");
+		return getValueFromProperty(URL);
+	}
+	
+	public void setUrl(String url) {
+		setValue(URL, url);
 	}
 	
 	public String getNotes() {
-		return getValueFromProperty("Notes");
+		return getValueFromProperty(NOTES);
+	}
+	
+	public void setNotes(String notes) {
+		setValue(NOTES, notes);
 	}
 	
 	public String getUsername() {
-		return getValueFromProperty("UserName");
+		return getValueFromProperty(USER_NAME);
+	}
+	
+	public void setUsername(String username) {
+		setValue(USER_NAME, username);
+	}
+	
+	public boolean isTitleProtected() {
+		return getPropertyByName(TITLE).isProtected();
+	}
+	
+	public boolean isPasswordProtected() {
+		return getPropertyByName(PASSWORD).isProtected();
 	}
 	
 	public void setParent(KeePassFileElement element) {
@@ -77,6 +111,17 @@ public class Entry implements KeePassFileElement {
 	@Override
 	public ProtectedStringCrypto getProtectedStringCrypto() {
 		return parent.getProtectedStringCrypto();
+	}
+	
+	private void setValue(String propertyName, String propertyValue) {
+		Property property = getPropertyByName(propertyName);
+		if(property == null) {
+			property = new Property(propertyName, propertyValue, false);
+			properties.add(property);
+		}
+		else {
+			property.setValue(new PropertyValue(false, propertyValue));
+		}
 	}
 	
 	private String getValueFromProperty(String name) {

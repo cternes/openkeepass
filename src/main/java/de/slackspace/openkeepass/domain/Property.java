@@ -37,12 +37,6 @@ public class Property implements KeePassFileElement {
 	}
 
 	public String getValue() {
-		if(isProtected()) {
-			ProtectedStringCrypto crypto = getProtectedStringCrypto();
-			if(crypto != null) {
-				return crypto.decrypt(propertyValue.getValue());
-			}
-		}
 		return propertyValue.getValue();
 	}
 	
