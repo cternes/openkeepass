@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.reader;
+package de.slackspace.openkeepass;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -22,7 +22,7 @@ import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.StreamUtils;
 
-public class KeepassDatabase {
+public class KeePassDatabase {
 
 	// KeePass 2.x signature
 	private static final int DATABASE_V2_FILE_SIGNATURE_1 = 0x9AA2D903 & 0xFF;
@@ -40,7 +40,7 @@ public class KeepassDatabase {
 	private XmlParser xmlParser = new XmlParser();
 	private byte[] keepassFile;
 	
-	private KeepassDatabase(InputStream inputStream) {
+	private KeePassDatabase(InputStream inputStream) {
 		try {
 			keepassFile = StreamUtils.toByteArray(inputStream);
 		} catch (IOException e) {
@@ -48,8 +48,8 @@ public class KeepassDatabase {
 		}
 	}
 	
-	public static KeepassDatabase getInstance(InputStream inputStream) {
-		KeepassDatabase reader = new KeepassDatabase(inputStream);
+	public static KeePassDatabase getInstance(InputStream inputStream) {
+		KeePassDatabase reader = new KeePassDatabase(inputStream);
 
 		try {
 			reader.checkVersionSupport();

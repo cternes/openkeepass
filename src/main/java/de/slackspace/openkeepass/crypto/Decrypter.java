@@ -5,8 +5,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import de.slackspace.openkeepass.KeePassDatabase;
 import de.slackspace.openkeepass.domain.KeePassHeader;
-import de.slackspace.openkeepass.reader.KeepassDatabase;
 import de.slackspace.openkeepass.util.StreamUtils;
 
 public class Decrypter {
@@ -15,7 +15,7 @@ public class Decrypter {
 		byte[] aesKey = createAesKey(password, header);
 		
 		BufferedInputStream bufferedInputStream = new BufferedInputStream(new ByteArrayInputStream(database));
-		bufferedInputStream.skip(KeepassDatabase.VERSION_SIGNATURE_LENGTH + header.getHeaderSize()); 
+		bufferedInputStream.skip(KeePassDatabase.VERSION_SIGNATURE_LENGTH + header.getHeaderSize()); 
 		
 		byte[] payload = StreamUtils.toByteArray(bufferedInputStream);
 		

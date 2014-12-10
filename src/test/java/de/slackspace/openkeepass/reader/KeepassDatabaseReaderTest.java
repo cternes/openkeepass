@@ -5,10 +5,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
 
+import de.slackspace.openkeepass.KeePassDatabase;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.Entry;
@@ -22,7 +24,7 @@ public class KeepassDatabaseReaderTest {
 	public void whenGettingEntriesByTitleShouldReturnMatchingEntries() throws FileNotFoundException {
 		FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
 		
-		KeepassDatabase reader = KeepassDatabase.getInstance(file);
+		KeePassDatabase reader = KeePassDatabase.getInstance(file);
 		KeePassFile database = reader.openDatabase("abcdefg");
 		
 		Entry entry = database.getEntryByTitle("MyEntry");
@@ -33,7 +35,7 @@ public class KeepassDatabaseReaderTest {
 	public void whenKeePassFileIsV2ShouldReadHeader() throws IOException {
 		FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
 		
-		KeepassDatabase reader = KeepassDatabase.getInstance(file);
+		KeePassDatabase reader = KeePassDatabase.getInstance(file);
 		KeePassHeader header = reader.getHeader();
 		
 		Assert.assertTrue(Arrays.equals(ByteUtils.hexStringToByteArray("31C1F2E6BF714350BE5805216AFC5AFF"), header.getCipher()));
@@ -51,7 +53,7 @@ public class KeepassDatabaseReaderTest {
 	@Test
 	public void whenPasswordIsValidShouldOpenKeepassFile() throws FileNotFoundException {
 		FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
-		KeepassDatabase reader = KeepassDatabase.getInstance(file);
+		KeePassDatabase reader = KeePassDatabase.getInstance(file);
 		
 		KeePassFile database = reader.openDatabase("abcdefg");
 		Assert.assertNotNull(database);
@@ -64,7 +66,7 @@ public class KeepassDatabaseReaderTest {
 		byte[] header = ByteUtils.hexStringToByteArray("03d9a29a65fb4bb5");
 		
 		ByteArrayInputStream file = new ByteArrayInputStream(header, header.length, 0);
-		KeepassDatabase.getInstance(file);
+		KeePassDatabase.getInstance(file);
 	}
 	
 	@Test(expected=UnsupportedOperationException.class) 
@@ -72,7 +74,23 @@ public class KeepassDatabaseReaderTest {
 		byte[] header = ByteUtils.hexStringToByteArray("0011223344556677");
 		
 		ByteArrayInputStream file = new ByteArrayInputStream(header, header.length, 0);
-		KeepassDatabase.getInstance(file);
+		KeePassDatabase.getInstance(file);
+	}
+	
+	@Test
+	public void testIfPasswordsCanBeDecrypted() throws FileNotFoundException {
+		FileInputStream file = new FileInputStream("target/test-classes/fullBlownDatabase.kdbx");
+		
+		KeePassDatabase reader = KeePassDatabase.getInstance(file);
+		KeePassFile database = reader.openDatabase("123456");
+		
+		List<Entry> entries = database.getEntries();
+		
+		Assert.assertEquals("2f29047129b9e4c48f05d09907e52b9b", entries.get(0).getPassword());
+		Assert.assertEquals("GzteT206M4bVvHYaKPpA", entries.get(1).getPassword());
+		Assert.assertEquals("gC03cizrzcBxytfKurWQ", entries.get(2).getPassword());
+		Assert.assertEquals("jXjHEh3c8wcl0hank0qG", entries.get(3).getPassword());
+		Assert.assertEquals("wkzB5KGIUoP8LKSSEngX", entries.get(4).getPassword());
 	}
 	
 }
