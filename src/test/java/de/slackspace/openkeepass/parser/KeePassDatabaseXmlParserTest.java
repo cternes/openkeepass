@@ -17,7 +17,7 @@ import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.util.ByteUtils;
 
-public class XmlParserTest {
+public class KeePassDatabaseXmlParserTest {
 
 	private byte[] protectedStreamKey = ByteUtils.hexStringToByteArray("ec77a2169769734c5d26e5341401f8d7b11052058f8455d314879075d0b7e257");
 	private static SimpleDateFormat dateFormatter;
