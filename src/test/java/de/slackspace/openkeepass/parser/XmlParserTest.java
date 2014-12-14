@@ -118,7 +118,7 @@ public class XmlParserTest {
 
 	private KeePassFile parseKeePassXml() throws FileNotFoundException {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
-		KeePassFile keePassFile = new XmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
+		KeePassFile keePassFile = new KeePassDatabaseXmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
 		return keePassFile;
 	}
 }

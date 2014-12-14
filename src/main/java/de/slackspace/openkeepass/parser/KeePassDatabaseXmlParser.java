@@ -9,7 +9,7 @@ import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.KeePassFile;
 
-public class XmlParser {
+public class KeePassDatabaseXmlParser {
 
 	public KeePassFile parse(InputStream inputStream, ProtectedStringCrypto protectedStringCrypto) {
 		KeePassFile keePassFile = JAXB.unmarshal(inputStream, KeePassFile.class);
