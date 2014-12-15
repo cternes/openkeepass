@@ -120,9 +120,4 @@ public class Group implements KeePassFileElement {
 		}
 	}
 
-	@Override
-	public ProtectedStringCrypto getProtectedStringCrypto() {
-		return parent.getProtectedStringCrypto();
-	}
-	
 }

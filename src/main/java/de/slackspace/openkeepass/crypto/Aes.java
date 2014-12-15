@@ -13,7 +13,7 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import de.slackspace.openkeepass.exception.KeepassDatabaseUnreadable;
+import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 
 public class Aes {
 
@@ -84,7 +84,7 @@ public class Aes {
 		}
 	}
 	
-	private static KeepassDatabaseUnreadable createCryptoException(Throwable e) {
-		return new KeepassDatabaseUnreadable("Could not decrypt keepass file. Master key wrong?", e);
+	private static KeePassDatabaseUnreadable createCryptoException(Throwable e) {
+		return new KeePassDatabaseUnreadable("Could not decrypt keepass file. Master key wrong?", e);
 	}
 }

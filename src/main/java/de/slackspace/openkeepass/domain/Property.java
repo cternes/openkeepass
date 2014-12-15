@@ -52,8 +52,4 @@ public class Property implements KeePassFileElement {
 		this.parent = element;
 	}
 
-	@Override
-	public ProtectedStringCrypto getProtectedStringCrypto() {
-		return parent.getProtectedStringCrypto();
-	}
 }

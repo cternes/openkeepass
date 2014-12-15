@@ -4,5 +4,4 @@ import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 
 public interface KeePassFileElement {
 
-	public ProtectedStringCrypto getProtectedStringCrypto();
 }

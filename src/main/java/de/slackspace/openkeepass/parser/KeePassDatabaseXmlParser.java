@@ -13,7 +13,7 @@ public class KeePassDatabaseXmlParser {
 
 	public KeePassFile parse(InputStream inputStream, ProtectedStringCrypto protectedStringCrypto) {
 		KeePassFile keePassFile = JAXB.unmarshal(inputStream, KeePassFile.class);
-		keePassFile.init(protectedStringCrypto);
+		keePassFile.init();
 		
 		// Decrypt all encrypted values
 		List<Entry> entries = keePassFile.getEntries();

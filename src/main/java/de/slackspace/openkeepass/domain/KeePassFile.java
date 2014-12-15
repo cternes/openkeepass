@@ -152,13 +152,8 @@ public class KeePassFile implements KeePassFileElement {
 		});
 	}
 	
-	public void init(ProtectedStringCrypto protectedStringCrypto) {
-		this.protectedStringCrypto = protectedStringCrypto;
+	public void init() {
 		root.setParent(this);
-	}
-	
-	public ProtectedStringCrypto getProtectedStringCrypto() {
-		return protectedStringCrypto;
 	}
 	
 	/**

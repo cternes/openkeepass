@@ -108,11 +108,6 @@ public class Entry implements KeePassFileElement {
 		}
 	}
 
-	@Override
-	public ProtectedStringCrypto getProtectedStringCrypto() {
-		return parent.getProtectedStringCrypto();
-	}
-	
 	private void setValue(String propertyName, String propertyValue) {
 		Property property = getPropertyByName(propertyName);
 		if(property == null) {
