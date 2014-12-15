@@ -2,6 +2,9 @@ package de.slackspace.openkeepass;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -21,7 +24,7 @@ import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.KeyFile;
-import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
+import de.slackspace.openkeepass.exception.KeepassDatabaseUnreadable;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.parser.KeyFileXmlParser;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
@@ -78,6 +81,34 @@ public class KeePassDatabase {
 			keepassFile = StreamUtils.toByteArray(inputStream);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		}
+	}
+	
+	/**
+	 * Retrieves a KeePassDatabase instance. The instance returned is based on the given database filename and tries to parse the database header of it.
+	 * 
+	 * @param keePassDatabaseFile a KeePass database filename, must not be NULL 
+	 * @return a KeePassDatabase
+	 */
+	public static KeePassDatabase getInstance(String keePassDatabaseFile) {
+		return getInstance(new File(keePassDatabaseFile));
+	}
+	
+	/**
+	 * Retrieves a KeePassDatabase instance. The instance returned is based on the given database file and tries to parse the database header of it.
+	 * 
+	 * @param keePassDatabaseFile a KeePass database file, must not be NULL 
+	 * @return a KeePassDatabase
+	 */
+	public static KeePassDatabase getInstance(File keePassDatabaseFile) {
+		if(keePassDatabaseFile == null) {
+			throw new IllegalArgumentException("You must provide a valid KeePass database file.");
+		}
+		
+		try {
+			return getInstance(new FileInputStream(keePassDatabaseFile));
+		} catch (FileNotFoundException e) {
+			throw new IllegalArgumentException("The KeePass database file could not be found. You must provide a valid KeePass database file.");
 		}
 	}
 	
@@ -181,6 +212,27 @@ public class KeePassDatabase {
 	}
 	
 	/**
+	 * Opens a KeePass database with the given password and returns the KeePassFile for further processing.
+	 * <p>
+	 * If the database cannot be decrypted with the provided password an exception will be thrown.
+	 * 
+	 * @param keyFile the password to open the database
+	 * @return a KeePassFile the keyfile to open the database
+	 * @see KeePassFile
+	 */
+	public KeePassFile openDatabase(File keyFile) {
+		if(keyFile == null) {
+			throw new IllegalArgumentException("You must provide a valid KeePass keyfile.");
+		}
+		
+		try {
+			return openDatabase(new FileInputStream(keyFile));
+		} catch (FileNotFoundException e) {
+			throw new IllegalArgumentException("The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.");
+		}
+	}
+	
+	/**
 	 * Opens a KeePass database with the given keyfile stream and returns the KeePassFile for further processing.
 	 * <p>
 	 * If the database cannot be decrypted with the provided keyfile an exception will be thrown. 
@@ -190,6 +242,10 @@ public class KeePassDatabase {
 	 * @see KeePassFile
 	 */
 	public KeePassFile openDatabase(InputStream keyFileStream) {
+		if(keyFileStream == null) {
+			throw new IllegalArgumentException("You must provide a non-empty KeePass keyfile stream.");
+		}
+		
 		try {
 			KeyFile keyFile = keyFileXmlParser.parse(keyFileStream);
 			byte[] protectedBuffer = Base64.decode(keyFile.getKey().getData().getBytes("UTF-8"));
@@ -210,7 +266,7 @@ public class KeePassDatabase {
 			
 			// compare startBytes
 			if(!Arrays.equals(keepassHeader.getStreamStartBytes(), startBytes)) {
-				throw new KeePassDatabaseUnreadable("The keepass database file seems to be corrupt or cannot be decrypted.");
+				throw new KeepassDatabaseUnreadable("The keepass database file seems to be corrupt or cannot be decrypted.");
 			}
 			
 			HashedBlockInputStream hashedBlockInputStream = new HashedBlockInputStream(decryptedStream);

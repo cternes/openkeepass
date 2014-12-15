@@ -1,6 +1,7 @@
 package de.slackspace.openkeepass.reader;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -102,6 +103,20 @@ public class KeepassDatabaseReaderTest {
 		
 		List<Entry> entries = database.getEntries();
 		Assert.assertEquals("V6uoqOm7esGRqm20VvMz", entries.get(0).getPassword());
+	}
+	
+	@Test
+	public void whenGettingInstanceByStringShouldOpenDatabase() {
+		KeePassFile database = KeePassDatabase.getInstance("target/test-classes/fullBlownDatabase.kdbx").openDatabase("123456");
+		List<Entry> entries = database.getEntries();
+		Assert.assertEquals("2f29047129b9e4c48f05d09907e52b9b", entries.get(0).getPassword());
+	}
+	
+	@Test
+	public void whenGettingInstanceByFileShouldOpenDatabase() {
+		KeePassFile database = KeePassDatabase.getInstance(new File("target/test-classes/fullBlownDatabase.kdbx")).openDatabase("123456");
+		List<Entry> entries = database.getEntries();
+		Assert.assertEquals("2f29047129b9e4c48f05d09907e52b9b", entries.get(0).getPassword());
 	}
 	
 }
