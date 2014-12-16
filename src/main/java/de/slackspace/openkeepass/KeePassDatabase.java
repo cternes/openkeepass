@@ -24,7 +24,7 @@ import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.KeyFile;
-import de.slackspace.openkeepass.exception.KeepassDatabaseUnreadable;
+import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.parser.KeyFileXmlParser;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
@@ -266,7 +266,7 @@ public class KeePassDatabase {
 			
 			// compare startBytes
 			if(!Arrays.equals(keepassHeader.getStreamStartBytes(), startBytes)) {
-				throw new KeepassDatabaseUnreadable("The keepass database file seems to be corrupt or cannot be decrypted.");
+				throw new KeePassDatabaseUnreadable("The keepass database file seems to be corrupt or cannot be decrypted.");
 			}
 			
 			HashedBlockInputStream hashedBlockInputStream = new HashedBlockInputStream(decryptedStream);
