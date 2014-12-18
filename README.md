@@ -26,8 +26,7 @@ Examples
 The basic usage is very simple. This example will show you how to retrieve all entries and the top groups of the KeePass database.  
 
     // Open Database
-	FileInputStream fileInputStream = new FileInputStream("Database.kdbx");
-	KeePassFile database = KeePassDatabase.getInstance(fileInputStream).openDatabase("MasterPassword");
+	KeePassFile database = KeePassDatabase.getInstance("Database.kdbx").openDatabase("MasterPassword");
 		
 	// Retrieve all entries
 	List<Entry> entries = database.getEntries();
