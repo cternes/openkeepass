@@ -23,6 +23,12 @@
 		<mockito.version>1.9.5</mockito.version>
 		<junit.version>4.10</junit.version>
 	</properties>
+	
+	<scm>
+		<connection>scm:git:git@github.com:cternes/openkeepass.git</connection>
+		<url>scm:git:git@github.com:cternes/openkeepass.git</url>
+		<developerConnection>scm:git:git@github.com:cternes/openkeepass.git</developerConnection>
+	</scm>
 
 	<dependencies>
 		<dependency>
