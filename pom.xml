@@ -6,6 +6,16 @@
 	<version>0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>A java library for reading KeePass databases.</description>
+	<url>https://github.com/cternes/openkeepass</url>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
