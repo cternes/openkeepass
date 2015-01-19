@@ -44,10 +44,10 @@ import de.slackspace.openkeepass.util.StreamUtils;
  * A typical use-case should use the following idiom:
  * <pre>
  * // open database 
- * KeePassFile database = KeePassDatabase.getInstance(keePassDatabase).openDatabase("secret");
+ * KeePassFile database = KeePassDatabase.getInstance("keePassDatabasePath").openDatabase("secret");
  * 
  * // get password entries 
- * List<Entry> entries = database.getEntries();
+ * List&lt;Entry&gt; entries = database.getEntries();
  * ...
  * </pre>
  * 
