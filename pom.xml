@@ -15,6 +15,13 @@
 		</license>
 	</licenses>
 	
+	<developers>
+		<developer>
+			<name>Christian Ternes</name>
+			<email>github@slackspace.de</email>
+		</developer>
+	</developers>
+	
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
@@ -48,4 +55,5 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	
 </project>
