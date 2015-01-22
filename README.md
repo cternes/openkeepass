@@ -11,6 +11,17 @@ Features included so far:
 - Easy to learn API: openkeepass has a simple API with convenient methods that makes it easy to read data from a KeePass database.
 - Very lean: openkeepass tries to keep the necessary dependencies to an absolute minimum.
 
+Installation
+=============
+
+The easiest way is to add openkeepass as a maven dependency. 
+
+	<dependency>
+	    <groupId>de.slackspace</groupId>
+    	<artifactId>openkeepass</artifactId>
+	    <version>0.4.0</version>
+	</dependency>
+
 Prerequisites
 =============
 Before using this library make sure that you have the Java Cryptography Extension (JCE) installed on your system. 
