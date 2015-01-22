@@ -25,6 +25,7 @@ Examples
 
 The basic usage is very simple. This example will show you how to retrieve all entries and the top groups of the KeePass database.  
 
+```java
     // Open Database
 	KeePassFile database = KeePassDatabase.getInstance("Database.kdbx").openDatabase("MasterPassword");
 		
@@ -39,9 +40,11 @@ The basic usage is very simple. This example will show you how to retrieve all e
 	for (Group group : groups) {
 		System.out.println(group.getName());
 	}
+```
 
 You can also search for specific entries in the database:
 
+```java
 	// Search for single entry
 	Entry sampleEntry = database.getEntryByTitle("Sample Entry");
 	System.out.println("Title: " + sampleEntry.getTitle() + " Password: " + sampleEntry.getPassword());
@@ -51,5 +54,6 @@ You can also search for specific entries in the database:
 	for (Entry entry : entriesByTitle) {
 		System.out.println("Title: " + entry.getTitle() + " Password: " + entry.getPassword());
 	}
+```
 	
 For more usages have a look into the unit test classes.
