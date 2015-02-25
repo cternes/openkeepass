@@ -10,6 +10,7 @@ Features included so far:
 - Password or Keyfile credentials: openkeepass can open password protected databases as well as keyfile protected databases.
 - Easy to learn API: openkeepass has a simple API with convenient methods that makes it easy to read data from a KeePass database.
 - Very lean: openkeepass tries to keep the necessary dependencies to an absolute minimum.
+- Backward compatible until Java 6
 
 Installation
 =============
