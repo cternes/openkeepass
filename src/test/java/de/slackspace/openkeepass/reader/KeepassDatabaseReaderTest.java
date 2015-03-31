@@ -33,6 +33,17 @@ public class KeepassDatabaseReaderTest {
 	}
 	
 	@Test
+	public void whenGettingEntriesByTitleButNothingMatchesShouldReturnNull() throws FileNotFoundException {
+		FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
+		
+		KeePassDatabase reader = KeePassDatabase.getInstance(file);
+		KeePassFile database = reader.openDatabase("abcdefg");
+		
+		Entry entry = database.getEntryByTitle("abcdefgh");
+		Assert.assertNull(entry);
+	}
+	
+	@Test
 	public void whenKeePassFileIsV2ShouldReadHeader() throws IOException {
 		FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
 		
