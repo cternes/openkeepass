@@ -106,7 +106,7 @@ public class KeePassFile implements KeePassFileElement {
 	public Entry getEntryByTitle(String title) {
 		List<Entry> entries = getEntriesByTitle(title, true);
 		
-		if(entries != null) {
+		if(!entries.isEmpty()) {
 			return entries.get(0);
 		}
 		
