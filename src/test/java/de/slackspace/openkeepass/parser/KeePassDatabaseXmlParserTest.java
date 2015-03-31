@@ -115,6 +115,14 @@ public class KeePassDatabaseXmlParserTest {
 		Assert.assertEquals("Sample Entry", entries.get(0).getTitle());
 		Assert.assertEquals("Sample Entry #2", entries.get(1).getTitle());
 	}
+	
+	@Test
+	public void whenUsingGetEntriesByTitleLooselyButNothingMatchesShouldReturnEmptyList() throws FileNotFoundException {
+		KeePassFile keePassFile = parseKeePassXml();
+		
+		List<Entry> entries = keePassFile.getEntriesByTitle("abcdefg", false);
+		Assert.assertEquals(0, entries.size());
+	}
 
 	private KeePassFile parseKeePassXml() throws FileNotFoundException {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
