@@ -7,6 +7,7 @@ import javax.xml.bind.JAXB;
 
 import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 import de.slackspace.openkeepass.domain.Entry;
+import de.slackspace.openkeepass.domain.History;
 import de.slackspace.openkeepass.domain.KeePassFile;
 
 public class KeePassDatabaseXmlParser {
@@ -18,12 +19,22 @@ public class KeePassDatabaseXmlParser {
 		// Decrypt all encrypted values
 		List<Entry> entries = keePassFile.getEntries();
 		for (Entry entry : entries) {
-			if(entry.isPasswordProtected()) {
-				String decrypted = protectedStringCrypto.decrypt(entry.getPassword());
-				entry.setPassword(decrypted);
+			decryptAndSetPassword(entry, protectedStringCrypto);
+			
+			// Also decrypt historic password values 
+			History history = entry.getHistory();
+			for (Entry historicEntry : history.getHistoricEntries()) {
+				decryptAndSetPassword(historicEntry, protectedStringCrypto);
 			}
 		}
 		
 		return keePassFile;
+	}
+	
+	private void decryptAndSetPassword(Entry entry, ProtectedStringCrypto protectedStringCrypto) {
+		if(entry.isPasswordProtected()) {
+			String decrypted = protectedStringCrypto.decrypt(entry.getPassword());
+			entry.setPassword(decrypted);
+		}
 	}
 }

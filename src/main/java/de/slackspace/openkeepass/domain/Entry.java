@@ -9,8 +9,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Entry implements KeePassFileElement {
@@ -29,6 +27,9 @@ public class Entry implements KeePassFileElement {
 	
 	@XmlElement(name = "String")
 	private Set<Property> properties = new HashSet<Property>();
+	
+	@XmlElement(name= "History")
+	private History history;
 	
 	Entry() { }
 	
@@ -136,5 +137,13 @@ public class Entry implements KeePassFileElement {
 		}
 		
 		return null;
+	}
+
+	public History getHistory() {
+		return history;
+	}
+
+	public void setHistory(History history) {
+		this.history = history;
 	}
 }
