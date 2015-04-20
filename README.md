@@ -20,7 +20,7 @@ The easiest way is to add openkeepass as a maven dependency.
 	<dependency>
 	    <groupId>de.slackspace</groupId>
     	<artifactId>openkeepass</artifactId>
-	    <version>0.4.0</version>
+	    <version>0.4.1</version>
 	</dependency>
 
 Prerequisites
