@@ -6,8 +6,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
-
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Property implements KeePassFileElement {
@@ -50,6 +48,11 @@ public class Property implements KeePassFileElement {
 
 	public void setParent(KeePassFileElement element) {
 		this.parent = element;
+	}
+
+	@Override
+	public String toString() {
+		return "Property [key=" + key + ", propertyValue=" + propertyValue + "]";
 	}
 
 }

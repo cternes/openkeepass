@@ -146,4 +146,10 @@ public class Entry implements KeePassFileElement {
 	public void setHistory(History history) {
 		this.history = history;
 	}
+
+	@Override
+	public String toString() {
+		return "Entry [uuid=" + uuid + ", getTitle()=" + getTitle() + ", getPassword()=" + getPassword() + ", getUsername()=" + getUsername() + "]";
+	}
+	
 }

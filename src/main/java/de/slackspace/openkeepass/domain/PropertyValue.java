@@ -42,5 +42,10 @@ public class PropertyValue {
 	public void setProtected(boolean isProtected) {
 		this.isProtected = isProtected == true ? "True" : "False";
 	}
+
+	@Override
+	public String toString() {
+		return "PropertyValue [value=" + value + "]";
+	}
 	
 }
