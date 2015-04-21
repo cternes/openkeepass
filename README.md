@@ -67,5 +67,19 @@ You can also search for specific entries in the database:
 		System.out.println("Title: " + entry.getTitle() + " Password: " + entry.getPassword());
 	}
 ```
+
+Open a database with a key file:
+
+```java
+	// Open database with keyfile
+	KeePassFile database = KeePassDatabase.getInstance("DatabaseProtectedByKeyfile.kdbx").openDatabase(new File("Keyfile.key"));
+		
+	// Print all entries		
+	List<Entry> entries = database.getEntries();
+	for (Entry entry : entries) {
+		System.out.println(entry.getTitle() + ":" + entry.getPassword());
+	}
+```
+
 	
 For more usages have a look into the unit test classes.
