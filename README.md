@@ -81,5 +81,14 @@ Open a database with a key file:
 	}
 ```
 
+Retrieve custom string fields (Advanced tab) from a database:
+
+```java		
+	// Retrieve all properties including custom string fields of an entry
+	Set<Property> properties = database.getEntryByTitle("1st Entry").getProperties();
+	for (Property property : properties) {
+		System.out.println(property.getKey() + ":" + property.getValue());
+	}
+```
 	
 For more usages have a look into the unit test classes.
