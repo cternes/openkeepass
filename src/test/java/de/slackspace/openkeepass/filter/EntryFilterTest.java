@@ -44,7 +44,7 @@ public class EntryFilterTest {
 	private Entry createEntry(String uuid, String title, String password) {
 		Entry entry = new Entry(uuid);
 		
-		Set<Property> properties = new HashSet<Property>();
+		List<Property> properties = new ArrayList<Property>();
 		properties.add(new Property("Title", title, false));
 		properties.add(new Property("Password", password, false));
 		entry.setProperties(properties);

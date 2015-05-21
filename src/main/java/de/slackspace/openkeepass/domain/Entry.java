@@ -1,6 +1,7 @@
 package de.slackspace.openkeepass.domain;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -26,7 +27,7 @@ public class Entry implements KeePassFileElement {
 	private String uuid;
 	
 	@XmlElement(name = "String")
-	private Set<Property> properties = new HashSet<Property>();
+	private List<Property> properties = new ArrayList<Property>();
 	
 	@XmlElement(name= "History")
 	private History history;
@@ -45,11 +46,11 @@ public class Entry implements KeePassFileElement {
 		this.uuid = uuid;
 	}
 
-	public Set<Property> getProperties() {
+	public List<Property> getProperties() {
 		return properties;
 	}
 
-	public void setProperties(Set<Property> properties) {
+	public void setProperties(List<Property> properties) {
 		this.properties = properties;
 	}
 	

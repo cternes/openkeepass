@@ -49,6 +49,10 @@ public class Property implements KeePassFileElement {
 	public void setParent(KeePassFileElement element) {
 		this.parent = element;
 	}
+	
+	public PropertyValue getPropertyValue() {
+		return propertyValue;
+	}
 
 	@Override
 	public String toString() {

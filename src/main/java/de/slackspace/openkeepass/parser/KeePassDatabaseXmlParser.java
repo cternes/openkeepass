@@ -9,6 +9,8 @@ import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.History;
 import de.slackspace.openkeepass.domain.KeePassFile;
+import de.slackspace.openkeepass.domain.Property;
+import de.slackspace.openkeepass.domain.PropertyValue;
 
 public class KeePassDatabaseXmlParser {
 
@@ -19,22 +21,27 @@ public class KeePassDatabaseXmlParser {
 		// Decrypt all encrypted values
 		List<Entry> entries = keePassFile.getEntries();
 		for (Entry entry : entries) {
-			decryptAndSetPassword(entry, protectedStringCrypto);
+			decryptAndSetValues(entry, protectedStringCrypto);
 			
 			// Also decrypt historic password values 
 			History history = entry.getHistory();
 			for (Entry historicEntry : history.getHistoricEntries()) {
-				decryptAndSetPassword(historicEntry, protectedStringCrypto);
+				decryptAndSetValues(historicEntry, protectedStringCrypto);
 			}
 		}
 		
 		return keePassFile;
 	}
 	
-	private void decryptAndSetPassword(Entry entry, ProtectedStringCrypto protectedStringCrypto) {
-		if(entry != null && entry.getPassword() != null && !entry.getPassword().isEmpty() && entry.isPasswordProtected()) {
-			String decrypted = protectedStringCrypto.decrypt(entry.getPassword());
-			entry.setPassword(decrypted);
+	private void decryptAndSetValues(Entry entry, ProtectedStringCrypto protectedStringCrypto) {
+		List<Property> properties = entry.getProperties();
+		for (Property property : properties) {
+			PropertyValue propertyValue = property.getPropertyValue();
+			
+			if(propertyValue.isProtected()) {
+				String decrypted = protectedStringCrypto.decrypt(propertyValue.getValue());
+				propertyValue.setValue(decrypted);
+			}
 		}
 	}
 }

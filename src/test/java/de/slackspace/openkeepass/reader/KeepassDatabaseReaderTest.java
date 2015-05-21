@@ -140,5 +140,17 @@ public class KeepassDatabaseReaderTest {
 		List<Entry> entries = database.getEntries();
 		Assert.assertEquals("2f29047129b9e4c48f05d09907e52b9b", entries.get(0).getPassword());
 	}
-	
+
+	@Test
+	public void whenGettingEntriesFromKeeFoxShouldDecryptEntries() throws FileNotFoundException {
+		FileInputStream file = new FileInputStream("target/test-classes/KeeFoxDatabase.kdbx");
+		
+		KeePassDatabase reader = KeePassDatabase.getInstance(file);
+		KeePassFile database = reader.openDatabase("abcd1234");
+		
+		List<Entry> entries = database.getEntries();
+		Assert.assertEquals("Password", entries.get(0).getPassword());
+		Assert.assertEquals("12345", entries.get(1).getPassword());
+		Assert.assertEquals("test", entries.get(2).getPassword());
+	}
 }
