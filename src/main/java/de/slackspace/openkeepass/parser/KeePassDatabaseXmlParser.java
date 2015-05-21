@@ -32,7 +32,7 @@ public class KeePassDatabaseXmlParser {
 	}
 	
 	private void decryptAndSetPassword(Entry entry, ProtectedStringCrypto protectedStringCrypto) {
-		if(entry != null && !entry.getPassword().isEmpty() && entry.isPasswordProtected()) {
+		if(entry != null && entry.getPassword() != null && !entry.getPassword().isEmpty() && entry.isPasswordProtected()) {
 			String decrypted = protectedStringCrypto.decrypt(entry.getPassword());
 			entry.setPassword(decrypted);
 		}
