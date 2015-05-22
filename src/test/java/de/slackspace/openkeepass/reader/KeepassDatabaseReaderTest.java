@@ -149,8 +149,11 @@ public class KeepassDatabaseReaderTest {
 		KeePassFile database = reader.openDatabase("abcd1234");
 		
 		List<Entry> entries = database.getEntries();
+		Assert.assertEquals("Sample Entry", entries.get(0).getTitle());
 		Assert.assertEquals("Password", entries.get(0).getPassword());
+		Assert.assertEquals("Sample Entry #2", entries.get(1).getTitle());
 		Assert.assertEquals("12345", entries.get(1).getPassword());
+		Assert.assertEquals("Sign in - Google Accounts", entries.get(2).getTitle());
 		Assert.assertEquals("test", entries.get(2).getPassword());
 	}
 }
