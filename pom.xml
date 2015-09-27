@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.slackspace</groupId>
 	<artifactId>openkeepass</artifactId>
-	<version>0.4.2-SNAPSHOT</version>
+	<version>0.4.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>${project.groupId}:${project.artifactId}</name>
@@ -34,7 +34,8 @@
 		<connection>scm:git:git@github.com:cternes/openkeepass.git</connection>
 		<url>scm:git:git@github.com:cternes/openkeepass.git</url>
 		<developerConnection>scm:git:git@github.com:cternes/openkeepass.git</developerConnection>
-	</scm>
+	  	<tag>HEAD</tag>
+  	</scm>
 
 	<dependencies>
 		<dependency>
