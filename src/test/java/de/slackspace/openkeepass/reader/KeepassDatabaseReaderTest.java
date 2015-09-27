@@ -117,6 +117,26 @@ public class KeepassDatabaseReaderTest {
 	}
 	
 	@Test
+	public void whenPasswordOfEntryIsEmptyShouldReturnEmptyValue() throws FileNotFoundException {
+		FileInputStream file = new FileInputStream("target/test-classes/DatabaseWithEmptyPassword.kdbx");
+		
+		KeePassDatabase reader = KeePassDatabase.getInstance(file);
+		KeePassFile database = reader.openDatabase("1234");
+		
+		Entry entryWithEmptyPassword = database.getEntryByTitle("EntryWithEmptyPassword");
+		Assert.assertEquals("UsernameNotEmpty", entryWithEmptyPassword.getUsername());
+		Assert.assertEquals("", entryWithEmptyPassword.getPassword());
+
+		Entry entryWithEmptyUsername = database.getEntryByTitle("EntryWithEmptyUsername");
+		Assert.assertEquals("", entryWithEmptyUsername.getUsername());
+		Assert.assertEquals("1234", entryWithEmptyUsername.getPassword());
+		
+		Entry entryWithEmptyUserAndPassword = database.getEntryByTitle("EmptyEntry");
+		Assert.assertEquals("", entryWithEmptyUserAndPassword.getUsername());
+		Assert.assertEquals("", entryWithEmptyUserAndPassword.getPassword());
+	}
+	
+	@Test
 	public void whenKeePassFileIsSecuredWithKeyFileShouldOpenKeePassFileWithKeyFile() throws FileNotFoundException {
 		FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithKeyfile.kdbx");
 		FileInputStream keyFile = new FileInputStream("target/test-classes/DatabaseWithKeyfile.key");
