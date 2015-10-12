@@ -4,3 +4,4 @@
 .settings
 pom.xml.releaseBackup
 release.properties
+*.iml

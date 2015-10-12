@@ -1,16 +1,13 @@
 package de.slackspace.openkeepass.filter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import junit.framework.Assert;
 
 import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.Property;
+import junit.framework.Assert;
 
 public class EntryFilterTest {
 

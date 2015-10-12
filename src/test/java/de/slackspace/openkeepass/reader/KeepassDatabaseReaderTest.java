@@ -176,4 +176,15 @@ public class KeepassDatabaseReaderTest {
 		Assert.assertEquals("Sign in - Google Accounts", entries.get(2).getTitle());
 		Assert.assertEquals("test", entries.get(2).getPassword());
 	}
+	
+	@Test
+	public void whenGettingEntryByUUIDShouldReturnFoundEntry() throws FileNotFoundException {
+		FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
+		
+		KeePassDatabase reader = KeePassDatabase.getInstance(file);
+		KeePassFile database = reader.openDatabase("abcdefg");
+		
+		Entry entry = database.getEntryByUUID("H73fzVL/HUuy6Cf2ceTqIg==");
+		Assert.assertEquals("Sample Entry #2", entry.getTitle());
+	}
 }
