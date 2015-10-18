@@ -120,4 +120,8 @@ public class Group implements KeePassFileElement {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
 }
