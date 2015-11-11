@@ -104,7 +104,7 @@ public class Entry implements KeePassFileElement {
      * @return the found property or null.
      */
     public Property getProperty(String key) {
-        for (Property prop : getProperties()) {
+        for (Property prop : properties) {
             if (prop.getKey().equals(key))
                 return prop;
         }
