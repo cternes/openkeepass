@@ -105,10 +105,20 @@ public class KeePassDatabase {
 			throw new IllegalArgumentException("You must provide a valid KeePass database file.");
 		}
 		
+		InputStream keePassDatabaseStream = null;
 		try {
-			return getInstance(new FileInputStream(keePassDatabaseFile));
+			keePassDatabaseStream = new FileInputStream(keePassDatabaseFile);
+			return getInstance(keePassDatabaseStream);
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException("The KeePass database file could not be found. You must provide a valid KeePass database file.");
+		} finally {
+		  if (keePassDatabaseStream != null) {
+		    try {
+		      keePassDatabaseStream.close();
+		    } catch (IOException e) {
+		      // Ignore
+		    }
+		  }
 		}
 	}
 	
