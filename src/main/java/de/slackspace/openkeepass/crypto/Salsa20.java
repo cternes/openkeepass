@@ -2,23 +2,24 @@ package de.slackspace.openkeepass.crypto;
 
 import java.io.UnsupportedEncodingException;
 
-import org.bouncycastle.crypto.engines.Salsa20Engine;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.crypto.params.ParametersWithIV;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
 
+import de.slackspace.openkeepass.crypto.bc.Salsa20EngineAdapter;
+
 public class Salsa20 implements ProtectedStringCrypto {
 	
 	private static final String SALSA20IV = "E830094B97205D2A";
 	
-	private Salsa20Engine salsa20Engine;
+	private Salsa20EngineAdapter salsa20Engine;
 	
 	private Salsa20() {	}
 	
 	private void initialize(byte[] protectedStreamKey) {
 		byte[] salsaKey = Sha256.hash(protectedStreamKey);
-		salsa20Engine = new Salsa20Engine();
+		salsa20Engine = new Salsa20EngineAdapter();
 		salsa20Engine.init(true, new ParametersWithIV(new KeyParameter(salsaKey), Hex.decode(SALSA20IV)));
 	}
 	
