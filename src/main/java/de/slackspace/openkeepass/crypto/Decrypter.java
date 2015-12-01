@@ -22,6 +22,12 @@ public class Decrypter {
 		return Aes.decrypt(aesKey, header.getEncryptionIV(), payload);
 	}
 	
+	public byte[] encryptDatabase(byte[] password, KeePassHeader header, byte[] payload) {
+		byte[] aesKey = createAesKey(password, header);
+		
+		return Aes.encrypt(aesKey, header.getEncryptionIV(), payload);
+	}
+	
 	private byte[] createAesKey(byte[] password, KeePassHeader header) {
 		byte[] hashedPwd = Sha256.hash(password);
 		
