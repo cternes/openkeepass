@@ -2,8 +2,7 @@ package de.slackspace.openkeepass.crypto;
 
 import java.util.Arrays;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.util.ByteUtils;
