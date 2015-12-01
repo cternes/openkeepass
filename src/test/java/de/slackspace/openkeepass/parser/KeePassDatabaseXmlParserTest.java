@@ -1,7 +1,11 @@
 package de.slackspace.openkeepass.parser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.TimeZone;
@@ -127,5 +131,23 @@ public class KeePassDatabaseXmlParserTest {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
 		KeePassFile keePassFile = new KeePassDatabaseXmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
 		return keePassFile;
+	}
+	
+	@Test
+	public void whenWritingKeePassFileShouldBeAbleToReadItAgain() throws IOException {
+		// Read decrypted and write again
+		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
+		KeePassDatabaseXmlParser parser = new KeePassDatabaseXmlParser();
+		KeePassFile keePassFile = parser.parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
+		
+		ByteArrayOutputStream outputStream = parser.toXml(keePassFile, Salsa20.createInstance(protectedStreamKey));
+		OutputStream fileOutputStream = new FileOutputStream("target/test-classes/testDatabase_decrypted2.xml"); 
+		outputStream.writeTo(fileOutputStream);
+		
+		// Read written file
+		FileInputStream writtenInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted2.xml");
+		KeePassFile writtenKeePassFile = parser.parse(writtenInputStream, Salsa20.createInstance(protectedStreamKey));
+		
+		Assert.assertEquals("Password", writtenKeePassFile.getEntryByTitle("Sample Entry").getPassword());
 	}
 }

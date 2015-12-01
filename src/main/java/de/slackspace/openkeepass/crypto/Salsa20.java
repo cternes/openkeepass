@@ -10,6 +10,8 @@ import org.bouncycastle.util.encoders.Hex;
 
 public class Salsa20 implements ProtectedStringCrypto {
 	
+	private static final String ENCODING = "UTF-8";
+
 	private static final String SALSA20IV = "E830094B97205D2A";
 	
 	private Salsa20Engine salsa20Engine;
@@ -19,6 +21,8 @@ public class Salsa20 implements ProtectedStringCrypto {
 	private void initialize(byte[] protectedStreamKey) {
 		byte[] salsaKey = Sha256.hash(protectedStreamKey);
 		salsa20Engine = new Salsa20Engine();
+		
+		// Encrypt or Decrypt does not matter here
 		salsa20Engine.init(true, new ParametersWithIV(new KeyParameter(salsaKey), Hex.decode(SALSA20IV)));
 	}
 	
@@ -44,8 +48,27 @@ public class Salsa20 implements ProtectedStringCrypto {
 		salsa20Engine.processBytes(protectedBuffer, 0, protectedBuffer.length, plainText, 0);
 		
 		try { 
-			return new String(plainText, "UTF-8");
+			return new String(plainText, ENCODING);
 		} catch (UnsupportedEncodingException e) {
+			throw new UnsupportedOperationException("The encoding UTF-8 is not supported");
+		}
+	}
+
+	public String encrypt(String plainString) {
+		if(plainString == null) {
+			throw new IllegalArgumentException("PlainString must not be null");
+		}
+		
+		try {
+			byte[] plainStringBytes = plainString.getBytes(ENCODING);
+			byte[] encodedText = new byte[plainStringBytes.length];
+			
+			salsa20Engine.processBytes(plainStringBytes, 0, plainStringBytes.length, encodedText, 0);
+			
+			byte[] protectedBuffer = Base64.encode(encodedText);
+			
+			return new String(protectedBuffer, ENCODING);
+		} catch (UnsupportedEncodingException e1) {
 			throw new UnsupportedOperationException("The encoding UTF-8 is not supported");
 		}
 	}
