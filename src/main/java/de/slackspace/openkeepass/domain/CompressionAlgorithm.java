@@ -12,4 +12,12 @@ public enum CompressionAlgorithm {
 			default: throw new IllegalArgumentException(String.format("Value %d is not a valid CompressionAlgorithm", value));
 		}
 	}
+	
+	public static int getIntValue(CompressionAlgorithm algorithm) {
+		switch (algorithm) {
+			case None: return 0;
+			case Gzip: return 1;
+			default: throw new IllegalArgumentException(String.format("Value %s is not a valid CompressionAlgorithm", algorithm));
+		}
+	}
 }
