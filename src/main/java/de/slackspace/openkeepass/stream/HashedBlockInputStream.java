@@ -38,7 +38,7 @@ public class HashedBlockInputStream extends InputStream {
 		while (remaining > 0) {
 			if (bufferPos == buffer.length) {
 				// Get more from the source into the buffer
-				if (!ReadHashedBlock()) {
+				if (!readHashedBlock()) {
 					return length - remaining;
 				}
 
@@ -58,7 +58,7 @@ public class HashedBlockInputStream extends InputStream {
 		return length;
 	}
 
-	private boolean ReadHashedBlock() throws IOException {
+	private boolean readHashedBlock() throws IOException {
 		if (atEnd)
 			return false;
 
@@ -129,7 +129,7 @@ public class HashedBlockInputStream extends InputStream {
 			return -1;
 
 		if (bufferPos == buffer.length) {
-			if (!ReadHashedBlock())
+			if (!readHashedBlock())
 				return -1;
 		}
 
