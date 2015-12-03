@@ -252,6 +252,9 @@ public class KeePassDatabase {
 	}
 
 	/**
+	 * <strong>CAUTION: NOT PRODUCTION READY YET! USE AT YOUR OWN RISK!</strong>
+	 * <p>
+	 * 
 	 * Encrypts a {@link KeePassFile} with the given password and writes it to the given stream.
 	 * <p>
 	 * If the KeePassFile cannot be encrypted an exception will be thrown.
@@ -260,6 +263,7 @@ public class KeePassDatabase {
 	 * @param password the password to encrypt the database
 	 * @param stream the target stream where the output will be written 
 	 * @see KeePassFile
+	 * 
 	 */
 	public static void write(KeePassFile keePassFile, String password, OutputStream stream) {
 		try {
