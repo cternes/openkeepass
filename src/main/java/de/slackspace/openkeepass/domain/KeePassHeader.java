@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import de.slackspace.openkeepass.crypto.RandomGenerator;
 import de.slackspace.openkeepass.util.ByteUtils;
 
 public class KeePassHeader {
 
+	private static final int SIZE_OF_FIELD_LENGTH_BUFFER = 3;
+	
 	public static final int CIPHER = 2; 
 	public static final int COMPRESSION = 3; 
 	public static final int MASTER_SEED = 4; 
@@ -22,8 +25,8 @@ public class KeePassHeader {
 	private static final byte[] DATABASE_V2_FILE_SIGNATURE_1 = ByteUtils.hexStringToByteArray("03d9a29a");
 	private static final byte[] DATABASE_V2_FILE_SIGNATURE_2 = ByteUtils.hexStringToByteArray("67fb4bb5");
 	private static final byte[] DATABASE_V2_FILE_VERSION = ByteUtils.hexStringToByteArray("00000300");
+	private static final byte[] DATABASE_V2_AES_CIPHER = ByteUtils.hexStringToByteArray("31C1F2E6BF714350BE5805216AFC5AFF");
 	
-	private int headerSize = 0;
 	private byte[] cipher;
 	private byte[] encryptionIV;
 	private byte[] streamStartBytes;
@@ -82,20 +85,25 @@ public class KeePassHeader {
 			// Write terminating flag
 			stream.write(getEndOfHeader());
 			
+			
 			return stream.toByteArray();
 		} catch (IOException e) {
 			throw new RuntimeException("Could not write header value to stream", e);
 		}
 	}
 	
-	private byte[] getEndOfHeader() throws IOException {
-		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		stream.write(0);
-		stream.write(4);
-		stream.write(0);
-		stream.write("\r\n\r\n".getBytes());
-		
-		return stream.toByteArray();
+	private byte[] getEndOfHeader() {
+		try {
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+			stream.write(0);
+			stream.write(4);
+			stream.write(0);
+			stream.write("\r\n\r\n".getBytes());
+			
+			return stream.toByteArray();
+		} catch (IOException e) {
+			throw new RuntimeException("Could not write end of header to stream", e);
+		}
 	}
 
 	public byte[] getValue(int headerId) {
@@ -217,12 +225,19 @@ public class KeePassHeader {
 		return transformSeed;
 	}
 
-	public void increaseHeaderSize(int numBytes) {
-		headerSize += numBytes;
-	}
-	
 	public int getHeaderSize() {
-		return headerSize;
+		int size = 0;
+		
+		// Add size of values
+		for (int i = 2; i < 11; i++) {
+			byte[] value = getValue(i);
+			size += value.length + SIZE_OF_FIELD_LENGTH_BUFFER;
+		}
+		
+		// Add size of header end
+		size += getEndOfHeader().length;
+		
+		return size;
 	}
 	
 	public byte[] getProtectedStreamKey() {
@@ -247,5 +262,31 @@ public class KeePassHeader {
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 		buffer.putLong(value);
 		return buffer.array();
+	}
+
+	
+	/**
+	 * Initializes the header with default values and creates new random values for crypto keys.
+	 * <p>
+	 * Default values:
+	 * <ul>
+	 * 	<li>Compression: GZIP</li>
+	 *  <li>CrsAlgorithm: Salsa20</li>
+	 *  <li>TransformRounds: 8000<li>
+	 *  <li>Cipher: AES</li>
+	 * </ul>
+	 */
+	public void initialize() {
+		RandomGenerator random = new RandomGenerator();
+		
+		setCompression(CompressionAlgorithm.Gzip);
+		setCrsAlgorithm(CrsAlgorithm.Salsa20);
+		setTransformRounds(8000);
+		setMasterSeed(random.getRandomBytes(32));
+		setTransformSeed(random.getRandomBytes(32));
+		setEncryptionIV(random.getRandomBytes(16));
+		setProtectedStreamKey(random.getRandomBytes(32));
+		setStreamStartBytes(random.getRandomBytes(32));
+		setCipher(DATABASE_V2_AES_CIPHER);
 	}
 }
