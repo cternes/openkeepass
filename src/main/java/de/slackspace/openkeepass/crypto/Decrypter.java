@@ -5,7 +5,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import de.slackspace.openkeepass.KeePassDatabase;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.util.StreamUtils;
 
@@ -14,12 +13,34 @@ public class Decrypter {
 	public byte[] decryptDatabase(byte[] password, KeePassHeader header, byte[] database) throws IOException {
 		byte[] aesKey = createAesKey(password, header);
 		
+		return processDatabaseEncryption(false, database, header, aesKey);
+	}
+	
+	public byte[] encryptDatabase(byte[] password, KeePassHeader header, byte[] database) throws IOException {
+		byte[] aesKey = createAesKey(password, header);
+		
+		return processDatabaseEncryption(true, database, header, aesKey);
+	}
+	
+	private byte[] processDatabaseEncryption(boolean encrypt, byte[] database, KeePassHeader header, byte[] aesKey) throws IOException {
+		byte[] metaData = new byte[KeePassHeader.VERSION_SIGNATURE_LENGTH + header.getHeaderSize()];
 		BufferedInputStream bufferedInputStream = new BufferedInputStream(new ByteArrayInputStream(database));
-		bufferedInputStream.skip(KeePassDatabase.VERSION_SIGNATURE_LENGTH + header.getHeaderSize()); 
+		bufferedInputStream.read(metaData); 
 		
 		byte[] payload = StreamUtils.toByteArray(bufferedInputStream);
+		byte[] processedPayload;
+		if(encrypt) {
+			processedPayload = Aes.encrypt(aesKey, header.getEncryptionIV(), payload);
+		}
+		else {
+			processedPayload = Aes.decrypt(aesKey, header.getEncryptionIV(), payload);
+		}
 		
-		return Aes.decrypt(aesKey, header.getEncryptionIV(), payload);
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		output.write(metaData);
+		output.write(processedPayload);
+		
+		return output.toByteArray();
 	}
 	
 	private byte[] createAesKey(byte[] password, KeePassHeader header) {

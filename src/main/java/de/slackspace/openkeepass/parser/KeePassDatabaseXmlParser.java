@@ -1,5 +1,6 @@
 package de.slackspace.openkeepass.parser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -14,33 +15,54 @@ import de.slackspace.openkeepass.domain.PropertyValue;
 
 public class KeePassDatabaseXmlParser {
 
-	public KeePassFile parse(InputStream inputStream, ProtectedStringCrypto protectedStringCrypto) {
+	public KeePassFile fromXml(InputStream inputStream, ProtectedStringCrypto protectedStringCrypto) {
 		KeePassFile keePassFile = JAXB.unmarshal(inputStream, KeePassFile.class);
 		keePassFile.init();
 		
-		// Decrypt all encrypted values
-		List<Entry> entries = keePassFile.getEntries();
-		for (Entry entry : entries) {
-			decryptAndSetValues(entry, protectedStringCrypto);
-			
-			// Also decrypt historic password values 
-			History history = entry.getHistory();
-			for (Entry historicEntry : history.getHistoricEntries()) {
-				decryptAndSetValues(historicEntry, protectedStringCrypto);
-			}
-		}
+		processAllProtectedValues(false, protectedStringCrypto, keePassFile);
 		
 		return keePassFile;
 	}
 	
-	private void decryptAndSetValues(Entry entry, ProtectedStringCrypto protectedStringCrypto) {
+	public ByteArrayOutputStream toXml(KeePassFile keePassFile, ProtectedStringCrypto protectedStringCrypto) {
+		processAllProtectedValues(true, protectedStringCrypto, keePassFile);
+		
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		JAXB.marshal(keePassFile, outputStream);
+		
+		return outputStream;
+	}
+	
+	private void processAllProtectedValues(boolean encrypt, ProtectedStringCrypto protectedStringCrypto, KeePassFile keePassFile) {
+		// Decrypt/Encrypt all protected values
+		List<Entry> entries = keePassFile.getEntries();
+		for (Entry entry : entries) {
+			processProtectedValues(encrypt, entry, protectedStringCrypto);
+			
+			// Also process historic password values 
+			History history = entry.getHistory();
+			for (Entry historicEntry : history.getHistoricEntries()) {
+				processProtectedValues(encrypt, historicEntry, protectedStringCrypto);
+			}
+		}
+	}
+	
+	private void processProtectedValues(boolean encrypt, Entry entry, ProtectedStringCrypto protectedStringCrypto) {
 		List<Property> properties = entry.getProperties();
 		for (Property property : properties) {
 			PropertyValue propertyValue = property.getPropertyValue();
 			
 			if(!propertyValue.getValue().isEmpty() && propertyValue.isProtected()) {
-				String decrypted = protectedStringCrypto.decrypt(propertyValue.getValue());
-				propertyValue.setValue(decrypted);
+				
+				String processedValue = null;
+				if(encrypt) {
+					processedValue = protectedStringCrypto.encrypt(propertyValue.getValue());
+				}
+				else {
+					processedValue = protectedStringCrypto.decrypt(propertyValue.getValue());	
+				}
+				
+				propertyValue.setValue(processedValue);
 			}
 		}
 	}

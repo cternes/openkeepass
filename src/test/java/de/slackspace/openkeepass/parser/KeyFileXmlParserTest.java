@@ -3,8 +3,7 @@ package de.slackspace.openkeepass.parser;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.KeyFile;

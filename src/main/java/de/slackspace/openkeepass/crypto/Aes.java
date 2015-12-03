@@ -17,6 +17,8 @@ import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 
 public class Aes {
 
+	private static final String KEY_TRANSFORMATION = "AES/ECB/NoPadding";
+	private static final String DATA_TRANSFORMATION = "AES/CBC/PKCS5Padding";
 	private static final String KEY_ALGORITHM = "AES";
 	
 	public static byte[] decrypt(byte[] key, byte[] ivRaw, byte[] encryptedData) {
@@ -30,12 +32,30 @@ public class Aes {
 			throw new IllegalArgumentException("EncryptedData must not be null");
 		}
 		
+		return transformData(key, ivRaw, encryptedData, Cipher.DECRYPT_MODE);
+	}
+	
+	public static byte[] encrypt(byte[] key, byte[] ivRaw, byte[] data) {
+		if(key == null) {
+			throw new IllegalArgumentException("Key must not be null");
+		}
+		if(ivRaw == null) {
+			throw new IllegalArgumentException("IV must not be null");
+		}
+		if(data == null) {
+			throw new IllegalArgumentException("Data must not be null");
+		}
+		
+		return transformData(key, ivRaw, data, Cipher.ENCRYPT_MODE);
+	}
+
+	private static byte[] transformData(byte[] key, byte[] ivRaw, byte[] encryptedData, int operationMode) {
 		try {
-			Cipher c = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			Cipher cipher = Cipher.getInstance(DATA_TRANSFORMATION);
 			Key aesKey = new SecretKeySpec(key, KEY_ALGORITHM);
 			IvParameterSpec iv = new IvParameterSpec(ivRaw);
-			c.init(Cipher.DECRYPT_MODE, aesKey, iv);
-			return c.doFinal(encryptedData);
+			cipher.init(operationMode, aesKey, iv);
+			return cipher.doFinal(encryptedData);
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		} catch (NoSuchPaddingException e) {
@@ -63,7 +83,7 @@ public class Aes {
 		}
 		
 		try {
-			Cipher c = Cipher.getInstance("AES/ECB/NoPadding");
+			Cipher c = Cipher.getInstance(KEY_TRANSFORMATION);
 			Key aesKey = new SecretKeySpec(key, KEY_ALGORITHM);
 			c.init(Cipher.ENCRYPT_MODE, aesKey);
 			
@@ -87,4 +107,5 @@ public class Aes {
 	private static KeePassDatabaseUnreadable createCryptoException(Throwable e) {
 		return new KeePassDatabaseUnreadable("Could not decrypt keepass file. Master key wrong?", e);
 	}
+
 }

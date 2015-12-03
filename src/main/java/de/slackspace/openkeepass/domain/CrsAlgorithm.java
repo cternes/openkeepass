@@ -14,4 +14,13 @@ public enum CrsAlgorithm {
 			default: throw new IllegalArgumentException(String.format("Value %i is not a valid CrsAlgorithm", value));
 		}
 	}
+	
+	public static int getIntValue(CrsAlgorithm algorithm) {
+		switch (algorithm) {
+			case Null: return 0;
+			case ArcFourVariant: return 1;
+			case Salsa20: return 2;
+			default: throw new IllegalArgumentException(String.format("Value %s is not a valid CrsAlgorithm", algorithm));
+		}
+	}
 }
