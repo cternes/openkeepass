@@ -1,5 +1,7 @@
 package de.slackspace.openkeepass.domain;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -12,6 +14,7 @@ public class KeePassHeader {
 
 	private static final int SIZE_OF_FIELD_LENGTH_BUFFER = 3;
 	
+	// Header Fields
 	public static final int CIPHER = 2; 
 	public static final int COMPRESSION = 3; 
 	public static final int MASTER_SEED = 4; 
@@ -21,11 +24,25 @@ public class KeePassHeader {
 	public static final int PROTECTED_STREAM_KEY = 8; 
 	public static final int STREAM_START_BYTES = 9; 
 	public static final int INNER_RANDOM_STREAM_ID = 10;
-	
+
+	// KeePass 2.x signature
 	private static final byte[] DATABASE_V2_FILE_SIGNATURE_1 = ByteUtils.hexStringToByteArray("03d9a29a");
 	private static final byte[] DATABASE_V2_FILE_SIGNATURE_2 = ByteUtils.hexStringToByteArray("67fb4bb5");
 	private static final byte[] DATABASE_V2_FILE_VERSION = ByteUtils.hexStringToByteArray("00000300");
+	
+	// KeePass Magic Bytes for AES Cipher
 	private static final byte[] DATABASE_V2_AES_CIPHER = ByteUtils.hexStringToByteArray("31C1F2E6BF714350BE5805216AFC5AFF");
+	
+	// KeePass version signature length in bytes 
+	public static final int VERSION_SIGNATURE_LENGTH = 12;
+	
+	// KeePass 2.x signature
+	private static final int DATABASE_V2_FILE_SIGNATURE_1_INT = 0x9AA2D903 & 0xFF;
+	private static final int DATABASE_V2_FILE_SIGNATURE_2_INT = 0xB54BFB67 & 0xFF;
+	
+	// KeePass 1.x signature
+	private static final int OLD_DATABASE_V1_FILE_SIGNATURE_1_INT = 0x9AA2D903 & 0xFF;
+	private static final int OLD_DATABASE_V1_FILE_SIGNATURE_2_INT = 0xB54BFB65 & 0xFF;
 	
 	private byte[] cipher;
 	private byte[] encryptionIV;
@@ -60,6 +77,69 @@ public class KeePassHeader {
 		}
 	}
 
+	public void checkVersionSupport(byte[] keepassFile) throws IOException {
+		BufferedInputStream bufferedInputStream = new BufferedInputStream(new ByteArrayInputStream(keepassFile));
+
+		byte[] signature = new byte[VERSION_SIGNATURE_LENGTH];
+		bufferedInputStream.read(signature);
+		
+		ByteBuffer signatureBuffer = ByteBuffer.wrap(signature);
+		signatureBuffer.order(ByteOrder.LITTLE_ENDIAN);
+
+		int signaturePart1 = ByteUtils.toUnsignedInt(signatureBuffer.getInt());
+		int signaturePart2 = ByteUtils.toUnsignedInt(signatureBuffer.getInt());
+
+		if(signaturePart1 == DATABASE_V2_FILE_SIGNATURE_1_INT && signaturePart2 == DATABASE_V2_FILE_SIGNATURE_2_INT) {
+			return;
+		}
+		else if(signaturePart1 == OLD_DATABASE_V1_FILE_SIGNATURE_1_INT && signaturePart2 == OLD_DATABASE_V1_FILE_SIGNATURE_2_INT) {
+			throw new UnsupportedOperationException("The provided KeePass database file seems to be from KeePass 1.x which is not supported!");
+		}
+		else {
+			throw new UnsupportedOperationException("The provided file seems to be no KeePass database file!");
+		}
+	}
+	
+	/**
+	 * Initializes the header values from a given byte array. 
+	 * 
+	 * @param keepassFile the byte array to read from
+	 * @throws IOException if the header cannot be read
+	 */
+	public void read(byte[] keepassFile) throws IOException {
+		BufferedInputStream bufferedInputStream = new BufferedInputStream(new ByteArrayInputStream(keepassFile));
+		bufferedInputStream.skip(VERSION_SIGNATURE_LENGTH); // skip version
+		
+		while(true) {
+			try {
+				int fieldId = bufferedInputStream.read();
+				byte[] fieldLength = new byte[2];
+				bufferedInputStream.read(fieldLength);
+				
+				ByteBuffer fieldLengthBuffer = ByteBuffer.wrap(fieldLength);
+				fieldLengthBuffer.order(ByteOrder.LITTLE_ENDIAN);
+				int fieldLengthInt = ByteUtils.toUnsignedInt(fieldLengthBuffer.getShort());
+
+				if(fieldLengthInt > 0) {
+					byte[] data = new byte[fieldLengthInt];
+					bufferedInputStream.read(data);
+					setValue(fieldId, data);
+				}
+				
+				if(fieldId == 0) {
+					break;
+				}
+			} catch (IOException e) {
+				throw new RuntimeException("Could not read header input", e);
+			}
+		}
+	}
+	
+	/**
+	 * Returns the whole header as byte array.
+	 * 
+	 * @return header as byte array
+	 */
 	public byte[] getBytes() {
 		try {
 			ByteArrayOutputStream stream = new ByteArrayOutputStream();
