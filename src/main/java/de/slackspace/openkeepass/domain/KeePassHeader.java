@@ -231,7 +231,10 @@ public class KeePassHeader {
 		// Add size of values
 		for (int i = 2; i < 11; i++) {
 			byte[] value = getValue(i);
-			size += value.length + SIZE_OF_FIELD_LENGTH_BUFFER;
+			
+			if(value != null) {
+				size += value.length + SIZE_OF_FIELD_LENGTH_BUFFER;
+			}
 		}
 		
 		// Add size of header end
