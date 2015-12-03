@@ -2,16 +2,19 @@ package de.slackspace.openkeepass;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.bouncycastle.util.encoders.Base64;
 
@@ -28,6 +31,7 @@ import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.parser.KeyFileXmlParser;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
+import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.StreamUtils;
 
@@ -153,6 +157,7 @@ public class KeePassDatabase {
 
 		byte[] signature = new byte[VERSION_SIGNATURE_LENGTH];
 		bufferedInputStream.read(signature);
+		
 		ByteBuffer signatureBuffer = ByteBuffer.wrap(signature);
 		signatureBuffer.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -188,7 +193,6 @@ public class KeePassDatabase {
 					byte[] data = new byte[fieldLengthInt];
 					bufferedInputStream.read(data);
 					keepassHeader.setValue(fieldId, data);
-					keepassHeader.increaseHeaderSize(fieldLengthInt + 3);
 				}
 				
 				if(fieldId == 0) {
@@ -199,7 +203,7 @@ public class KeePassDatabase {
 			}
 		}
 	}
-
+	
 	/**
 	 * Opens a KeePass database with the given password and returns the KeePassFile for further processing.
 	 * <p>
@@ -275,9 +279,12 @@ public class KeePassDatabase {
 			
 			byte[] startBytes = new byte[32];
 			ByteArrayInputStream decryptedStream = new ByteArrayInputStream(aesDecryptedDbFile);
+			
+			// Metadata must be skipped here
+			decryptedStream.skip(KeePassDatabase.VERSION_SIGNATURE_LENGTH + keepassHeader.getHeaderSize());
 			decryptedStream.read(startBytes);
 			
-			// compare startBytes
+			// Compare startBytes
 			if(!Arrays.equals(keepassHeader.getStreamStartBytes(), startBytes)) {
 				throw new KeePassDatabaseUnreadable("The keepass database file seems to be corrupt or cannot be decrypted.");
 			}
@@ -287,7 +294,7 @@ public class KeePassDatabase {
 			
 			byte[] decompressed = hashedBlockBytes;
 			
-			// unzip if necessary
+			// Unzip if necessary
 			if(keepassHeader.getCompression().equals(CompressionAlgorithm.Gzip)) {
 				GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(hashedBlockBytes));
 				decompressed = StreamUtils.toByteArray(gzipInputStream);
@@ -314,6 +321,54 @@ public class KeePassDatabase {
 	 */
 	public KeePassHeader getHeader() {
 		return keepassHeader;
+	}
+
+	public static void write(KeePassFile keePassFile, String password, OutputStream stream) {
+		try {
+			KeePassHeader header = new KeePassHeader();
+			header.initialize();
+			
+			byte[] passwordBytes = password.getBytes("UTF-8");
+			byte[] hashedPassword = Sha256.hash(passwordBytes);
+			
+			ProtectedStringCrypto protectedStringCrypto = Salsa20.createInstance(header.getProtectedStreamKey());
+			//TODO: fix marshalling
+			byte[] keePassFilePayload = new KeePassDatabaseXmlParser().toXml(keePassFile, protectedStringCrypto).toByteArray();
+			
+			ByteArrayOutputStream streamToUnzip = new ByteArrayOutputStream();
+			GZIPOutputStream gzipOutputStream = new GZIPOutputStream(streamToUnzip);
+			gzipOutputStream.write(keePassFilePayload);
+			gzipOutputStream.close();
+			
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			HashedBlockOutputStream hbos = new HashedBlockOutputStream(bos);
+			hbos.write(streamToUnzip.toByteArray());
+			hbos.close();
+			ByteArrayOutputStream bosToEncrypt = new ByteArrayOutputStream();
+			
+			// Write Header
+			bosToEncrypt.write(header.getBytes());
+			bosToEncrypt.write(header.getStreamStartBytes());
+
+			// Write Content
+			bosToEncrypt.write(bos.toByteArray());
+
+			byte[] encryptedDatabase = new Decrypter().encryptDatabase(hashedPassword, header, bosToEncrypt.toByteArray());
+			
+			stream.write(encryptedDatabase);
+		} catch (IOException e) {
+			throw new RuntimeException("Could not write database file", e);
+		}
+		finally {
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (IOException e) {
+					// Ignore
+					// TODO: handle
+				}
+			}
+		}
 	}
 	
 }
