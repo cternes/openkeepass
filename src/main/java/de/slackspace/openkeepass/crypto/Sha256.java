@@ -14,7 +14,7 @@ public class Sha256 {
 		try {
 			return hash(text.getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
-			throw new UnsupportedOperationException("The enconding is not supported");
+			throw new UnsupportedOperationException("The encoding 'UTF-8' is not supported", e);
 		}
 	}
 	
@@ -28,7 +28,7 @@ public class Sha256 {
 			md.update(bytes);
 			return md.digest();
 		} catch (NoSuchAlgorithmException e) {
-			throw new UnsupportedOperationException("The algorithm is not supported");
+			throw new UnsupportedOperationException("The algorithm 'SHA-256' is not supported", e);
 		}
 	}
 }

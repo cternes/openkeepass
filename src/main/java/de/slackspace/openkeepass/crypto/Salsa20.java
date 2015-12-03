@@ -11,7 +11,6 @@ import org.bouncycastle.util.encoders.Hex;
 public class Salsa20 implements ProtectedStringCrypto {
 	
 	private static final String ENCODING = "UTF-8";
-
 	private static final String SALSA20IV = "E830094B97205D2A";
 	
 	private Salsa20Engine salsa20Engine;
@@ -50,7 +49,7 @@ public class Salsa20 implements ProtectedStringCrypto {
 		try { 
 			return new String(plainText, ENCODING);
 		} catch (UnsupportedEncodingException e) {
-			throw new UnsupportedOperationException("The encoding UTF-8 is not supported");
+			throw new UnsupportedOperationException("The encoding UTF-8 is not supported", e);
 		}
 	}
 
@@ -68,8 +67,8 @@ public class Salsa20 implements ProtectedStringCrypto {
 			byte[] protectedBuffer = Base64.encode(encodedText);
 			
 			return new String(protectedBuffer, ENCODING);
-		} catch (UnsupportedEncodingException e1) {
-			throw new UnsupportedOperationException("The encoding UTF-8 is not supported");
+		} catch (UnsupportedEncodingException e) {
+			throw new UnsupportedOperationException("The encoding UTF-8 is not supported", e);
 		}
 	}
 	
