@@ -15,7 +15,7 @@ import de.slackspace.openkeepass.domain.PropertyValue;
 
 public class KeePassDatabaseXmlParser {
 
-	public KeePassFile parse(InputStream inputStream, ProtectedStringCrypto protectedStringCrypto) {
+	public KeePassFile fromXml(InputStream inputStream, ProtectedStringCrypto protectedStringCrypto) {
 		KeePassFile keePassFile = JAXB.unmarshal(inputStream, KeePassFile.class);
 		keePassFile.init();
 		

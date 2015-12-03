@@ -129,7 +129,7 @@ public class KeePassDatabaseXmlParserTest {
 
 	private KeePassFile parseKeePassXml() throws FileNotFoundException {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
-		KeePassFile keePassFile = new KeePassDatabaseXmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
+		KeePassFile keePassFile = new KeePassDatabaseXmlParser().fromXml(fileInputStream, Salsa20.createInstance(protectedStreamKey));
 		return keePassFile;
 	}
 	
@@ -138,7 +138,7 @@ public class KeePassDatabaseXmlParserTest {
 		// Read decrypted and write again
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
 		KeePassDatabaseXmlParser parser = new KeePassDatabaseXmlParser();
-		KeePassFile keePassFile = parser.parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
+		KeePassFile keePassFile = parser.fromXml(fileInputStream, Salsa20.createInstance(protectedStreamKey));
 		
 		ByteArrayOutputStream outputStream = parser.toXml(keePassFile, Salsa20.createInstance(protectedStreamKey));
 		OutputStream fileOutputStream = new FileOutputStream("target/test-classes/testDatabase_decrypted2.xml"); 
@@ -146,7 +146,7 @@ public class KeePassDatabaseXmlParserTest {
 		
 		// Read written file
 		FileInputStream writtenInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted2.xml");
-		KeePassFile writtenKeePassFile = parser.parse(writtenInputStream, Salsa20.createInstance(protectedStreamKey));
+		KeePassFile writtenKeePassFile = parser.fromXml(writtenInputStream, Salsa20.createInstance(protectedStreamKey));
 		
 		Assert.assertEquals("Password", writtenKeePassFile.getEntryByTitle("Sample Entry").getPassword());
 	}

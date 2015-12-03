@@ -308,7 +308,7 @@ public class KeePassDatabase {
 				throw new UnsupportedOperationException("Only Salsa20 is supported as CrsAlgorithm at the moment!");
 			}
 			
-			return keePassDatabaseXmlParser.parse(new ByteArrayInputStream(decompressed), protectedStringCrypto);
+			return keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed), protectedStringCrypto);
 		} catch (IOException e) {
 			throw new RuntimeException("Could not open database file", e);
 		}

@@ -24,7 +24,7 @@ public class KeepassDatabaseWriterTest {
 	@Test
 	public void whenWritingDatabaseFileShouldBeAbleToReadItAlso() throws FileNotFoundException {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
-		KeePassFile keePassFile = new KeePassDatabaseXmlParser().parse(fileInputStream, Salsa20.createInstance(protectedStreamKey));
+		KeePassFile keePassFile = new KeePassDatabaseXmlParser().fromXml(fileInputStream, Salsa20.createInstance(protectedStreamKey));
 		
 		FileOutputStream file = new FileOutputStream("target/test-classes/writeDatabase.kdbx");
 		KeePassDatabase.write(keePassFile, "abcdefg", file);
