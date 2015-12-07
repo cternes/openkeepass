@@ -28,11 +28,20 @@ public class Group implements KeePassFileElement {
 	@XmlElement(name = "Name")
 	private String name;
 	
-	@XmlElement(name = "Group")
-	private List<Group> groups = new ArrayList<Group>();
+	@XmlElement(name = "IconID")
+	private int iconId; 
+	
+	@XmlElement(name = "Times")
+	private Times times;
+	
+	@XmlElement(name = "IsExpanded")
+	private boolean isExpanded;
 	
 	@XmlElement(name = "Entry")
 	private List<Entry> entries = new ArrayList<Entry>();
+
+	@XmlElement(name = "Group")
+	private List<Group> groups = new ArrayList<Group>();
 	
 	/**
 	 * Retrieves the Uuid of this group.
@@ -121,5 +130,49 @@ public class Group implements KeePassFileElement {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	/**
+	 * Retrieves the icon of this group.
+	 * 
+	 * @return the icon of this group
+	 */
+	public int getIconId() {
+		return iconId;
+	}
+
+	/**
+	 * Sets the icon of the group.
+	 * 
+	 * @param iconId the icon of the group
+	 */
+	public void setIconId(int iconId) {
+		this.iconId = iconId;
+	}
+
+	public Times getTimes() {
+		return times;
+	}
+
+	public void setTimes(Times times) {
+		this.times = times;
+	}
+
+	/**
+	 * Retrieves the last expanded status of the group.
+	 * 
+	 * @return true if the group was expanded the last time it was opened in keepass
+	 */
+	public boolean isExpanded() {
+		return isExpanded;
+	}
+
+	/**
+	 * Sets the expanded status of the group.
+	 * 
+	 * @param isExpanded true if the group should appear to be expanded the last time it was opened in keepass
+	 */
+	public void setExpanded(boolean isExpanded) {
+		this.isExpanded = isExpanded;
 	}
 }
