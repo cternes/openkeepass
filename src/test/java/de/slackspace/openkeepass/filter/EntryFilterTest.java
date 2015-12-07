@@ -3,11 +3,11 @@ package de.slackspace.openkeepass.filter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.Property;
-import junit.framework.Assert;
 
 public class EntryFilterTest {
 
