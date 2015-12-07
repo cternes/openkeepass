@@ -273,8 +273,8 @@ public class KeePassDatabase {
 			byte[] passwordBytes = password.getBytes("UTF-8");
 			byte[] hashedPassword = Sha256.hash(passwordBytes);
 			
+			// Marshall xml
 			ProtectedStringCrypto protectedStringCrypto = Salsa20.createInstance(header.getProtectedStreamKey());
-			//TODO: fix marshalling
 			byte[] keePassFilePayload = new KeePassDatabaseXmlParser().toXml(keePassFile, protectedStringCrypto).toByteArray();
 			
 			// Unzip

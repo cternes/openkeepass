@@ -16,7 +16,7 @@ import de.slackspace.openkeepass.filter.ListFilter;
 /**
  * A KeePassFile represents the structure of a KeePass database. This is the central entry point to read data from the KeePass database.
  */
-@XmlRootElement
+@XmlRootElement(name = "KeePassFile")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KeePassFile implements KeePassFileElement {
 
