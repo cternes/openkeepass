@@ -25,6 +25,7 @@ import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.KeyFile;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
+import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteable;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.parser.KeyFileXmlParser;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
@@ -267,6 +268,11 @@ public class KeePassDatabase {
 	 */
 	public static void write(KeePassFile keePassFile, String password, OutputStream stream) {
 		try {
+			
+			if(!validateKeePassFile(keePassFile)) {
+				throw new KeePassDatabaseUnwriteable("The provided keePassFile is not valid. A valid keePassFile must contain of meta and root group and the root group must at least contain one group.");
+			}
+			
 			KeePassHeader header = new KeePassHeader();
 			header.initialize();
 			
@@ -315,6 +321,18 @@ public class KeePassDatabase {
 				}
 			}
 		}
+	}
+
+	private static boolean validateKeePassFile(KeePassFile keePassFile) {
+		if(keePassFile == null || keePassFile.getMeta() == null) {
+			return false;
+		}
+		
+		if(keePassFile.getRoot() == null || keePassFile.getRoot().getGroups().isEmpty()) {
+			return false;
+		}
+		
+		return true;
 	}
 	
 }
