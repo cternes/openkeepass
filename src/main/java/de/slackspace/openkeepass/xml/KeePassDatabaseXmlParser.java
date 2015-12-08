@@ -54,7 +54,7 @@ public class KeePassDatabaseXmlParser {
 		for (Property property : properties) {
 			PropertyValue propertyValue = property.getPropertyValue();
 			
-			if(!propertyValue.getValue().isEmpty() && propertyValue.isProtected()) {
+			if(propertyValue.getValue() != null && !propertyValue.getValue().isEmpty() && propertyValue.isProtected()) {
 				
 				String processedValue = null;
 				if(encrypt) {

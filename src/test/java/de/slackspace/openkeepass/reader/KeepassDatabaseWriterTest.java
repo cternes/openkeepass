@@ -14,10 +14,12 @@ import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.Entry;
+import de.slackspace.openkeepass.domain.EntryBuilder;
 import de.slackspace.openkeepass.domain.Group;
+import de.slackspace.openkeepass.domain.GroupBuilder;
 import de.slackspace.openkeepass.domain.KeePassFile;
+import de.slackspace.openkeepass.domain.KeePassFileBuilder;
 import de.slackspace.openkeepass.domain.KeePassHeader;
-import de.slackspace.openkeepass.domain.builder.KeePassFileBuilder;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteable;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
@@ -54,10 +56,10 @@ public class KeepassDatabaseWriterTest {
 	
 	@Test
 	public void shouldCreateNewDatabaseFile() throws FileNotFoundException {
-		Entry entryOne = new Entry(UUID.randomUUID().toString());
-		entryOne.setTitle("First entry");
-		entryOne.setUsername("Carl");
-		entryOne.setPassword("Carls secret");
+		Entry entryOne = new EntryBuilder("First entry")
+				.username("Carl")
+				.password("Carls secret")
+				.build();
 		
 		KeePassFile keePassFile = new KeePassFileBuilder("testDB")
 				.withTopEntries(entryOne)
@@ -88,18 +90,15 @@ public class KeepassDatabaseWriterTest {
 		 *     	   |-- Second entry (E)
 		 *  
 		 */
-		Group root = new Group();
-		Group banking = new Group("Banking");
-		Group internet = new Group("Internet");
-		Group shopping = new Group("Shopping");
-		Entry firstEntry = new Entry("First entry");
-		Entry secondEntry = new Entry("Second entry");
-
-		shopping.getEntries().add(secondEntry);
-		internet.getGroups().add(shopping);
-		root.getGroups().add(banking);
-		root.getGroups().add(internet);
-		root.getEntries().add(firstEntry);
+		Group root = new GroupBuilder()
+				.addEntry(new EntryBuilder("First entry").build())
+				.addGroup(new GroupBuilder("Banking").build())
+				.addGroup(new GroupBuilder("Internet")
+						.addGroup(new GroupBuilder("Shopping")
+								.addEntry(new EntryBuilder("Second entry").build())
+								.build())
+						.build())
+				.build();
 		
 		KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB")
 				.withTopGroup(root)

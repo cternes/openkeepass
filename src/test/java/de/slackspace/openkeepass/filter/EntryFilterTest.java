@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.Entry;
+import de.slackspace.openkeepass.domain.EntryBuilder;
 
 public class EntryFilterTest {
 
@@ -38,8 +39,7 @@ public class EntryFilterTest {
 	}
 
 	private Entry createEntry(String title, String password) {
-		Entry entry = new Entry(title);
-		entry.setPassword(password);
+		Entry entry = new EntryBuilder(title).password(password).build();
 		
 		return entry;
 	}

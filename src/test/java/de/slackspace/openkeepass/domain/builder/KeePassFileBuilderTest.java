@@ -4,8 +4,11 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.Entry;
+import de.slackspace.openkeepass.domain.EntryBuilder;
 import de.slackspace.openkeepass.domain.Group;
+import de.slackspace.openkeepass.domain.GroupBuilder;
 import de.slackspace.openkeepass.domain.KeePassFile;
+import de.slackspace.openkeepass.domain.KeePassFileBuilder;
 
 public class KeePassFileBuilderTest {
 
@@ -34,18 +37,15 @@ public class KeePassFileBuilderTest {
 		 *     	   |-- Second entry (E)
 		 *  
 		 */
-		Group root = new Group();
-		Group banking = new Group("Banking");
-		Group internet = new Group("Internet");
-		Group shopping = new Group("Shopping");
-		Entry firstEntry = new Entry("First entry");
-		Entry secondEntry = new Entry("Second entry");
-
-		shopping.getEntries().add(secondEntry);
-		internet.getGroups().add(shopping);
-		root.getGroups().add(banking);
-		root.getGroups().add(internet);
-		root.getEntries().add(firstEntry);
+		Group root = new GroupBuilder()
+			.addEntry(new EntryBuilder("First entry").build())
+			.addGroup(new GroupBuilder("Banking").build())
+			.addGroup(new GroupBuilder("Internet")
+					.addGroup(new GroupBuilder("Shopping")
+							.addEntry(new EntryBuilder("Second entry").build())
+							.build())
+					.build())
+			.build();
 		
 		KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB")
 				.withTopGroup(root)
