@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.parser;
+package de.slackspace.openkeepass.xml;
 
 import java.io.InputStream;
 
@@ -8,7 +8,7 @@ import de.slackspace.openkeepass.domain.KeyFile;
 
 public class KeyFileXmlParser {
 
-	public KeyFile parse(InputStream inputStream) {
+	public KeyFile fromXml(InputStream inputStream) {
 		KeyFile keyFile = JAXB.unmarshal(inputStream, KeyFile.class);
 		
 		return keyFile;

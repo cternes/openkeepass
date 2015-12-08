@@ -26,11 +26,11 @@ import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.KeyFile;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteable;
-import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
-import de.slackspace.openkeepass.parser.KeyFileXmlParser;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
 import de.slackspace.openkeepass.util.StreamUtils;
+import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
+import de.slackspace.openkeepass.xml.KeyFileXmlParser;
 
 /**
  * A KeePassDatabase is the central API class to read and write a KeePass database file.
@@ -193,7 +193,7 @@ public class KeePassDatabase {
 		}
 		
 		try {
-			KeyFile keyFile = keyFileXmlParser.parse(keyFileStream);
+			KeyFile keyFile = keyFileXmlParser.fromXml(keyFileStream);
 			byte[] protectedBuffer = Base64.decode(keyFile.getKey().getData().getBytes("UTF-8"));
 			
 			return decryptAndParseDatabase(protectedBuffer);

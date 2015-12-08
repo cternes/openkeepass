@@ -19,6 +19,7 @@ import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.util.ByteUtils;
+import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 
 public class KeePassDatabaseXmlParserTest {
 

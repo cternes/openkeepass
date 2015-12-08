@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.parser;
+package de.slackspace.openkeepass.xml;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;

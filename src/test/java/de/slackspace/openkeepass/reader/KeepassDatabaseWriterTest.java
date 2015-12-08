@@ -20,8 +20,8 @@ import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.builder.KeePassFileBuilder;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteable;
-import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.util.ByteUtils;
+import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 
 public class KeepassDatabaseWriterTest {
 
