@@ -184,7 +184,7 @@ public class KeepassDatabaseReaderTest {
 		KeePassDatabase reader = KeePassDatabase.getInstance(file);
 		KeePassFile database = reader.openDatabase("abcdefg");
 		
-		Entry entry = database.getEntryByUUID("H73fzVL/HUuy6Cf2ceTqIg==");
+		Entry entry = database.getEntryByUUID("1fbddfcd-52ff-1d4b-b2e8-27f671e4ea22");
 		Assert.assertEquals("Sample Entry #2", entry.getTitle());
 	}
 }
