@@ -37,69 +37,49 @@ public class Entry implements KeePassFileElement {
 	private History history;
 
 	Entry() {
-		setUuid(UUID.randomUUID().toString());
+		this.uuid = UUID.randomUUID().toString();
 	}
-
-	public Entry(String title) {
-		this();
-		setTitle(title);
+	
+	public Entry(EntryBuilder builder) {
+		this.parent = builder.parent;
+		this.history = builder.history; 
+		this.uuid = builder.uuid;
+		
+		setValue(false, NOTES, builder.notes);
+		setValue(true, PASSWORD, builder.password);
+		setValue(false, TITLE, builder.title);
+		setValue(false, USER_NAME, builder.username);
+		setValue(false, URL, builder.url);
 	}
 
 	public String getUuid() {
 		return uuid;
 	}
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-
 	public List<Property> getProperties() {
 		return properties;
-	}
-
-	public void setProperties(List<Property> properties) {
-		this.properties = properties;
 	}
 
 	public String getTitle() {
 		return getValueFromProperty(TITLE);
 	}
 
-	public void setTitle(String title) {
-		setValue(false, TITLE, title);
-	}
-
 	public String getPassword() {
 		return getValueFromProperty(PASSWORD);
-	}
-
-	public void setPassword(String password) {
-		setValue(true, PASSWORD, password);
 	}
 
 	public String getUrl() {
 		return getValueFromProperty(URL);
 	}
 
-	public void setUrl(String url) {
-		setValue(false, URL, url);
-	}
-
 	public String getNotes() {
 		return getValueFromProperty(NOTES);
-	}
-
-	public void setNotes(String notes) {
-		setValue(false, NOTES, notes);
 	}
 
 	public String getUsername() {
 		return getValueFromProperty(USER_NAME);
 	}
 
-	public void setUsername(String username) {
-		setValue(false, USER_NAME, username);
-	}
 
 	public boolean isTitleProtected() {
 		return getPropertyByName(TITLE).isProtected();
@@ -154,10 +134,6 @@ public class Entry implements KeePassFileElement {
 
 	public History getHistory() {
 		return history;
-	}
-
-	public void setHistory(History history) {
-		this.history = history;
 	}
 
 	@Override

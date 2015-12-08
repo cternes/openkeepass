@@ -48,13 +48,19 @@ public class Group implements KeePassFileElement {
 	@XmlElement(name = "Group")
 	private List<Group> groups = new ArrayList<Group>();
 	
-	public Group() {
-		setUuid(UUID.randomUUID().toString());
+	Group() {
+		uuid = UUID.randomUUID().toString();
 	}
 	
-	public Group(String name) {
-		this();
-		setName(name);
+	public Group(GroupBuilder builder) {
+		entries = builder.entries;
+		groups = builder.groups;
+		iconId = builder.iconId;
+		isExpanded = builder.isExpanded;
+		name = builder.name;
+		parent = builder.parent;
+		times = builder.times;
+		uuid = builder.uuid;
 	}
 	
 	/**
@@ -67,30 +73,12 @@ public class Group implements KeePassFileElement {
 	}
 
 	/**
-	 * Sets the Uuid of this group.
-	 * 
-	 * @param uuid the uuid of this group
-	 */
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
-
-	/**
 	 * Retrieves the name of the group.
 	 * 
 	 * @return the name of the group
 	 */
 	public String getName() {
 		return name;
-	}
-
-	/**
-	 * Sets the name of the group.
-	 * 
-	 * @param name the name of the group
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	/**
@@ -102,10 +90,6 @@ public class Group implements KeePassFileElement {
 		return groups;
 	}
 	
-	public void setGroups(List<Group> groups) {
-		this.groups = groups;
-	}
-
 	/**
 	 * Retrieves all entries of this group.
 	 * 
@@ -114,15 +98,6 @@ public class Group implements KeePassFileElement {
 	 */
 	public List<Entry> getEntries() {
 		return entries;
-	}
-
-	/**
-	 * Sets the entries of this group.
-	 * 
-	 * @param entries the entries of this group
-	 */
-	public void setEntries(List<Entry> entries) {
-		this.entries = entries;
 	}
 
 	public void setParent(KeePassFileElement element) {
@@ -155,21 +130,8 @@ public class Group implements KeePassFileElement {
 		return iconId;
 	}
 
-	/**
-	 * Sets the icon of the group.
-	 * 
-	 * @param iconId the icon of the group
-	 */
-	public void setIconId(int iconId) {
-		this.iconId = iconId;
-	}
-
 	public Times getTimes() {
 		return times;
-	}
-
-	public void setTimes(Times times) {
-		this.times = times;
 	}
 
 	/**
@@ -181,12 +143,4 @@ public class Group implements KeePassFileElement {
 		return isExpanded;
 	}
 
-	/**
-	 * Sets the expanded status of the group.
-	 * 
-	 * @param isExpanded true if the group should appear to be expanded the last time it was opened in keepass
-	 */
-	public void setExpanded(boolean isExpanded) {
-		this.isExpanded = isExpanded;
-	}
 }
