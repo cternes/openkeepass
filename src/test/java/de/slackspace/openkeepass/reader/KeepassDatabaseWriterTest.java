@@ -1,8 +1,12 @@
 package de.slackspace.openkeepass.reader;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,6 +18,8 @@ import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
+import de.slackspace.openkeepass.domain.builder.KeePassFileBuilder;
+import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteable;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.util.ByteUtils;
 
@@ -45,5 +51,34 @@ public class KeepassDatabaseWriterTest {
 		Entry sampleEntryTwo = openDatabase.getEntryByTitle("Sample Entry #2");
 		Assert.assertEquals("Michael321", sampleEntryTwo.getUsername());
 		Assert.assertEquals("12345", sampleEntryTwo.getPassword());
+	}
+	
+	@Test
+	public void shouldCreateNewDatabaseFile() throws FileNotFoundException {
+		Entry entryOne = new Entry(UUID.randomUUID().toString());
+		entryOne.setTitle("First entry");
+		entryOne.setUsername("Carl");
+		entryOne.setPassword("Carls secret");
+		
+		KeePassFile keePassFile = new KeePassFileBuilder("testDB")
+				.withTopEntries(entryOne)
+				.build();
+		
+		String dbFilename = "target/test-classes/writeNewDatabase.kdbx";
+		KeePassDatabase.write(keePassFile, "abc", new FileOutputStream(dbFilename));
+		
+		KeePassDatabase keePassDb = KeePassDatabase.getInstance(dbFilename);
+		KeePassFile database = keePassDb.openDatabase("abc");
+		Entry entryByTitle = database.getEntryByTitle("First entry");
+		
+		Assert.assertEquals(entryOne.getTitle(), entryByTitle.getTitle());
+	}
+	
+	@Test(expected=KeePassDatabaseUnwriteable.class)
+	public void whenRootIsNullShouldThrowExceptionOnWrite() {
+		KeePassFile keePassFile = new KeePassFileBuilder("corruptDB").build();
+		keePassFile.setRoot(null);
+		
+		KeePassDatabase.write(keePassFile, "abc", new ByteArrayOutputStream());
 	}
 }
