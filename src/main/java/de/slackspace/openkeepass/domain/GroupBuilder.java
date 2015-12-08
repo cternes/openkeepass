@@ -6,8 +6,6 @@ import java.util.UUID;
 
 public class GroupBuilder {
 
-	KeePassFileElement parent;
-	
 	String uuid;
 	
 	String name;
@@ -58,11 +56,6 @@ public class GroupBuilder {
 	
 	public GroupBuilder addGroup(Group group) {
 		groups.add(group);
-		return this;
-	}
-	
-	public GroupBuilder parent(KeePassFileElement parent) {
-		this.parent = parent;
 		return this;
 	}
 	

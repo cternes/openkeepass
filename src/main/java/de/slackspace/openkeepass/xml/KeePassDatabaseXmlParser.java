@@ -17,7 +17,6 @@ public class KeePassDatabaseXmlParser {
 
 	public KeePassFile fromXml(InputStream inputStream, ProtectedStringCrypto protectedStringCrypto) {
 		KeePassFile keePassFile = JAXB.unmarshal(inputStream, KeePassFile.class);
-		keePassFile.init();
 		
 		processAllProtectedValues(false, protectedStringCrypto, keePassFile);
 		

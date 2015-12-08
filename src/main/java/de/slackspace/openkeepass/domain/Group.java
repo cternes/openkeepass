@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
@@ -23,9 +22,6 @@ import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Group implements KeePassFileElement {
 
-	@XmlTransient
-	private KeePassFileElement parent;
-	
 	@XmlElement(name = "UUID")
 	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
 	private String uuid;
@@ -58,7 +54,6 @@ public class Group implements KeePassFileElement {
 		iconId = builder.iconId;
 		isExpanded = builder.isExpanded;
 		name = builder.name;
-		parent = builder.parent;
 		times = builder.times;
 		uuid = builder.uuid;
 	}
@@ -98,22 +93,6 @@ public class Group implements KeePassFileElement {
 	 */
 	public List<Entry> getEntries() {
 		return entries;
-	}
-
-	public void setParent(KeePassFileElement element) {
-		parent = element;
-		
-		if(groups != null) {
-			for (Group group : groups) {
-				group.setParent(this);
-			}
-		}
-
-		if(entries != null) {
-			for (Entry entry : entries) {
-				entry.setParent(this);
-			}
-		}
 	}
 
 	@Override

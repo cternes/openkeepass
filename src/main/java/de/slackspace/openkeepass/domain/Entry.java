@@ -8,7 +8,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
@@ -22,9 +21,6 @@ public class Entry implements KeePassFileElement {
 	private static final String URL = "URL";
 	private static final String PASSWORD = "Password";
 	private static final String TITLE = "Title";
-
-	@XmlTransient
-	private KeePassFileElement parent;
 
 	@XmlElement(name = "UUID")
 	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
@@ -41,7 +37,6 @@ public class Entry implements KeePassFileElement {
 	}
 	
 	public Entry(EntryBuilder builder) {
-		this.parent = builder.parent;
 		this.history = builder.history; 
 		this.uuid = builder.uuid;
 		
@@ -87,14 +82,6 @@ public class Entry implements KeePassFileElement {
 
 	public boolean isPasswordProtected() {
 		return getPropertyByName(PASSWORD).isProtected();
-	}
-
-	public void setParent(KeePassFileElement element) {
-		this.parent = element;
-
-		for (Property property : properties) {
-			property.setParent(this);
-		}
 	}
 
 	private void setValue(boolean isProtected, String propertyName, String propertyValue) {

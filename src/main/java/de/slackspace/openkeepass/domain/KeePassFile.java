@@ -150,10 +150,6 @@ public class KeePassFile implements KeePassFileElement {
 		});
 	}
 
-	public void init() {
-		root.setParent(this);
-	}
-
 	/**
 	 * Retrieves a list of all entries in the KeePass database.
 	 *

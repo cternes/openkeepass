@@ -4,8 +4,6 @@ import java.util.UUID;
 
 public class EntryBuilder {
 
-	KeePassFileElement parent;
-
 	String uuid;
 
 	History history;
@@ -51,11 +49,6 @@ public class EntryBuilder {
 	
 	public EntryBuilder history(History history) {
 		this.history = history;
-		return this;
-	}
-	
-	public EntryBuilder parent(KeePassFileElement parent) {
-		this.parent = parent;
 		return this;
 	}
 	
