@@ -49,18 +49,6 @@ public class ByteUtils {
 	}
 
 	public static UUID bytesToUUID(byte[] bytes) {
-//		long lsb = 0;
-//		for (int i = 15; i >= 8; i--) {
-//			lsb = (lsb << 8) | (bytes[i] & 0xff);
-//		}
-//
-//		long msb = 0;
-//		for (int i = 7; i >= 0; i--) {
-//			msb = (msb << 8) | (bytes[i] & 0xff);
-//		}
-//
-//		return new UUID(msb, lsb);
-		
 		ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
 		long mostSigBits = byteBuffer.getLong();
 		long leastSigBits = byteBuffer.getLong();
