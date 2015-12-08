@@ -2,12 +2,16 @@ package de.slackspace.openkeepass.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import de.slackspace.openkeepass.parser.UUIDXmlAdapter;
 
 /**
  * A Group represents a structure that consists of entries and subgroups.
@@ -23,13 +27,14 @@ public class Group implements KeePassFileElement {
 	private KeePassFileElement parent;
 	
 	@XmlElement(name = "UUID")
+	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
 	private String uuid;
 	
 	@XmlElement(name = "Name")
 	private String name;
 	
 	@XmlElement(name = "IconID")
-	private int iconId; 
+	private int iconId = 49; 
 	
 	@XmlElement(name = "Times")
 	private Times times;
@@ -42,6 +47,10 @@ public class Group implements KeePassFileElement {
 
 	@XmlElement(name = "Group")
 	private List<Group> groups = new ArrayList<Group>();
+	
+	public Group() {
+		setUuid(UUID.randomUUID().toString());
+	}
 	
 	/**
 	 * Retrieves the Uuid of this group.

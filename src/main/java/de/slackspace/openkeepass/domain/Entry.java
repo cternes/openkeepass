@@ -8,6 +8,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import de.slackspace.openkeepass.parser.UUIDXmlAdapter;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -23,6 +26,7 @@ public class Entry implements KeePassFileElement {
 	private KeePassFileElement parent;
 
 	@XmlElement(name = "UUID")
+	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
 	private String uuid;
 
 	@XmlElement(name = "String")
