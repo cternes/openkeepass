@@ -43,11 +43,20 @@ public class KeePassFileBuilder {
 		keePassFile.setMeta(meta);
 		
 		addTopGroupIfNotExisting();
+		setTopGroupNameIfNotExisting();
 		keePassFile.setRoot(root);
 		
 		return keePassFile;
 	}
 	
+	private void setTopGroupNameIfNotExisting() {
+		Group topGroup = root.getGroups().get(0);
+		String name = topGroup.getName();
+		if(name == null || name.isEmpty()) {
+			topGroup.setName(meta.getDatabaseName());
+		}
+	}
+
 	private void addTopGroupIfNotExisting() {
 		if(root.getGroups().isEmpty()) {
 			Group topGroup = new Group();
