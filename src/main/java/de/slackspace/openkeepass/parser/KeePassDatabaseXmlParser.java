@@ -41,8 +41,10 @@ public class KeePassDatabaseXmlParser {
 			
 			// Also process historic password values 
 			History history = entry.getHistory();
-			for (Entry historicEntry : history.getHistoricEntries()) {
-				processProtectedValues(encrypt, historicEntry, protectedStringCrypto);
+			if(history != null) {
+				for (Entry historicEntry : history.getHistoricEntries()) {
+					processProtectedValues(encrypt, historicEntry, protectedStringCrypto);
+				}
 			}
 		}
 	}
