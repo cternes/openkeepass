@@ -52,6 +52,11 @@ public class Group implements KeePassFileElement {
 		setUuid(UUID.randomUUID().toString());
 	}
 	
+	public Group(String name) {
+		this();
+		setName(name);
+	}
+	
 	/**
 	 * Retrieves the Uuid of this group.
 	 * 

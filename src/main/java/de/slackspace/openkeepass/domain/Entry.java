@@ -2,6 +2,7 @@ package de.slackspace.openkeepass.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -36,10 +37,12 @@ public class Entry implements KeePassFileElement {
 	private History history;
 
 	Entry() {
+		setUuid(UUID.randomUUID().toString());
 	}
 
-	public Entry(String uuid) {
-		setUuid(uuid);
+	public Entry(String title) {
+		this();
+		setTitle(title);
 	}
 
 	public String getUuid() {

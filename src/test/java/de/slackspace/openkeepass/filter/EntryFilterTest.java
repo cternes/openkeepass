@@ -7,7 +7,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.Entry;
-import de.slackspace.openkeepass.domain.Property;
 
 public class EntryFilterTest {
 
@@ -31,20 +30,16 @@ public class EntryFilterTest {
 	
 	private List<Entry> createEntries() {
 		ArrayList<Entry> list = new ArrayList<Entry>();
-		list.add(createEntry("1", "test", "testPassword"));
-		list.add(createEntry("2", "My simple test case", "My simple test password"));
-		list.add(createEntry("3", "AAA BBB ccc", "aa bb CC"));
+		list.add(createEntry("test", "testPassword"));
+		list.add(createEntry("My simple test case", "My simple test password"));
+		list.add(createEntry("AAA BBB ccc", "aa bb CC"));
 
 		return list;
 	}
 
-	private Entry createEntry(String uuid, String title, String password) {
-		Entry entry = new Entry(uuid);
-		
-		List<Property> properties = new ArrayList<Property>();
-		properties.add(new Property("Title", title, false));
-		properties.add(new Property("Password", password, false));
-		entry.setProperties(properties);
+	private Entry createEntry(String title, String password) {
+		Entry entry = new Entry(title);
+		entry.setPassword(password);
 		
 		return entry;
 	}
