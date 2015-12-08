@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.UUID;
 
 public class ByteUtils {
 
@@ -43,7 +44,34 @@ public class ByteUtils {
 	
 	public static int readUnsignedInt(InputStream inputStream) throws IOException {
 		int value = readInt(inputStream);
-		
+
 		return ByteUtils.toUnsignedInt(value);
+	}
+
+	public static UUID bytesToUUID(byte[] bytes) {
+//		long lsb = 0;
+//		for (int i = 15; i >= 8; i--) {
+//			lsb = (lsb << 8) | (bytes[i] & 0xff);
+//		}
+//
+//		long msb = 0;
+//		for (int i = 7; i >= 0; i--) {
+//			msb = (msb << 8) | (bytes[i] & 0xff);
+//		}
+//
+//		return new UUID(msb, lsb);
+		
+		ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
+		long mostSigBits = byteBuffer.getLong();
+		long leastSigBits = byteBuffer.getLong();
+		return new UUID(mostSigBits, leastSigBits);
+	}
+
+	public static byte[] uuidToBytes(UUID uuid) {
+		ByteBuffer buffer = ByteBuffer.allocate(16);
+		buffer.putLong(uuid.getMostSignificantBits());
+		buffer.putLong(uuid.getLeastSignificantBits());
+		
+		return buffer.array();
 	}
 }
