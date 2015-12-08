@@ -1,7 +1,5 @@
 package de.slackspace.openkeepass.reader;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,6 +14,7 @@ import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.Entry;
+import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.builder.KeePassFileBuilder;
@@ -72,6 +71,51 @@ public class KeepassDatabaseWriterTest {
 		Entry entryByTitle = database.getEntryByTitle("First entry");
 		
 		Assert.assertEquals(entryOne.getTitle(), entryByTitle.getTitle());
+	}
+	
+	@Test
+	public void shouldBuildKeePassFileWithTreeStructure() throws FileNotFoundException {
+		/* Should create the following structure:
+		 * 
+		 * Root
+		 * |
+		 * |-- First entry (E)
+		 * |-- Banking (G)
+		 * |
+		 * |-- Internet (G)
+		 *     |
+		 *     |-- Shopping (G)
+		 *     	   |-- Second entry (E)
+		 *  
+		 */
+		Group root = new Group();
+		Group banking = new Group("Banking");
+		Group internet = new Group("Internet");
+		Group shopping = new Group("Shopping");
+		Entry firstEntry = new Entry("First entry");
+		Entry secondEntry = new Entry("Second entry");
+
+		shopping.getEntries().add(secondEntry);
+		internet.getGroups().add(shopping);
+		root.getGroups().add(banking);
+		root.getGroups().add(internet);
+		root.getEntries().add(firstEntry);
+		
+		KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB")
+				.withTopGroup(root)
+				.build();
+		
+		String dbFilename = "target/test-classes/writeTreeDB.kdbx";
+		KeePassDatabase.write(keePassFile, "abc", new FileOutputStream(dbFilename));
+		
+		KeePassDatabase keePassDb = KeePassDatabase.getInstance(dbFilename);
+		KeePassFile database = keePassDb.openDatabase("abc");
+		
+		Assert.assertEquals("Banking", database.getTopGroups().get(0).getName());
+		Assert.assertEquals("Internet", database.getTopGroups().get(1).getName());
+		Assert.assertEquals("First entry", database.getTopEntries().get(0).getTitle());
+		Assert.assertEquals("Shopping", database.getTopGroups().get(1).getGroups().get(0).getName());
+		Assert.assertEquals("Second entry", database.getTopGroups().get(1).getGroups().get(0).getEntries().get(0).getTitle());
 	}
 	
 	@Test(expected=KeePassDatabaseUnwriteable.class)
