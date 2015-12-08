@@ -63,7 +63,7 @@ public class Entry implements KeePassFileElement {
 	}
 
 	public void setTitle(String title) {
-		setValue(TITLE, title);
+		setValue(false, TITLE, title);
 	}
 
 	public String getPassword() {
@@ -71,7 +71,7 @@ public class Entry implements KeePassFileElement {
 	}
 
 	public void setPassword(String password) {
-		setValue(PASSWORD, password);
+		setValue(true, PASSWORD, password);
 	}
 
 	public String getUrl() {
@@ -79,7 +79,7 @@ public class Entry implements KeePassFileElement {
 	}
 
 	public void setUrl(String url) {
-		setValue(URL, url);
+		setValue(false, URL, url);
 	}
 
 	public String getNotes() {
@@ -87,7 +87,7 @@ public class Entry implements KeePassFileElement {
 	}
 
 	public void setNotes(String notes) {
-		setValue(NOTES, notes);
+		setValue(false, NOTES, notes);
 	}
 
 	public String getUsername() {
@@ -95,7 +95,7 @@ public class Entry implements KeePassFileElement {
 	}
 
 	public void setUsername(String username) {
-		setValue(USER_NAME, username);
+		setValue(false, USER_NAME, username);
 	}
 
 	public boolean isTitleProtected() {
@@ -114,13 +114,13 @@ public class Entry implements KeePassFileElement {
 		}
 	}
 
-	private void setValue(String propertyName, String propertyValue) {
+	private void setValue(boolean isProtected, String propertyName, String propertyValue) {
 		Property property = getPropertyByName(propertyName);
 		if (property == null) {
-			property = new Property(propertyName, propertyValue, false);
+			property = new Property(propertyName, propertyValue, isProtected);
 			properties.add(property);
 		} else {
-			property.setValue(new PropertyValue(false, propertyValue));
+			property.setValue(new PropertyValue(isProtected, propertyValue));
 		}
 	}
 
