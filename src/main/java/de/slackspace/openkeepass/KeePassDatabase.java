@@ -42,7 +42,7 @@ import de.slackspace.openkeepass.xml.KeyFileXmlParser;
  * 		<li>KeePass Database V2 with keyfile</li>
  * </ul>
  * 
- * A typical use-case should use the following idiom:
+ * A typical read use-case should use the following idiom:
  * <pre>
  * // open database 
  * KeePassFile database = KeePassDatabase.getInstance("keePassDatabasePath").openDatabase("secret");
@@ -53,6 +53,21 @@ import de.slackspace.openkeepass.xml.KeyFileXmlParser;
  * </pre>
  * 
  * If the database could not be opened a <tt>RuntimeException</tt> will be thrown.
+ * <p>
+ * A typical write use-case should use the following idiom:
+ * <pre>
+ * // build an entry
+ * Entry entryOne = new EntryBuilder("First entry").username("Carl").password("secret").build();
+ *
+ * // build more entries or groups as you like
+ * ...
+ *  
+ * // build KeePass model
+ * KeePassFile keePassFile = new KeePassFileBuilder("testDB").addTopEntries(entryOne).build();
+ *
+ * // write KeePass database file
+ * KeePassDatabase.write(keePassFile, "secret", new FileOutputStream("keePassDatabasePath"));
+ * </pre>
  * 
  * @see KeePassFile
  * 
@@ -253,9 +268,6 @@ public class KeePassDatabase {
 	}
 
 	/**
-	 * <strong>CAUTION: NOT PRODUCTION READY YET! USE AT YOUR OWN RISK!</strong>
-	 * <p>
-	 * 
 	 * Encrypts a {@link KeePassFile} with the given password and writes it to the given stream.
 	 * <p>
 	 * If the KeePassFile cannot be encrypted an exception will be thrown.
