@@ -23,16 +23,12 @@ public class PropertyValue {
 	PropertyValue() { }
 	
 	public PropertyValue(boolean isProtected, String value) {
-		setProtected(isProtected);
-		setValue(value);
+		this.isProtected = isProtected;
+		this.value = value;
 	}
 	
 	public String getValue() {
 		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
 	}
 
 	public boolean isProtected() {
@@ -42,10 +38,6 @@ public class PropertyValue {
 		return isProtected.booleanValue();
 	}
 	
-	public void setProtected(boolean isProtected) {
-		this.isProtected = isProtected;
-	}
-
 	@Override
 	public String toString() {
 		return "PropertyValue [value=" + value + "]";

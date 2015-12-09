@@ -22,26 +22,18 @@ public class Property implements KeePassFileElement {
 	Property() { }
 	
 	public Property(String key, String value, boolean isProtected) {
-		setKey(key);
-		setValue(new PropertyValue(isProtected, value));
+		this.key = key;
+		this.propertyValue = new PropertyValue(isProtected, value);
 	}
 	
 	public String getKey() {
 		return key;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
-	}
-
 	public String getValue() {
 		return propertyValue.getValue();
 	}
 	
-	public void setValue(PropertyValue value) {
-		this.propertyValue = value;
-	}
-
 	public boolean isProtected() {
 		return propertyValue.isProtected();
 	}

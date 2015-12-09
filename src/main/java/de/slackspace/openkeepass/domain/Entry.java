@@ -90,7 +90,7 @@ public class Entry implements KeePassFileElement {
 			property = new Property(propertyName, propertyValue, isProtected);
 			properties.add(property);
 		} else {
-			property.setValue(new PropertyValue(isProtected, propertyValue));
+			property = new Property(propertyName, propertyValue, isProtected);
 		}
 	}
 

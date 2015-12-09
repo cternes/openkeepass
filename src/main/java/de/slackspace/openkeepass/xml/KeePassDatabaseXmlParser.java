@@ -2,6 +2,7 @@ package de.slackspace.openkeepass.xml;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXB;
@@ -49,6 +50,9 @@ public class KeePassDatabaseXmlParser {
 	}
 	
 	private void processProtectedValues(boolean encrypt, Entry entry, ProtectedStringCrypto protectedStringCrypto) {
+		List<Property> removeList = new ArrayList<Property>();
+		List<Property> addList = new ArrayList<Property>();
+		
 		List<Property> properties = entry.getProperties();
 		for (Property property : properties) {
 			PropertyValue propertyValue = property.getPropertyValue();
@@ -63,8 +67,12 @@ public class KeePassDatabaseXmlParser {
 					processedValue = protectedStringCrypto.decrypt(propertyValue.getValue());	
 				}
 				
-				propertyValue.setValue(processedValue);
+				removeList.add(property);
+				addList.add(new Property(property.getKey(), processedValue, property.isProtected()));
 			}
 		}
+		
+		properties.removeAll(removeList);
+		properties.addAll(addList);
 	}
 }
