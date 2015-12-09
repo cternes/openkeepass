@@ -1,11 +1,16 @@
 package de.slackspace.openkeepass.domain;
 
 import java.util.Calendar;
+import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
+import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,13 +35,15 @@ public class Meta {
 	private int maintenanceHistoryDays;
 	
 	@XmlElement(name = "RecycleBinUUID")
+	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
 	private String recycleBinUuid; 
 	
 	@XmlElement(name = "RecycleBinChanged")
 	private Calendar recycleBinChanged;
 	
 	@XmlElement(name = "RecycleBinEnabled")
-	private String recycleBinEnabled;
+	@XmlJavaTypeAdapter(BooleanXmlAdapter.class)
+	private Boolean recycleBinEnabled;
 	
 	@XmlElement(name = "HistoryMaxItems")
 	private long historyMaxItems;
@@ -44,80 +51,52 @@ public class Meta {
 	@XmlElement(name = "HistoryMaxSize")
 	private long historyMaxSize;
 
-	public String getDatabaseName() {
-		return databaseName;
+	Meta() {}
+	
+	public Meta(MetaBuilder metaBuilder) {
+		this.databaseDescription = metaBuilder.databaseDescription;
+		this.databaseDescriptionChanged = metaBuilder.databaseDescriptionChanged;
+		this.databaseName = metaBuilder.databaseName;
+		this.databaseNameChanged = metaBuilder.databaseNameChanged;
+		this.generator = metaBuilder.generator;
+		this.historyMaxItems = metaBuilder.historyMaxItems;
+		this.historyMaxSize = metaBuilder.historyMaxSize;
+		this.maintenanceHistoryDays = metaBuilder.maintenanceHistoryDays;
+		this.recycleBinChanged = metaBuilder.recycleBinChanged;
+		this.recycleBinEnabled = metaBuilder.recycleBinEnabled;
+//		this.recycleBinUuid = metaBuilder.recycleBinUuid;
 	}
 
-	public void setDatabaseName(String databaseName) {
-		this.databaseName = databaseName;
+	public String getDatabaseName() {
+		return databaseName;
 	}
 
 	public String getDatabaseDescription() {
 		return databaseDescription;
 	}
 
-	public void setDatabaseDescription(String databaseDescription) {
-		this.databaseDescription = databaseDescription;
-	}
-
 	public String getGenerator() {
 		return generator;
-	}
-
-	public void setGenerator(String generator) {
-		this.generator = generator;
 	}
 
 	public Calendar getDatabaseNameChanged() {
 		return databaseNameChanged;
 	}
 
-	public void setDatabaseNameChanged(Calendar databaseNameChanged) {
-		this.databaseNameChanged = databaseNameChanged;
-	}
-
 	public Calendar getDatabaseDescriptionChanged() {
 		return databaseDescriptionChanged;
-	}
-
-	public void setDatabaseDescriptionChanged(Calendar databaseDescriptionChanged) {
-		this.databaseDescriptionChanged = databaseDescriptionChanged;
 	}
 
 	public int getMaintenanceHistoryDays() {
 		return maintenanceHistoryDays;
 	}
 
-	public void setMaintenanceHistoryDays(int maintenanceHistoryDays) {
-		this.maintenanceHistoryDays = maintenanceHistoryDays;
-	}
-
 	public String getRecycleBinUuid() {
 		return recycleBinUuid;
 	}
 
-	public void setRecycleBinUuid(String recycleBinUuid) {
-		this.recycleBinUuid = recycleBinUuid;
-	}
-
 	public Calendar getRecycleBinChanged() {
 		return recycleBinChanged;
-	}
-
-	public void setRecycleBinChanged(Calendar recycleBinChanged) {
-		this.recycleBinChanged = recycleBinChanged;
-	}
-
-	public boolean getRecycleBinEnabled() {
-		if(recycleBinEnabled == null) {
-			return false;
-		}
-		
-		return recycleBinEnabled.equalsIgnoreCase("true");
-	}
-
-	public void setRecycleBinEnabled(boolean recycleBinEnabled) {
-		this.recycleBinEnabled = recycleBinEnabled == true ? "True" : "False";
 	}
 
 	public long getHistoryMaxItems() {
@@ -134,5 +113,9 @@ public class Meta {
 
 	public void setHistoryMaxSize(long historyMaxSize) {
 		this.historyMaxSize = historyMaxSize;
+	}
+	
+	public boolean getRecycleBinEnabled() {
+		return recycleBinEnabled;
 	}
 }
