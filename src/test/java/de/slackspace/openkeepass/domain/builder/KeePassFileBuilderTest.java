@@ -3,7 +3,6 @@ package de.slackspace.openkeepass.domain.builder;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.EntryBuilder;
 import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.GroupBuilder;
@@ -48,7 +47,7 @@ public class KeePassFileBuilderTest {
 			.build();
 		
 		KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB")
-				.withTopGroup(root)
+				.addTopGroups(root)
 				.build();
 		
 		Assert.assertEquals("Banking", keePassFile.getTopGroups().get(0).getName());

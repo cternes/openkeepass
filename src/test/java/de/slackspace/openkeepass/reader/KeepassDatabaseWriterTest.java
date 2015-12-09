@@ -1,6 +1,5 @@
 package de.slackspace.openkeepass.reader;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -19,7 +18,6 @@ import de.slackspace.openkeepass.domain.GroupBuilder;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassFileBuilder;
 import de.slackspace.openkeepass.domain.KeePassHeader;
-import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteable;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 
@@ -61,7 +59,7 @@ public class KeepassDatabaseWriterTest {
 				.build();
 		
 		KeePassFile keePassFile = new KeePassFileBuilder("testDB")
-				.withTopEntries(entryOne)
+				.addTopEntries(entryOne)
 				.build();
 		
 		String dbFilename = "target/test-classes/writeNewDatabase.kdbx";
@@ -100,7 +98,7 @@ public class KeepassDatabaseWriterTest {
 				.build();
 		
 		KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB")
-				.withTopGroup(root)
+				.addTopGroups(root)
 				.build();
 		
 		String dbFilename = "target/test-classes/writeTreeDB.kdbx";
@@ -116,11 +114,4 @@ public class KeepassDatabaseWriterTest {
 		Assert.assertEquals("Second entry", database.getTopGroups().get(1).getGroups().get(0).getEntries().get(0).getTitle());
 	}
 	
-	@Test(expected=KeePassDatabaseUnwriteable.class)
-	public void whenRootIsNullShouldThrowExceptionOnWrite() {
-		KeePassFile keePassFile = new KeePassFileBuilder("corruptDB").build();
-		keePassFile.setRoot(null);
-		
-		KeePassDatabase.write(keePassFile, "abc", new ByteArrayOutputStream());
-	}
 }

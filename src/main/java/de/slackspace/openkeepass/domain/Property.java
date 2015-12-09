@@ -46,10 +46,6 @@ public class Property implements KeePassFileElement {
 		return propertyValue.isProtected();
 	}
 
-	public void setParent(KeePassFileElement element) {
-		this.parent = element;
-	}
-	
 	public PropertyValue getPropertyValue() {
 		return propertyValue;
 	}

@@ -2,7 +2,8 @@ package de.slackspace.openkeepass.domain;
 
 public class KeePassFileBuilder {
 
-	private Meta meta;
+	Meta meta;
+	Group root;
 	private GroupBuilder rootBuilder = new GroupBuilder();
 	private GroupBuilder topGroupBuilder = new GroupBuilder();
 	
@@ -16,13 +17,15 @@ public class KeePassFileBuilder {
 		this.meta = meta;
 	}
 
-	public KeePassFileBuilder withTopGroup(Group group) {
-		rootBuilder = rootBuilder.addGroup(group);
+	public KeePassFileBuilder addTopGroups(Group... groups) {
+		for (Group group : groups) {
+			rootBuilder.addGroup(group);
+		}
 		
 		return this;
 	}
 	
-	public KeePassFileBuilder withTopEntries(Entry... entries) {
+	public KeePassFileBuilder addTopEntries(Entry... entries) {
 		for (Entry entry : entries) {
 			topGroupBuilder.addEntry(entry);
 		}
@@ -31,13 +34,11 @@ public class KeePassFileBuilder {
 	}
 	
 	public KeePassFile build() {
-		KeePassFile keePassFile = new KeePassFile();
-		keePassFile.setMeta(meta);
-		
 		setTopGroupNameIfNotExisting();
-		keePassFile.setRoot(rootBuilder.build());
 		
-		return keePassFile;
+		root = rootBuilder.build();
+		
+		return new KeePassFile(this);
 	}
 	
 	private void setTopGroupNameIfNotExisting() {

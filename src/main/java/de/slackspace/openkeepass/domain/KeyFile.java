@@ -16,7 +16,4 @@ public class KeyFile {
 		return key;
 	}
 
-	public void setKey(Key key) {
-		this.key = key;
-	}
 }

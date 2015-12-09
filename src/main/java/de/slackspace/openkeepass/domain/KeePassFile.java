@@ -30,6 +30,13 @@ public class KeePassFile implements KeePassFileElement {
 	@XmlTransient
 	private ProtectedStringCrypto protectedStringCrypto;
 
+	KeePassFile() {}
+	
+	public KeePassFile(KeePassFileBuilder builder) {
+		this.meta = builder.meta;
+		this.root = builder.root;
+	}
+	
 	/**
 	 * Retrieves the meta section of a KeePass database.
 	 *
@@ -41,15 +48,6 @@ public class KeePassFile implements KeePassFileElement {
 	}
 
 	/**
-	 * Sets the meta section of a KeePass database.
-	 *
-	 * @param meta the meta section of the database
-	 */
-	public void setMeta(Meta meta) {
-		this.meta = meta;
-	}
-
-	/**
 	 * Retrieves the root group of a KeePass database.
 	 *
 	 * @return the root group
@@ -57,15 +55,6 @@ public class KeePassFile implements KeePassFileElement {
 	 */
 	public Group getRoot() {
 		return root;
-	}
-
-	/**
-	 * Sets the root group of a KeePass database.
-	 *
-	 * @param root the root group
-	 */
-	public void setRoot(Group root) {
-		this.root = root;
 	}
 
 	/**

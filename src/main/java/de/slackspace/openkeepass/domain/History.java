@@ -19,7 +19,4 @@ public class History {
 		return entries;
 	}
 
-	public void setHistoricEntries(List<Entry> historicEntries) {
-		this.entries = historicEntries;
-	}
 }

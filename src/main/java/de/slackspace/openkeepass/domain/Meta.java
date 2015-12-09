@@ -103,18 +103,10 @@ public class Meta {
 		return historyMaxItems;
 	}
 
-	public void setHistoryMaxItems(long historyMaxItems) {
-		this.historyMaxItems = historyMaxItems;
-	}
-
 	public long getHistoryMaxSize() {
 		return historyMaxSize;
 	}
 
-	public void setHistoryMaxSize(long historyMaxSize) {
-		this.historyMaxSize = historyMaxSize;
-	}
-	
 	public boolean getRecycleBinEnabled() {
 		return recycleBinEnabled;
 	}
