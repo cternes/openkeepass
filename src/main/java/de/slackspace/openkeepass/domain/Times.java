@@ -36,60 +36,43 @@ public class Times {
 	@XmlElement(name = "LocationChanged")
 	private Calendar locationChanged;
 
-	public Calendar getLastModificationTime() {
-		return lastModificationTime;
+	Times() {}
+	
+	public Times(TimesBuilder timesBuilder) {
+		this.creationTime = timesBuilder.creationTime;
+		this.expires = timesBuilder.expires;
+		this.expiryTime = timesBuilder.expiryTime;
+		this.lastAccessTime = timesBuilder.lastAccessTime;
+		this.lastModificationTime = timesBuilder.lastModificationTime;
+		this.locationChanged = timesBuilder.locationChanged;
+		this.usageCount = timesBuilder.usageCount;
 	}
 
-	public void setLastModificationTime(Calendar lastModificationTime) {
-		this.lastModificationTime = lastModificationTime;
+	public Calendar getLastModificationTime() {
+		return lastModificationTime;
 	}
 
 	public Calendar getCreationTime() {
 		return creationTime;
 	}
 
-	public void setCreationTime(Calendar creationTime) {
-		this.creationTime = creationTime;
-	}
-
 	public Calendar getLastAccessTime() {
 		return lastAccessTime;
-	}
-
-	public void setLastAccessTime(Calendar lastAccessTime) {
-		this.lastAccessTime = lastAccessTime;
 	}
 
 	public Calendar getExpiryTime() {
 		return expiryTime;
 	}
 
-	public void setExpiryTime(Calendar expiryTime) {
-		this.expiryTime = expiryTime;
-	}
-
-	public boolean isExpires() {
+	public boolean expires() {
 		return expires;
-	}
-
-	public void setExpires(boolean expires) {
-		this.expires = expires;
 	}
 
 	public int getUsageCount() {
 		return usageCount;
 	}
 
-	public void setUsageCount(int usageCount) {
-		this.usageCount = usageCount;
-	}
-
 	public Calendar getLocationChanged() {
 		return locationChanged;
 	}
-
-	public void setLocationChanged(Calendar locationChanged) {
-		this.locationChanged = locationChanged;
-	}
-	
 }
