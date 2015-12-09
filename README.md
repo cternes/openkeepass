@@ -1,12 +1,13 @@
 openkeepass
 ===========
 
-openkeepass is a java library for reading KeePass databases. It is the only java library that supports **KeePass 2.x database files**.  
+openkeepass is a java library for reading and writing KeePass databases. It is the only java library that supports **KeePass 2.x database files**.  
 
 *Only KeePass files created with version 2.x are supported. KeePass files created with version 1.x are NOT supported.* 
 
 Features included so far:
 
+- Reading and writing support for KeePass 2.x
 - Password or Keyfile credentials: openkeepass can open password protected databases as well as keyfile protected databases.
 - Easy to learn API: openkeepass has a simple API with convenient methods that makes it easy to read data from a KeePass database.
 - Very lean: openkeepass tries to keep the necessary dependencies to an absolute minimum.
@@ -32,7 +33,7 @@ You can download JCE here:
 - [Download JCE for JDK 7](http://www.oracle.com/technetwork/java/embedded/embedded-se/downloads/jce-7-download-432124.html)
 - [Download JCE for JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html)
 
-Examples
+Examples for reading
 =============
 
 The basic usage is very simple. This example will show you how to retrieve all entries and the top groups of the KeePass database.  
@@ -89,6 +90,31 @@ Retrieve custom string fields (Advanced tab) from a database:
 	for (Property property : properties) {
 		System.out.println(property.getKey() + ":" + property.getValue());
 	}
+```
+	
+For more usages have a look into the unit test classes.
+	
+Examples for writing
+=============
+	
+If you want to start writing a new KeePass file from scratch you first have to build up your database model. This will be done using the provided builders.
+After the model has been constructed you can use the __KeePassDatabase__ class to write the KeePass database to a stream.
+
+```java	
+	// Build KeePass model
+	Group root = new GroupBuilder()
+					.addEntry(new EntryBuilder("First entry").username("Peter").password("Peters secret").build())
+					.addGroup(new GroupBuilder("Banking")
+							.addEntry(new EntryBuilder("Second entry").username("Paul").password("secret").build())
+							.build())
+					.build();
+				
+	KeePassFile keePassFile = new KeePassFileBuilder("writingDB")
+					.addTopGroups(root)
+					.build();
+				
+	// Write KeePass file to disk
+	KeePassDatabase.write(keePassFile, "MasterPassword", new FileOutputStream("Database.kdbx"));
 ```
 	
 For more usages have a look into the unit test classes.
