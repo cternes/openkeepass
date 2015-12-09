@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class GroupBuilder {
 
-	String uuid;
+	UUID uuid;
 	
 	String name;
 	
@@ -21,7 +21,7 @@ public class GroupBuilder {
 	List<Group> groups = new ArrayList<Group>();
 	
 	public GroupBuilder() {
-		this.uuid = UUID.randomUUID().toString();
+		this.uuid = UUID.randomUUID();
 	}
 	
 	public GroupBuilder(String name) {

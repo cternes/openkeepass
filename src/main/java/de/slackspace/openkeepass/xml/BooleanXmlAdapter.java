@@ -13,7 +13,7 @@ public class BooleanXmlAdapter extends XmlAdapter<String, Boolean> {
 	 */
 	@Override
 	public String marshal(Boolean value) throws Exception {
-		if(value == true) {
+		if(value != null && value == true) {
 			return "True";
 		}
 		return "False";
@@ -26,5 +26,4 @@ public class BooleanXmlAdapter extends XmlAdapter<String, Boolean> {
 	public Boolean unmarshal(String value) throws Exception {
 		return value.equalsIgnoreCase("true");
 	}
-
 }

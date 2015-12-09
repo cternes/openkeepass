@@ -6,6 +6,9 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -24,7 +27,8 @@ public class Times {
 	private Calendar expiryTime;
 	
 	@XmlElement(name = "Expires")
-	private boolean expires;
+	@XmlJavaTypeAdapter(BooleanXmlAdapter.class)
+	private Boolean expires;
 	
 	@XmlElement(name = "UsageCount")
 	private int usageCount;

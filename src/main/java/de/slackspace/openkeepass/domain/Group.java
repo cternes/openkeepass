@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 
 /**
@@ -24,7 +25,7 @@ public class Group implements KeePassFileElement {
 
 	@XmlElement(name = "UUID")
 	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
-	private String uuid;
+	private UUID uuid;
 	
 	@XmlElement(name = "Name")
 	private String name;
@@ -36,7 +37,8 @@ public class Group implements KeePassFileElement {
 	private Times times;
 	
 	@XmlElement(name = "IsExpanded")
-	private boolean isExpanded;
+	@XmlJavaTypeAdapter(BooleanXmlAdapter.class)
+	private Boolean isExpanded;
 	
 	@XmlElement(name = "Entry")
 	private List<Entry> entries = new ArrayList<Entry>();
@@ -45,7 +47,7 @@ public class Group implements KeePassFileElement {
 	private List<Group> groups = new ArrayList<Group>();
 	
 	Group() {
-		uuid = UUID.randomUUID().toString();
+		uuid = UUID.randomUUID();
 	}
 	
 	public Group(GroupBuilder builder) {
@@ -63,7 +65,7 @@ public class Group implements KeePassFileElement {
 	 * 
 	 * @return the Uuid of this group
 	 */
-	public String getUuid() {
+	public UUID getUuid() {
 		return uuid;
 	}
 
@@ -119,7 +121,10 @@ public class Group implements KeePassFileElement {
 	 * @return true if the group was expanded the last time it was opened in keepass
 	 */
 	public boolean isExpanded() {
-		return isExpanded;
+		if(isExpanded == null) {
+			return false;
+		}
+		return isExpanded.booleanValue();
 	}
 
 }

@@ -36,7 +36,7 @@ public class Meta {
 	
 	@XmlElement(name = "RecycleBinUUID")
 	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
-	private String recycleBinUuid; 
+	private UUID recycleBinUuid; 
 	
 	@XmlElement(name = "RecycleBinChanged")
 	private Calendar recycleBinChanged;
@@ -64,7 +64,7 @@ public class Meta {
 		this.maintenanceHistoryDays = metaBuilder.maintenanceHistoryDays;
 		this.recycleBinChanged = metaBuilder.recycleBinChanged;
 		this.recycleBinEnabled = metaBuilder.recycleBinEnabled;
-//		this.recycleBinUuid = metaBuilder.recycleBinUuid;
+		this.recycleBinUuid = metaBuilder.recycleBinUuid;
 	}
 
 	public String getDatabaseName() {
@@ -91,7 +91,7 @@ public class Meta {
 		return maintenanceHistoryDays;
 	}
 
-	public String getRecycleBinUuid() {
+	public UUID getRecycleBinUuid() {
 		return recycleBinUuid;
 	}
 

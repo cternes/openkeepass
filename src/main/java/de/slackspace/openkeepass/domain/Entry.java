@@ -24,7 +24,7 @@ public class Entry implements KeePassFileElement {
 
 	@XmlElement(name = "UUID")
 	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
-	private String uuid;
+	private UUID uuid;
 
 	@XmlElement(name = "String")
 	private List<Property> properties = new ArrayList<Property>();
@@ -33,7 +33,7 @@ public class Entry implements KeePassFileElement {
 	private History history;
 
 	Entry() {
-		this.uuid = UUID.randomUUID().toString();
+		this.uuid = UUID.randomUUID();
 	}
 	
 	public Entry(EntryBuilder builder) {
@@ -47,7 +47,7 @@ public class Entry implements KeePassFileElement {
 		setValue(false, URL, builder.url);
 	}
 
-	public String getUuid() {
+	public UUID getUuid() {
 		return uuid;
 	}
 

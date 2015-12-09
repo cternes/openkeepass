@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class EntryBuilder {
 
-	String uuid;
+	UUID uuid;
 
 	History history;
 	
@@ -19,7 +19,7 @@ public class EntryBuilder {
 	String url;
 	
 	public EntryBuilder() {
-		this.uuid = UUID.randomUUID().toString();
+		this.uuid = UUID.randomUUID();
 	}
 	
 	public EntryBuilder(String title) {

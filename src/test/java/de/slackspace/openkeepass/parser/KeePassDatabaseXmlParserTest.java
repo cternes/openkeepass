@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -43,7 +44,7 @@ public class KeePassDatabaseXmlParserTest {
 		Assert.assertEquals("2014-11-22 18:59:39", dateFormatter.format(keePassFile.getMeta().getDatabaseDescriptionChanged().getTime()));
 		Assert.assertEquals(365, keePassFile.getMeta().getMaintenanceHistoryDays());
 		Assert.assertEquals(true, keePassFile.getMeta().getRecycleBinEnabled());
-		Assert.assertEquals("AAAAAAAAAAAAAAAAAAAAAA==", keePassFile.getMeta().getRecycleBinUuid()); 
+		Assert.assertEquals(UUID.fromString("00000000-0000-0000-0000-00000000"), keePassFile.getMeta().getRecycleBinUuid()); 
 		Assert.assertEquals("2014-11-22 18:58:56", dateFormatter.format(keePassFile.getMeta().getRecycleBinChanged().getTime()));
 		Assert.assertEquals(10, keePassFile.getMeta().getHistoryMaxItems());
 		Assert.assertEquals(6291456, keePassFile.getMeta().getHistoryMaxSize());
@@ -58,22 +59,22 @@ public class KeePassDatabaseXmlParserTest {
 		
 		Assert.assertEquals(6, groups.size());
 		Assert.assertEquals("General", groups.get(0).getName());
-		Assert.assertEquals("16abcc27-cca3-9544-8012-df4e98d4a3d8", groups.get(0).getUuid());
+		Assert.assertEquals(UUID.fromString("16abcc27-cca3-9544-8012-df4e98d4a3d8"), groups.get(0).getUuid());
 		
 		Assert.assertEquals("Windows", groups.get(1).getName());
-		Assert.assertEquals("ad7b7b0f-e10c-ff4a-96d6-b80f0788399f", groups.get(1).getUuid());
+		Assert.assertEquals(UUID.fromString("ad7b7b0f-e10c-ff4a-96d6-b80f0788399f"), groups.get(1).getUuid());
 		
 		Assert.assertEquals("Network", groups.get(2).getName());
-		Assert.assertEquals("0f074068-a9f8-b44c-9716-5539ebfd9405", groups.get(2).getUuid());
+		Assert.assertEquals(UUID.fromString("0f074068-a9f8-b44c-9716-5539ebfd9405"), groups.get(2).getUuid());
 		
 		Assert.assertEquals("Internet", groups.get(3).getName());
-		Assert.assertEquals("08e814ac-fb79-3f4e-bbe8-37b2667fdab9", groups.get(3).getUuid());
+		Assert.assertEquals(UUID.fromString("08e814ac-fb79-3f4e-bbe8-37b2667fdab9"), groups.get(3).getUuid());
 		
 		Assert.assertEquals("eMail", groups.get(4).getName());
-		Assert.assertEquals("ff159f39-f9c2-ea48-bbea-c361ad947baf", groups.get(4).getUuid());
+		Assert.assertEquals(UUID.fromString("ff159f39-f9c2-ea48-bbea-c361ad947baf"), groups.get(4).getUuid());
 		
 		Assert.assertEquals("Homebanking", groups.get(5).getName());
-		Assert.assertEquals("45d8eddb-5265-6b4f-84e5-0f449491f0d6", groups.get(5).getUuid());
+		Assert.assertEquals(UUID.fromString("45d8eddb-5265-6b4f-84e5-0f449491f0d6"), groups.get(5).getUuid());
 	}
 	
 	@Test
@@ -84,7 +85,7 @@ public class KeePassDatabaseXmlParserTest {
 		Assert.assertNotNull(entries);
 		
 		Assert.assertEquals(2, entries.size());
-		Assert.assertEquals("9626dd2d-6f3c-714e-81be-b3d096f2aa30", entries.get(0).getUuid());
+		Assert.assertEquals(UUID.fromString("9626dd2d-6f3c-714e-81be-b3d096f2aa30"), entries.get(0).getUuid());
 		Assert.assertEquals(5, entries.get(0).getProperties().size());
 		Assert.assertEquals("Sample Entry", entries.get(0).getTitle());
 		Assert.assertEquals("http://keepass.info/", entries.get(0).getUrl());

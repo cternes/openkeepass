@@ -12,15 +12,14 @@ import de.slackspace.openkeepass.util.ByteUtils;
  * This works because JAXB is representing bytes by default as Base64 in xml. 
  *
  */
-public class UUIDXmlAdapter extends XmlAdapter<byte[], String> {
+public class UUIDXmlAdapter extends XmlAdapter<byte[], UUID> {
 
 	/* (non-Javadoc)
 	 * @see javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
 	 */
 	@Override
-	public byte[] marshal(String value) throws Exception {
-		UUID uuid = UUID.fromString(value);
-		byte[] bytes = ByteUtils.uuidToBytes(uuid);
+	public byte[] marshal(UUID value) throws Exception {
+		byte[] bytes = ByteUtils.uuidToBytes(value);
 
 		return bytes;
 	}
@@ -29,8 +28,8 @@ public class UUIDXmlAdapter extends XmlAdapter<byte[], String> {
 	 * @see javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
 	 */
 	@Override
-	public String unmarshal(byte[] value) throws Exception {
-		return ByteUtils.bytesToUUID(value).toString();
+	public UUID unmarshal(byte[] value) throws Exception {
+		return ByteUtils.bytesToUUID(value);
 	}
 
 }

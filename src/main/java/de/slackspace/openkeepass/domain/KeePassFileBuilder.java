@@ -7,10 +7,9 @@ public class KeePassFileBuilder {
 	private GroupBuilder topGroupBuilder = new GroupBuilder();
 	
 	public KeePassFileBuilder(String databaseName) {
-		meta = new Meta();
-		meta.setDatabaseName(databaseName);
-		meta.setGenerator("KeePass");
-		meta.setHistoryMaxItems(10);
+		meta = new MetaBuilder(databaseName)
+				.historyMaxItems(10)
+				.build();
 	}
 	
 	public KeePassFileBuilder(Meta meta) {

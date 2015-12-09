@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -184,7 +185,7 @@ public class KeepassDatabaseReaderTest {
 		KeePassDatabase reader = KeePassDatabase.getInstance(file);
 		KeePassFile database = reader.openDatabase("abcdefg");
 		
-		Entry entry = database.getEntryByUUID("1fbddfcd-52ff-1d4b-b2e8-27f671e4ea22");
+		Entry entry = database.getEntryByUUID(UUID.fromString("1fbddfcd-52ff-1d4b-b2e8-27f671e4ea22"));
 		Assert.assertEquals("Sample Entry #2", entry.getTitle());
 	}
 }

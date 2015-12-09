@@ -5,13 +5,17 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PropertyValue {
 
 	@XmlAttribute(name = "Protected")
-	private String isProtected;
+	@XmlJavaTypeAdapter(BooleanXmlAdapter.class)
+	private Boolean isProtected;
 
 	@XmlValue
 	private String value;
@@ -35,12 +39,11 @@ public class PropertyValue {
 		if(isProtected == null) {
 			return false;
 		}
-		
-		return isProtected.equalsIgnoreCase("true");
+		return isProtected.booleanValue();
 	}
 	
 	public void setProtected(boolean isProtected) {
-		this.isProtected = isProtected == true ? "True" : "False";
+		this.isProtected = isProtected;
 	}
 
 	@Override

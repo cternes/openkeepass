@@ -2,6 +2,7 @@ package de.slackspace.openkeepass.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -185,7 +186,7 @@ public class KeePassFile implements KeePassFileElement {
 	 * @param UUID the uuid which should be searched
 	 * @return the found entry or null
 	 */
-	public Entry getEntryByUUID(final String UUID) {
+	public Entry getEntryByUUID(final UUID UUID) {
 		List<Entry> allEntries = getEntries();
 
 		List<Entry> entries = ListFilter.filter(allEntries, new Filter<Entry>() {
@@ -193,7 +194,7 @@ public class KeePassFile implements KeePassFileElement {
 			@Override
 			public boolean matches(Entry item) {
 
-				if (item.getUuid() != null && item.getUuid().equalsIgnoreCase(UUID)) {
+				if (item.getUuid() != null && item.getUuid().compareTo(UUID) == 0) {
 					return true;
 				} else {
 					return false;
