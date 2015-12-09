@@ -19,6 +19,7 @@ import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.KeePassFile;
+import de.slackspace.openkeepass.domain.Times;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 
@@ -151,5 +152,57 @@ public class KeePassDatabaseXmlParserTest {
 		KeePassFile writtenKeePassFile = parser.fromXml(writtenInputStream, Salsa20.createInstance(protectedStreamKey));
 		
 		Assert.assertEquals("Password", writtenKeePassFile.getEntryByTitle("Sample Entry").getPassword());
+	}
+	
+	@Test
+	public void whenUsingGetGroupsShouldReturnAllGroups() throws FileNotFoundException {
+		KeePassFile keePassFile = parseKeePassXml();
+		
+		List<Group> groups = keePassFile.getGroups();
+		Assert.assertEquals(7, groups.size());
+	}
+	
+	@Test
+	public void whenUsingGetGroupsByNameExactlyShouldReturnGroupsWithGivenName() throws FileNotFoundException {
+		KeePassFile keePassFile = parseKeePassXml();
+		
+		List<Group> groups = keePassFile.getGroupsByName("Windows", true);
+		Assert.assertEquals(1, groups.size());
+		Assert.assertEquals("Windows", groups.get(0).getName());
+	}
+	
+	@Test
+	public void whenUsingGetGroupsByNameLooslyShouldReturnGroupsWithGivenName() throws FileNotFoundException {
+		KeePassFile keePassFile = parseKeePassXml();
+		
+		List<Group> groups = keePassFile.getGroupsByName("net", false);
+		Assert.assertEquals(2, groups.size());
+		Assert.assertEquals("Network", groups.get(0).getName());
+		Assert.assertEquals("Internet", groups.get(1).getName());
+	}
+	
+	@Test
+	public void whenUsingGetGroupByNameShouldReturnOneGroup() throws FileNotFoundException {
+		KeePassFile keePassFile = parseKeePassXml();
+		
+		Group group = keePassFile.getGroupByName("Internet");
+		Assert.assertEquals("Internet", group.getName());
+	}
+	
+	@Test
+	public void whenUsingGetTimesShouldReturnCorrectlyParsedTimes() throws FileNotFoundException {
+		KeePassFile keePassFile = parseKeePassXml();
+		
+		Group group = keePassFile.getGroupByName("testDatabase");
+		Times times = group.getTimes();
+		
+		Assert.assertEquals(false, times.expires());
+		Assert.assertEquals("2014-11-22 18:58:56", dateFormatter.format(times.getLastModificationTime().getTime()));
+		Assert.assertEquals("2014-11-22 18:58:56", dateFormatter.format(times.getCreationTime().getTime()));
+		Assert.assertEquals("2014-11-22 18:58:13", dateFormatter.format(times.getExpiryTime().getTime()));
+		Assert.assertEquals("2014-11-22 18:59:53", dateFormatter.format(times.getLastAccessTime().getTime()));
+		Assert.assertEquals("2014-11-22 18:58:56", dateFormatter.format(times.getLastModificationTime().getTime()));
+		Assert.assertEquals("2014-11-22 18:58:56", dateFormatter.format(times.getLocationChanged().getTime()));
+		Assert.assertEquals(8, times.getUsageCount());
 	}
 }

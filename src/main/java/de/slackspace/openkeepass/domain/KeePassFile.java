@@ -129,7 +129,45 @@ public class KeePassFile implements KeePassFileElement {
 						return true;
 					}
 				} else {
-					if (item.getTitle() != null && item.getTitle().contains(title)) {
+					if (item.getTitle() != null && item.getTitle().toLowerCase().contains(title.toLowerCase())) {
+						return true;
+					}
+				}
+
+				return false;
+			}
+
+		});
+	}
+	
+	/**
+	 * Retrieves a list of group with matching names.
+	 * <p>
+	 * If the <tt>matchExactly</tt> flag is true, only groups which have an exactly matching name will be returned,
+	 * otherwise all groups which contain the given name will be returned.
+	 *
+	 * @param name        the name which should be searched
+	 * @param matchExactly if true only groups which have an exactly matching name will be returned
+	 * @return a list of entries with matching names
+	 * @see Group
+	 */
+	public List<Group> getGroupsByName(final String name, final boolean matchExactly) {
+		List<Group> allGroups = new ArrayList<Group>();
+
+		if (root != null) {
+			getGroups(root, allGroups);
+		}
+
+		return ListFilter.filter(allGroups, new Filter<Group>() {
+
+			@Override
+			public boolean matches(Group item) {
+				if (matchExactly) {
+					if (item.getName() != null && item.getName().equalsIgnoreCase(name)) {
+						return true;
+					}
+				} else {
+					if (item.getName() != null && item.getName().toLowerCase().contains(name.toLowerCase())) {
 						return true;
 					}
 				}
@@ -155,6 +193,41 @@ public class KeePassFile implements KeePassFileElement {
 
 		return allEntries;
 	}
+	
+	/**
+	 * Retrieves a list of all groups in the KeePass database.
+	 * 
+	 * @return a list of all groups
+	 * @see Group
+	 */
+	public List<Group> getGroups() {
+		List<Group> allGroups = new ArrayList<Group>();
+		
+		if (root != null) {
+			getGroups(root, allGroups);
+		}
+		
+		return allGroups;
+	} 
+	
+	/**
+	 * Retrieves a single group with an exactly matching name.
+	 * <p>
+	 * If there are multiple groups with the same name, the first one found will be returned.
+	 *
+	 * @param name the name which should be searched
+	 * @return a group with a matching name
+	 * @see Group
+	 */
+	public Group getGroupByName(String name) {
+		List<Group> groups = getGroupsByName(name, true);
+
+		if (!groups.isEmpty()) {
+			return groups.get(0);
+		}
+
+		return null;
+	}
 
 	private void getEntries(Group parentGroup, List<Entry> entries) {
 		List<Group> groups = parentGroup.getGroups();
@@ -163,6 +236,19 @@ public class KeePassFile implements KeePassFileElement {
 		if (groups.size() != 0) {
 			for (Group group : groups) {
 				getEntries(group, entries);
+			}
+		}
+
+		return;
+	}
+	
+	private void getGroups(Group parentGroup, List<Group> groups) {
+		List<Group> parentGroups = parentGroup.getGroups();
+		groups.addAll(parentGroups);
+		
+		if (parentGroups.size() != 0) {
+			for (Group group : parentGroups) {
+				getGroups(group, groups);
 			}
 		}
 
