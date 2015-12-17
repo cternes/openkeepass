@@ -1,0 +1,43 @@
+package de.slackspace.openkeepass.domain.builder;
+
+import java.util.UUID;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import de.slackspace.openkeepass.domain.Entry;
+import de.slackspace.openkeepass.domain.EntryBuilder;
+
+public class EntryBuilderTest {
+
+	@Test
+	public void shouldBuildEntryWithUUIDAndTitle() {
+		UUID uuid = UUID.randomUUID();
+		Entry entry = new EntryBuilder(uuid)
+				.title("test")
+				.build();
+		
+		Assert.assertEquals(uuid, entry.getUuid());
+		Assert.assertEquals("test", entry.getTitle());
+	}
+	
+	@Test
+	public void shouldBuildEntryWithTitleAndRandomUUID() {
+		Entry entry = new EntryBuilder("test")
+				.build();
+		
+		Assert.assertNotNull(entry.getUuid());
+		Assert.assertEquals("test", entry.getTitle());
+	}
+	
+	@Test
+	public void shouldBuildEntryWithTitleAndGivenUUID() {
+		UUID uuid = UUID.randomUUID();
+		Entry entry = new EntryBuilder("test")
+				.uuid(uuid)
+				.build();
+		
+		Assert.assertEquals(uuid, entry.getUuid());
+		Assert.assertEquals("test", entry.getTitle());
+	}
+}

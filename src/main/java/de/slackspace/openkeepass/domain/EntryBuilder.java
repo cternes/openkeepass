@@ -21,7 +21,11 @@ public class EntryBuilder {
 	public EntryBuilder() {
 		this.uuid = UUID.randomUUID();
 	}
-	
+
+	public EntryBuilder (UUID uuid) {
+		this.uuid = uuid;
+	}
+
 	public EntryBuilder(String title) {
 		this();
 		this.title = title;
@@ -31,7 +35,12 @@ public class EntryBuilder {
 		this.title = title;
 		return this;
 	}
-	
+
+	public EntryBuilder uuid(UUID uuid) {
+		this.uuid = uuid;
+		return this;
+	}
+
 	public EntryBuilder username(String username) {
 		this.username = username;
 		return this;
