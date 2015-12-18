@@ -96,6 +96,21 @@ public class Group implements KeePassFileElement {
 	public List<Entry> getEntries() {
 		return entries;
 	}
+	
+	/**
+	 * Retrieves the entry with the given title.
+	 * 
+	 * @param title the title of the entry which should be retrieved
+	 * @return an entry with matching title
+	 */
+	public Entry getEntryByTitle(String title) {
+		for (Entry entry : entries) {
+			if(entry.getTitle().equalsIgnoreCase(title)) {
+				return entry;
+			}
+		}
+		return null;
+	}
 
 	@Override
 	public String toString() {
