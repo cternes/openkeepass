@@ -18,6 +18,16 @@ public class TimesBuilder {
 	
 	Calendar locationChanged;
 	
+	public TimesBuilder(Times times) {
+		this.lastModificationTime = times.getLastModificationTime();
+		this.creationTime = times.getCreationTime();
+		this.lastAccessTime = times.getLastAccessTime();
+		this.expiryTime = times.getExpiryTime();
+		this.expires = times.expires();
+		this.usageCount = times.getUsageCount();
+		this.locationChanged = times.getLocationChanged();
+	}
+	
 	public TimesBuilder lastModificationTime(Calendar lastModificationTime) {
 		this.lastModificationTime = lastModificationTime;
 		return this;

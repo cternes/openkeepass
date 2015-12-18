@@ -31,6 +31,20 @@ public class MetaBuilder {
 		this.databaseName = databaseName;
 	}
 	
+	public MetaBuilder(Meta meta) {
+		this.generator = meta.getGenerator();
+		this.databaseName = meta.getDatabaseName();
+		this.databaseDescription = meta.getDatabaseDescription();
+		this.databaseNameChanged = meta.getDatabaseNameChanged();
+		this.databaseDescriptionChanged = meta.getDatabaseDescriptionChanged();
+		this.maintenanceHistoryDays = meta.getMaintenanceHistoryDays();
+		this.recycleBinUuid = meta.getRecycleBinUuid();
+		this.recycleBinEnabled = meta.getRecycleBinEnabled();
+		this.recycleBinChanged = meta.getRecycleBinChanged();
+		this.historyMaxItems = meta.getHistoryMaxItems();
+		this.historyMaxSize = meta.getHistoryMaxSize();
+	}
+	
 	public MetaBuilder generator(String generator) {
 		this.generator = generator;
 		return this;

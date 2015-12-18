@@ -8,7 +8,7 @@ import de.slackspace.openkeepass.domain.zipper.GroupZipper;
 public class GroupZipperTest {
 
 	@Test
-	public void shouldNavigateThroughTreeAndReplaceSingleGroupNode() {
+	public void shouldNavigateThroughTreeAndReplaceGroupAndEntryNode() {
 		/* Should create the following structure:
 		 * 
 		 * Root
