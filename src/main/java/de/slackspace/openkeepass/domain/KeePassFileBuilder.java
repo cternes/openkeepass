@@ -1,11 +1,21 @@
 package de.slackspace.openkeepass.domain;
 
+import de.slackspace.openkeepass.domain.zipper.GroupZipper;
+
 public class KeePassFileBuilder {
 
 	Meta meta;
 	Group root;
 	private GroupBuilder rootBuilder = new GroupBuilder();
 	private GroupBuilder topGroupBuilder = new GroupBuilder();
+	private KeePassFile keePassFile;
+	
+	public KeePassFileBuilder(KeePassFile keePassFile) {
+		this.keePassFile = keePassFile;
+		this.meta = keePassFile.getMeta();
+		
+		rootBuilder = new GroupBuilder(keePassFile.getRoot());
+	}
 	
 	public KeePassFileBuilder(String databaseName) {
 		meta = new MetaBuilder(databaseName)
@@ -39,6 +49,10 @@ public class KeePassFileBuilder {
 		root = rootBuilder.build();
 		
 		return new KeePassFile(this);
+	}
+	
+	public GroupZipper getZipper() {
+		return new GroupZipper(keePassFile);
 	}
 	
 	private void setTopGroupNameIfNotExisting() {

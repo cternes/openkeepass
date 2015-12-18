@@ -18,6 +18,7 @@ import de.slackspace.openkeepass.domain.GroupBuilder;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassFileBuilder;
 import de.slackspace.openkeepass.domain.KeePassHeader;
+import de.slackspace.openkeepass.domain.zipper.GroupZipper;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 
@@ -112,6 +113,26 @@ public class KeepassDatabaseWriterTest {
 		Assert.assertEquals("First entry", database.getTopEntries().get(0).getTitle());
 		Assert.assertEquals("Shopping", database.getTopGroups().get(1).getGroups().get(0).getName());
 		Assert.assertEquals("Second entry", database.getTopGroups().get(1).getGroups().get(0).getEntries().get(0).getTitle());
+	}
+	
+	@Test
+	public void shouldModifiyGroupInKeePassFile() throws FileNotFoundException {
+		String password = "123456";
+		KeePassDatabase keePassDb = KeePassDatabase.getInstance("target/test-classes/fullBlownDatabase.kdbx");
+		KeePassFile database = keePassDb.openDatabase(password);
+		
+		Group group = database.getGroupByName("test");
+		Group modifiedGroup = new GroupBuilder(group).name("test2").build();
+
+		GroupZipper zipper = new KeePassFileBuilder(database).getZipper().down().right().right().right().right().down();
+		KeePassFile modifiedDatabase = zipper.replace(modifiedGroup).close();
+		
+		String dbFilename = "target/test-classes/fullBlownDatabaseModified.kdbx";
+		KeePassDatabase.write(modifiedDatabase, password, new FileOutputStream(dbFilename));
+		KeePassFile databaseReadFromHdd = KeePassDatabase.getInstance(dbFilename).openDatabase(password);
+		
+		Assert.assertNotNull("Banking", databaseReadFromHdd.getGroupByName("test2"));
+		Assert.assertEquals(2, databaseReadFromHdd.getGroupByName("test2").getEntries().size());
 	}
 	
 }
