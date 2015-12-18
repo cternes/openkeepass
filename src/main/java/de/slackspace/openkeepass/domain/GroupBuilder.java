@@ -29,6 +29,20 @@ public class GroupBuilder {
 		this.name = name;
 	}
 	
+	public GroupBuilder(Group group) {
+		if(group == null) {
+			throw new IllegalArgumentException("Parameter group must not be null");
+		}
+		
+		this.uuid = group.getUuid();
+		this.name = group.getName();
+		this.iconId = group.getIconId();
+		this.times = group.getTimes();
+		this.isExpanded = group.isExpanded();
+		this.groups = group.getGroups();
+		this.entries = group.getEntries();
+	}
+	
 	public GroupBuilder name(String name) {
 		this.name = name;
 		return this;
@@ -56,6 +70,16 @@ public class GroupBuilder {
 	
 	public GroupBuilder addGroup(Group group) {
 		groups.add(group);
+		return this;
+	}
+	
+	public GroupBuilder removeGroup(Group group) {
+		groups.remove(group);
+		return this;
+	}
+	
+	public GroupBuilder removeEntry(Entry entry) {
+		entries.remove(entry);
 		return this;
 	}
 	

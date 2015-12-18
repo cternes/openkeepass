@@ -21,7 +21,21 @@ public class EntryBuilder {
 	public EntryBuilder() {
 		this.uuid = UUID.randomUUID();
 	}
-
+	
+	public EntryBuilder(Entry entry) {
+		if(entry == null) {
+			throw new IllegalArgumentException("Parameter entry must not be null");
+		}
+		
+		this.uuid = entry.getUuid();
+		this.title = entry.getTitle();
+		this.history = entry.getHistory();
+		this.username = entry.getUsername();
+		this.password = entry.getPassword();
+		this.notes = entry.getNotes();
+		this.url = entry.getUrl();
+	}
+	
 	public EntryBuilder (UUID uuid) {
 		this.uuid = uuid;
 	}
