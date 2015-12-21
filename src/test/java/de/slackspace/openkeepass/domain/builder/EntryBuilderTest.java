@@ -2,6 +2,7 @@ package de.slackspace.openkeepass.domain.builder;
 
 import java.util.UUID;
 
+import de.slackspace.openkeepass.domain.History;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -39,5 +40,28 @@ public class EntryBuilderTest {
 		
 		Assert.assertEquals(uuid, entry.getUuid());
 		Assert.assertEquals("test", entry.getTitle());
+	}
+
+	@Test
+	public void shouldBuildEntryFromEntryWithHistory(){
+		UUID uuid = UUID.randomUUID();
+		Entry entry = new EntryBuilder("historytest")
+				.uuid(uuid)
+				.build();
+		EntryBuilder entryBuilder = new EntryBuilder(entry);
+		entryBuilder.username("test user name");
+		Entry createdEntry = entryBuilder.buildWithHistory();
+		Assert.assertEquals("should be 'test user name'", "test user name", createdEntry.getUsername());
+		History history = createdEntry.getHistory();
+		Assert.assertNotNull("history should not be null", history);
+		Assert.assertEquals("history size should be 1", 1, history.getHistoricEntries().size());
+		Entry historicEntry = history.getHistoricEntries().get(0);
+		Assert.assertEquals("title should be historytest", "historytest", historicEntry.getTitle());
+		Assert.assertNull("username of the history should be null", historicEntry.getUsername());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void shouldThrowIllegalArgumentExceptionWithNoEntrySet(){
+		Entry entry = new EntryBuilder("test").buildWithHistory();
 	}
 }
