@@ -48,13 +48,17 @@ public class EntryBuilderTest {
 		Entry entry = new EntryBuilder("historytest")
 				.uuid(uuid)
 				.build();
-		EntryBuilder entryBuilder = new EntryBuilder(entry);
-		entryBuilder.username("test user name");
+		
+		EntryBuilder entryBuilder = new EntryBuilder(entry)
+				.username("test user name");
+		
 		Entry createdEntry = entryBuilder.buildWithHistory();
 		Assert.assertEquals("should be 'test user name'", "test user name", createdEntry.getUsername());
+		
 		History history = createdEntry.getHistory();
 		Assert.assertNotNull("history should not be null", history);
 		Assert.assertEquals("history size should be 1", 1, history.getHistoricEntries().size());
+		
 		Entry historicEntry = history.getHistoricEntries().get(0);
 		Assert.assertEquals("title should be historytest", "historytest", historicEntry.getTitle());
 		Assert.assertNull("username of the history should be null", historicEntry.getUsername());
@@ -62,6 +66,6 @@ public class EntryBuilderTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWithNoEntrySet(){
-		Entry entry = new EntryBuilder("test").buildWithHistory();
+		new EntryBuilder("test").buildWithHistory();
 	}
 }
