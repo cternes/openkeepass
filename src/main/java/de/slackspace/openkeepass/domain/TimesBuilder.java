@@ -2,6 +2,10 @@ package de.slackspace.openkeepass.domain;
 
 import java.util.Calendar;
 
+/**
+ * A builder to create {@link Times} objects.
+ *
+ */
 public class TimesBuilder {
 
 	Calendar lastModificationTime;
@@ -12,11 +16,14 @@ public class TimesBuilder {
 
 	Calendar expiryTime;
 	
-	Boolean expires;
+	boolean expires;
 	
 	int usageCount;
 	
 	Calendar locationChanged;
+	
+	public TimesBuilder() {
+	}
 	
 	public TimesBuilder(Times times) {
 		this.lastModificationTime = times.getLastModificationTime();
@@ -48,7 +55,7 @@ public class TimesBuilder {
 		return this;
 	}
 
-	public TimesBuilder expires(Boolean expires) {
+	public TimesBuilder expires(boolean expires) {
 		this.expires = expires;
 		return this;
 	}
@@ -63,6 +70,11 @@ public class TimesBuilder {
 		return this;
 	}
 
+	/**
+	 * Builds a new times with the values from the builder.
+	 * 
+	 * @return a new times object
+	 */
 	public Times build() {
 		return new Times(this);
 	}

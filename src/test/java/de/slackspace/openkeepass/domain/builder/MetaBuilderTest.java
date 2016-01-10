@@ -1,8 +1,6 @@
 package de.slackspace.openkeepass.domain.builder;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import org.junit.Assert;
@@ -10,6 +8,7 @@ import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.Meta;
 import de.slackspace.openkeepass.domain.MetaBuilder;
+import de.slackspace.openkeepass.util.CalendarHandler;
 
 public class MetaBuilderTest {
 
@@ -45,27 +44,15 @@ public class MetaBuilderTest {
 	
 	@Test
 	public void shouldBuildEntryWithChangeDates() {
-		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		dateFormatter.setTimeZone(TimeZone.getTimeZone("GMT"));
-		
-		Calendar descriptionChangeDate = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-		descriptionChangeDate.set(2015, 1, 5, 0, 0, 0);
-		
-		Calendar nameChangeDate = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-		nameChangeDate.set(2015, 3, 3, 0, 0, 0);
-		
-		Calendar recycleBinChangeDate = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-		recycleBinChangeDate.set(2015, 6, 6, 0, 0, 0);
-		
 		Meta meta = new MetaBuilder("test")
-				.databaseDescriptionChanged(descriptionChangeDate)
-				.databaseNameChanged(nameChangeDate)
-				.recycleBinChanged(recycleBinChangeDate)
+				.databaseDescriptionChanged(CalendarHandler.createCalendar(2015, 2, 5))
+				.databaseNameChanged(CalendarHandler.createCalendar(2015, 4, 3))
+				.recycleBinChanged(CalendarHandler.createCalendar(2015, 7, 6))
 				.build();
 		
-		Assert.assertEquals("2015-02-05 00:00:00", dateFormatter.format(meta.getDatabaseDescriptionChanged().getTime()));
-		Assert.assertEquals("2015-04-03 00:00:00", dateFormatter.format(meta.getDatabaseNameChanged().getTime()));
-		Assert.assertEquals("2015-07-06 00:00:00", dateFormatter.format(meta.getRecycleBinChanged().getTime()));
+		Assert.assertEquals("2015-02-05 00:00:00", CalendarHandler.formatCalendar(meta.getDatabaseDescriptionChanged()));
+		Assert.assertEquals("2015-04-03 00:00:00", CalendarHandler.formatCalendar(meta.getDatabaseNameChanged()));
+		Assert.assertEquals("2015-07-06 00:00:00", CalendarHandler.formatCalendar(meta.getRecycleBinChanged()));
 	}
 	
 	@Test

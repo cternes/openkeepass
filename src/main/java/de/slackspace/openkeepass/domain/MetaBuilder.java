@@ -117,7 +117,7 @@ public class MetaBuilder {
 	/**
 	 * Builds a new meta with the values from the builder.
 	 * 
-	 * @return a new meta
+	 * @return a new meta object
 	 */
 	public Meta build() {
 		return new Meta(this);
