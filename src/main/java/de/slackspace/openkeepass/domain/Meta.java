@@ -191,5 +191,11 @@ public class Meta {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Meta [generator=" + generator + ", databaseName=" + databaseName + ", databaseDescription="
+				+ databaseDescription + "]";
+	}
 	
 }

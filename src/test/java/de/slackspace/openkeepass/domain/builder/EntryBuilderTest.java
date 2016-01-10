@@ -2,12 +2,12 @@ package de.slackspace.openkeepass.domain.builder;
 
 import java.util.UUID;
 
-import de.slackspace.openkeepass.domain.History;
 import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.EntryBuilder;
+import de.slackspace.openkeepass.domain.History;
 
 public class EntryBuilderTest {
 
@@ -67,5 +67,22 @@ public class EntryBuilderTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldThrowIllegalArgumentExceptionWithNoEntrySet(){
 		new EntryBuilder("test").buildWithHistory();
+	}
+	
+	@Test
+	public void shouldCheckEqualityOfObjects() {
+		Entry entry = new EntryBuilder()
+				.title("test")
+				.notes("a note")
+				.password("secret")
+				.username("user")
+				.url("myUrl")
+				.build();
+		
+		Entry entryCopyEqual = new EntryBuilder(entry).build();
+		Assert.assertEquals(entry, entryCopyEqual);
+		
+		Entry entryCopyNotEqual = new EntryBuilder(entry).notes("another note").build();
+		Assert.assertNotEquals(entry, entryCopyNotEqual);
 	}
 }

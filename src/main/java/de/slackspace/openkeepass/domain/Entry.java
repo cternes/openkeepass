@@ -127,6 +127,43 @@ public class Entry implements KeePassFileElement {
 	public History getHistory() {
 		return history;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((history == null) ? 0 : history.hashCode());
+		result = prime * result + ((properties == null) ? 0 : properties.hashCode());
+		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Entry other = (Entry) obj;
+		if (history == null) {
+			if (other.history != null)
+				return false;
+		} else if (!history.equals(other.history))
+			return false;
+		if (properties == null) {
+			if (other.properties != null)
+				return false;
+		} else if (!properties.equals(other.properties))
+			return false;
+		if (uuid == null) {
+			if (other.uuid != null)
+				return false;
+		} else if (!uuid.equals(other.uuid))
+			return false;
+		return true;
+	}
 
 	@Override
 	public String toString() {
