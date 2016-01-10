@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -265,6 +266,28 @@ public class KeePassDatabase {
 	 */
 	public KeePassHeader getHeader() {
 		return keepassHeader;
+	}
+	
+	/**
+	 * Encrypts a {@link KeePassFile} with the given password and writes it to the given file location.
+	 * <p>
+	 * If the KeePassFile cannot be encrypted an exception will be thrown.
+	 * 
+	 * @param keePassFile the keePass model which should be written
+	 * @param password the password to encrypt the database
+	 * @param keePassDatabaseFile the target location where the database file will be written 
+	 * @see KeePassFile
+	 */
+	public static void write(KeePassFile keePassFile, String password, String keePassDatabaseFile) {
+		if(keePassDatabaseFile == null || keePassDatabaseFile.isEmpty()) {
+			throw new IllegalArgumentException("You must provide a non-empty path where the database should be written to.");
+		}
+		
+		try {
+			write(keePassFile, password, new FileOutputStream(keePassDatabaseFile));
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**

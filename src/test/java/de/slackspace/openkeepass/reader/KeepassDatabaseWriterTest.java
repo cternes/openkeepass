@@ -141,7 +141,7 @@ public class KeepassDatabaseWriterTest {
 	public void shouldModifyMetadataAndRenameGeneralNodeThenWriteAndReadDatabase() throws FileNotFoundException {
 		String password = "abcdefg";
 		String originalDbFile = "target/test-classes/testDatabase.kdbx";
-		String modifiedDbFile = "target/test-classes/modifiedtestDatabase.kdbx";
+		String modifiedDbFile = "target/test-classes/modifiedtestDatabase2.kdbx";
 		
 		KeePassFile database = KeePassDatabase.getInstance(originalDbFile).openDatabase(password);
 		
@@ -154,7 +154,7 @@ public class KeepassDatabaseWriterTest {
 		KeePassFile modifiedKeepassFile = zipper.replace(renamedNode).replaceMeta(meta).close();
 
 		// write
-		KeePassDatabase.write(modifiedKeepassFile, password, new FileOutputStream(modifiedDbFile));
+		KeePassDatabase.write(modifiedKeepassFile, password, modifiedDbFile);
 		
 		// read and assert
 		KeePassFile readModifiedDb = KeePassDatabase.getInstance(modifiedDbFile).openDatabase(password);
