@@ -279,8 +279,11 @@ public class KeePassDatabase {
 	 * 
 	 */
 	public static void write(KeePassFile keePassFile, String password, OutputStream stream) {
+		if(stream == null) {
+			throw new IllegalArgumentException("You must provide a stream to write to.");
+		}
+		
 		try {
-			
 			if(!validateKeePassFile(keePassFile)) {
 				throw new KeePassDatabaseUnwriteable("The provided keePassFile is not valid. A valid keePassFile must contain of meta and root group and the root group must at least contain one group.");
 			}

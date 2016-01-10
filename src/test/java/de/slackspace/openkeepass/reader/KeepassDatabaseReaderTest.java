@@ -195,28 +195,4 @@ public class KeepassDatabaseReaderTest {
 		Assert.assertEquals("Sample Entry #2", entry.getTitle());
 	}
 	
-	@Test
-	public void shouldModifyMetadataAndRenameGeneralNodeThenWriteAndReadDatabase() throws FileNotFoundException {
-		String password = "abcdefg";
-		String originalDbFile = "target/test-classes/testDatabase.kdbx";
-		String modifiedDbFile = "target/test-classes/modifiedtestDatabase.kdbx";
-		
-		KeePassFile database = KeePassDatabase.getInstance(originalDbFile).openDatabase(password);
-		
-		// change db name
-		Meta meta = new MetaBuilder(database.getMeta()).databaseName("differentName").build();
-		
-		// change general node
-		GroupZipper zipper = new GroupZipper(database).down();
-		Group renamedNode = new GroupBuilder(zipper.getNode()).name("Misc").build();
-		KeePassFile modifiedKeepassFile = zipper.replace(renamedNode).replaceMeta(meta).close();
-
-		// write
-		KeePassDatabase.write(modifiedKeepassFile, password, new FileOutputStream(modifiedDbFile));
-		
-		// read and assert
-		KeePassFile readModifiedDb = KeePassDatabase.getInstance(modifiedDbFile).openDatabase(password);
-		Assert.assertEquals("differentName", readModifiedDb.getMeta().getDatabaseName());
-		Assert.assertEquals("Misc", readModifiedDb.getTopGroups().get(0).getName());
-	}
 }
