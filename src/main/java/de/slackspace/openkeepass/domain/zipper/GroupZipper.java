@@ -153,4 +153,16 @@ public class GroupZipper {
 		
 		return parent.getRoot();
 	}
+	
+	/**
+	 * Replaces the meta with the given one.
+	 * 
+	 * @param meta the given meta object
+	 * @return
+	 */
+	public GroupZipper replaceMeta(Meta meta) {
+		this.meta = meta;
+		return this;
+	}
+	
 }

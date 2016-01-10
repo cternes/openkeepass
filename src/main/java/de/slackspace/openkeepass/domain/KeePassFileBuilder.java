@@ -26,6 +26,11 @@ public class KeePassFileBuilder {
 	public KeePassFileBuilder(Meta meta) {
 		this.meta = meta;
 	}
+	
+	public KeePassFileBuilder withMeta(Meta meta) {
+		this.meta = meta;
+		return this;
+	}
 
 	public KeePassFileBuilder addTopGroups(Group... groups) {
 		for (Group group : groups) {
