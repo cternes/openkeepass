@@ -59,6 +59,11 @@ public class MetaBuilder {
 		this.historyMaxSize = meta.getHistoryMaxSize();
 	}
 	
+	public MetaBuilder databaseName(String databaseName) {
+		this.databaseName = databaseName;
+		return this;
+	}
+	 
 	public MetaBuilder generator(String generator) {
 		this.generator = generator;
 		return this;
