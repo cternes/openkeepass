@@ -53,7 +53,7 @@ public class EntryBuilder {
 	/**
 	 * Initializes the builder with values from the given entry.
 	 * 
-	 * @param entry the values from this entry will initialize the builder
+	 * @param entry the values from this will initialize the builder
 	 */
 	public EntryBuilder(Entry entry) {
 		if (entry == null) {

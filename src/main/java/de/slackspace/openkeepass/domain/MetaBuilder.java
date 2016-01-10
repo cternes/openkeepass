@@ -3,6 +3,10 @@ package de.slackspace.openkeepass.domain;
 import java.util.Calendar;
 import java.util.UUID;
 
+/**
+ * A builder to create {@link Meta} objects.
+ *
+ */
 public class MetaBuilder {
 
 	String generator = "KeePass";
@@ -27,10 +31,20 @@ public class MetaBuilder {
 	
 	long historyMaxSize;
 	
+	/**
+	 * Creates a new builder with the given database name.
+	 * 
+	 * @param databaseName the name which should be used
+	 */
 	public MetaBuilder(String databaseName) {
 		this.databaseName = databaseName;
 	}
 	
+	/**
+	 * Initializes the builder with values from the given meta.
+	 * 
+	 * @param meta the values from this will initialize the builder
+	 */
 	public MetaBuilder(Meta meta) {
 		this.generator = meta.getGenerator();
 		this.databaseName = meta.getDatabaseName();
@@ -95,6 +109,11 @@ public class MetaBuilder {
 		return this;
 	}
 	
+	/**
+	 * Builds a new meta with the values from the builder.
+	 * 
+	 * @return a new meta
+	 */
 	public Meta build() {
 		return new Meta(this);
 	}

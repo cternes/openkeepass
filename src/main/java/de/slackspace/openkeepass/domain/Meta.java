@@ -12,6 +12,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 
+/**
+ * Represents the metadata of the KeePass database like database name or how
+ * much history entries will be preserved.
+ * 
+ */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Meta {
