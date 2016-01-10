@@ -12,6 +12,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 
+/**
+ * Represents an entry in the KeePass database.
+ * It typically consists of a title, username and a password. 
+ *
+ */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Entry implements KeePassFileElement {

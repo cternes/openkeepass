@@ -2,6 +2,10 @@ package de.slackspace.openkeepass.domain;
 
 import java.util.UUID;
 
+/**
+ * A builder to create {@link Entry} objects.
+ *
+ */
 public class EntryBuilder {
 
 	UUID uuid;
@@ -20,10 +24,37 @@ public class EntryBuilder {
 
 	Entry originalEntry;
 
+	/**
+	 * Creates a new builder with a random UUID.
+	 */
 	public EntryBuilder() {
 		this.uuid = UUID.randomUUID();
 	}
+	
+	/**
+	 * Creates a new builder with the given UUID.
+	 * 
+	 * @param uuid the UUID which should be used
+	 */
+	public EntryBuilder(UUID uuid) {
+		this.uuid = uuid;
+	}
+	
+	/**
+	 * Creates a new builder with the given title.
+	 * 
+	 * @param title the title which should be used
+	 */
+	public EntryBuilder(String title) {
+		this();
+		this.title = title;
+	}
 
+	/**
+	 * Initializes the builder with values from the given entry.
+	 * 
+	 * @param entry the values from this entry will initialize the builder
+	 */
 	public EntryBuilder(Entry entry) {
 		if (entry == null) {
 			throw new IllegalArgumentException("Parameter entry must not be null");
@@ -36,15 +67,6 @@ public class EntryBuilder {
 		this.password = entry.getPassword();
 		this.notes = entry.getNotes();
 		this.url = entry.getUrl();
-	}
-
-	public EntryBuilder(UUID uuid) {
-		this.uuid = uuid;
-	}
-
-	public EntryBuilder(String title) {
-		this();
-		this.title = title;
 	}
 
 	public EntryBuilder title(String title) {
@@ -82,12 +104,17 @@ public class EntryBuilder {
 		return this;
 	}
 
+	/**
+	 * Builds a new entry with the values from the builder.
+	 * 
+	 * @return a new entry
+	 */
 	public Entry build() {
 		return new Entry(this);
 	}
 
 	/**
-	 * Build a new Entry and place the original one in the history list.
+	 * Builds a new entry and place the original one in the history list.
 	 *
 	 * @return the new entry.
 	 */
