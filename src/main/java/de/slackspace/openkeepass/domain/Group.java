@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import de.slackspace.openkeepass.util.IconUtils;
 import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 
@@ -29,9 +30,13 @@ public class Group implements KeePassFileElement {
 	
 	@XmlElement(name = "Name")
 	private String name;
-	
+
 	@XmlElement(name = "IconID")
-	private int iconId = 49; 
+	private int iconId = 49;
+
+	@XmlElement(name = "CustomIconUUID")
+	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
+	private UUID customIconUUID;
 	
 	@XmlElement(name = "Times")
 	private Times times;
@@ -124,6 +129,30 @@ public class Group implements KeePassFileElement {
 	 */
 	public int getIconId() {
 		return iconId;
+	}
+
+	/**
+	 * Returns the custom icon of this group.
+	 *
+	 * @return the UUID of the custom icon or null
+   */
+	public UUID getCustomIconUuid() {
+		return customIconUUID;
+	}
+
+	/**
+	 * Returns the raw data of either the custom icon (if specified) or the chosen stock icon.
+	 * You need to pass the registry of custom icons to be used, if a custom icon is specified (see {@link Meta#getCustomIcons()}).
+	 *
+	 * @return raw image data in PNG format or null
+   */
+	public byte[] getIconData(CustomIcons customIcons) {
+		if (customIconUUID != null) {
+			if (customIcons == null) throw new IllegalArgumentException("item uses a custom icon, but customIcons is null");
+			return customIcons.getCustomIconByUuid(customIconUUID).getData();
+		} else {
+			return IconUtils.getStockIconData(iconId);
+		}
 	}
 
 	public Times getTimes() {

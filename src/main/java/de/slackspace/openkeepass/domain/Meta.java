@@ -56,6 +56,9 @@ public class Meta {
 	@XmlElement(name = "HistoryMaxSize")
 	private long historyMaxSize;
 
+	@XmlElement(name = "CustomIcons")
+	private CustomIcons customIcons;
+
 	Meta() {}
 	
 	public Meta(MetaBuilder metaBuilder) {
@@ -114,6 +117,10 @@ public class Meta {
 
 	public boolean getRecycleBinEnabled() {
 		return recycleBinEnabled;
+	}
+
+	public CustomIcons getCustomIcons() {
+		return customIcons;
 	}
 
 	@Override
@@ -197,5 +204,4 @@ public class Meta {
 		return "Meta [generator=" + generator + ", databaseName=" + databaseName + ", databaseDescription="
 				+ databaseDescription + "]";
 	}
-	
 }
