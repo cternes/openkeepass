@@ -9,31 +9,36 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.UUID;
 
+/**
+ * Represents a custom icon in the KeePass database.
+ *
+ */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CustomIcon {
-  @XmlElement(name = "UUID")
-  @XmlJavaTypeAdapter(UUIDXmlAdapter.class)
-  private UUID uuid;
+	
+	@XmlElement(name = "UUID")
+	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
+	private UUID uuid;
 
-  @XmlElement(name = "Data")
-  private byte[] data;
+	@XmlElement(name = "Data")
+	private byte[] data;
 
-  /**
-   * Returns the UUID of this custom icon.
-   *
-   * @return this icon's UUID
-   */
-  public UUID getUuid() {
-    return uuid;
-  }
+	/**
+	 * Returns the uuid of this custom icon.
+	 *
+	 * @return the uuid of the icon
+	 */
+	public UUID getUuid() {
+		return uuid;
+	}
 
-  /**
-   * Returns the raw image data as bytes.
-   *
-   * @return image data in PNG format
-   */
-  public byte[] getData() {
-    return data;
-  }
+	/**
+	 * Returns the raw image data as bytes.
+	 *
+	 * @return raw image data as bytes
+	 */
+	public byte[] getData() {
+		return data;
+	}
 }

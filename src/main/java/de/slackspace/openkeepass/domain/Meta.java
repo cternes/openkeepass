@@ -13,8 +13,8 @@ import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 
 /**
- * Represents the metadata of the KeePass database like database name or how
- * much history entries will be preserved.
+ * Represents the metadata of the KeePass database like database name, custom icons
+ * or how much history entries will be preserved.
  * 
  */
 @XmlRootElement

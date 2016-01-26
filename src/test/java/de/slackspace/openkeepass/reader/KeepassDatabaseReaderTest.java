@@ -4,19 +4,22 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import de.slackspace.openkeepass.domain.*;
-import de.slackspace.openkeepass.util.StreamUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.KeePassDatabase;
-import de.slackspace.openkeepass.domain.zipper.GroupZipper;
+import de.slackspace.openkeepass.domain.CompressionAlgorithm;
+import de.slackspace.openkeepass.domain.CrsAlgorithm;
+import de.slackspace.openkeepass.domain.CustomIcons;
+import de.slackspace.openkeepass.domain.Entry;
+import de.slackspace.openkeepass.domain.Group;
+import de.slackspace.openkeepass.domain.KeePassFile;
+import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.util.ByteUtils;
 
 public class KeepassDatabaseReaderTest {
