@@ -1,5 +1,9 @@
 package de.slackspace.openkeepass.domain;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -11,32 +15,7 @@ public class GroupZipperTest {
 
 	@Test
 	public void shouldNavigateThroughTreeAndReplaceGroupAndEntryNode() {
-		/* Should create the following structure:
-		 * 
-		 * Root
-		 * |
-		 * |-- First entry (E)
-		 * |-- Banking (G)
-		 * |
-		 * |-- Internet (G)
-		 *     |
-		 *     |-- Shopping (G)
-		 *     	   |-- Second entry (E)
-		 *  
-		 */
-		Group root = new GroupBuilder()
-				.addEntry(new EntryBuilder("First entry").build())
-				.addGroup(new GroupBuilder("Banking").build())
-				.addGroup(new GroupBuilder("Internet")
-						.addGroup(new GroupBuilder("Shopping")
-								.addEntry(new EntryBuilder("Second entry").build())
-								.build())
-						.build())
-				.build();
-		
-		KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB")
-				.addTopGroups(root)
-				.build();		
+		KeePassFile keePassFile = createTreeStructure();		
 		
 		GroupZipper zipper = new GroupZipper(keePassFile).down().right().down();
 		Group shoppingGroup = zipper.getNode();
@@ -51,6 +30,41 @@ public class GroupZipperTest {
 		KeePassFile keePassFileModified = zipper.close();
 		Assert.assertNotNull(keePassFileModified.getGroupByName("Fashion"));
 		Assert.assertNotNull(keePassFileModified.getEntryByTitle("Entry #2"));
+	}
+
+	private KeePassFile createTreeStructure() {
+		/* Should create the following structure:
+		 * 
+		 * Root
+		 * |
+		 * |-- First entry (E)
+		 * |-- Banking (G)
+		 * |
+		 * |-- Internet (G)
+		 *     |
+		 *     |-- Shopping (G)
+		 *     	   |-- Second entry (E)
+		 *     |
+		 *     |-- Stores (G)
+		 * |
+		 * |-- Music (G) 
+		 */
+		Group root = new GroupBuilder()
+				.addEntry(new EntryBuilder("First entry").build())
+				.addGroup(new GroupBuilder("Banking").build())
+				.addGroup(new GroupBuilder("Internet")
+						.addGroup(new GroupBuilder("Shopping")
+								.addEntry(new EntryBuilder("Second entry").build())
+								.build())
+						.addGroup(new GroupBuilder("Stores").build())
+						.build())
+				.addGroup(new GroupBuilder("Music").build())
+				.build();
+		
+		KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB")
+				.addTopGroups(root)
+				.build();
+		return keePassFile;
 	}
 	
 	@Test
@@ -107,6 +121,22 @@ public class GroupZipperTest {
 		expectedException.expect(RuntimeException.class);
 		expectedException.expectMessage("Could not move up because this group does not have a parent");
 		zipper.up();
+	}
+	
+	@Test
+	public void shouldIterateThroughAllGroups() {
+		KeePassFile keePassFile = createTreeStructure();
+		
+		GroupZipper zipper = new GroupZipper(keePassFile);
+		Iterator<Group> iter = zipper.iterator();
+		
+		List<Group> visitedGroups = new ArrayList<Group>();
+		while(iter.hasNext()) {
+			Group group = iter.next();
+			visitedGroups.add(group);
+		}
+		
+		Assert.assertEquals(5, visitedGroups.size());
 	}
 
 	private KeePassFile createFlatGroupStructure() {
