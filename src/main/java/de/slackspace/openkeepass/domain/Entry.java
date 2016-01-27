@@ -91,7 +91,7 @@ public class Entry implements KeePassFileElement {
 	public byte[] getIconData(CustomIcons customIcons) {
 		if (customIconUUID != null) {
 			if (customIcons == null) throw new IllegalArgumentException("item uses a custom icon, but customIcons is null");
-			return customIcons.getCustomIconByUuid(customIconUUID).getData();
+			return customIcons.getIconByUuid(customIconUUID).getData();
 		} else {
 			return IconUtils.getStockIconData(iconId);
 		}

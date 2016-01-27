@@ -27,7 +27,7 @@ public class Group implements KeePassFileElement {
 	@XmlElement(name = "UUID")
 	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
 	private UUID uuid;
-	
+
 	@XmlElement(name = "Name")
 	private String name;
 
@@ -37,24 +37,24 @@ public class Group implements KeePassFileElement {
 	@XmlElement(name = "CustomIconUUID")
 	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
 	private UUID customIconUUID;
-	
+
 	@XmlElement(name = "Times")
 	private Times times;
-	
+
 	@XmlElement(name = "IsExpanded")
 	@XmlJavaTypeAdapter(BooleanXmlAdapter.class)
 	private Boolean isExpanded;
-	
+
 	@XmlElement(name = "Entry")
 	private List<Entry> entries = new ArrayList<Entry>();
 
 	@XmlElement(name = "Group")
 	private List<Group> groups = new ArrayList<Group>();
-	
+
 	Group() {
 		uuid = UUID.randomUUID();
 	}
-	
+
 	public Group(GroupBuilder builder) {
 		entries = builder.entries;
 		groups = builder.groups;
@@ -64,7 +64,7 @@ public class Group implements KeePassFileElement {
 		times = builder.times;
 		uuid = builder.uuid;
 	}
-	
+
 	/**
 	 * Retrieves the Uuid of this group.
 	 * 
@@ -91,7 +91,7 @@ public class Group implements KeePassFileElement {
 	public List<Group> getGroups() {
 		return groups;
 	}
-	
+
 	/**
 	 * Retrieves all entries of this group.
 	 * 
@@ -101,7 +101,7 @@ public class Group implements KeePassFileElement {
 	public List<Entry> getEntries() {
 		return entries;
 	}
-	
+
 	/**
 	 * Retrieves the entry with the given title.
 	 * 
@@ -135,7 +135,7 @@ public class Group implements KeePassFileElement {
 	 * Returns the custom icon of this group.
 	 *
 	 * @return the UUID of the custom icon or null
-   */
+	 */
 	public UUID getCustomIconUuid() {
 		return customIconUUID;
 	}
@@ -145,11 +145,11 @@ public class Group implements KeePassFileElement {
 	 * You need to pass the registry of custom icons to be used, if a custom icon is specified (see {@link Meta#getCustomIcons()}).
 	 *
 	 * @return raw image data in PNG format or null
-   */
+	 */
 	public byte[] getIconData(CustomIcons customIcons) {
 		if (customIconUUID != null) {
 			if (customIcons == null) throw new IllegalArgumentException("item uses a custom icon, but customIcons is null");
-			return customIcons.getCustomIconByUuid(customIconUUID).getData();
+			return customIcons.getIconByUuid(customIconUUID).getData();
 		} else {
 			return IconUtils.getStockIconData(iconId);
 		}
