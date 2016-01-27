@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Represents custom icons in the metadata of a KeePass file.
+ * Represents a list of custom icons in the metadata of a KeePass file.
  *
  */
 @XmlRootElement
@@ -24,7 +24,7 @@ public class CustomIcons {
 	 *
 	 * @return a list of custom icons
 	 */
-	public List<CustomIcon> getCustomIcons() {
+	public List<CustomIcon> getIcons() {
 		return customIcons;
 	}
 
@@ -34,7 +34,7 @@ public class CustomIcons {
 	 * @param uuid the uuid which should be searched
 	 * @return the custom icon if found, null otherwise
 	 */
-	public CustomIcon getCustomIconByUuid(UUID uuid) {
+	public CustomIcon getIconByUuid(UUID uuid) {
 		for (CustomIcon customIcon : customIcons) {
 			if (customIcon.getUuid() != null && customIcon.getUuid().compareTo(uuid) == 0) {
 				return customIcon;
