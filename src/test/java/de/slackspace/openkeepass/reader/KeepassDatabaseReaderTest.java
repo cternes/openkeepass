@@ -196,7 +196,7 @@ public class KeepassDatabaseReaderTest {
 		KeePassFile database = KeePassDatabase.getInstance("target/test-classes/IconsDatabase.kdbx").openDatabase("abcdefg");
 
 		CustomIcons customIcons = database.getMeta().getCustomIcons();
-		Assert.assertNotNull(customIcons);
+		Assert.assertEquals(1, customIcons.getIcons().size());
 
 		Group group = database.getGroupByName("SomeGroup");
 		Assert.assertNotNull(group);
