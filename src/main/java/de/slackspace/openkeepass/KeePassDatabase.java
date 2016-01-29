@@ -1,31 +1,10 @@
 package de.slackspace.openkeepass;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-
-import org.bouncycastle.util.encoders.Base64;
-
 import de.slackspace.openkeepass.crypto.Decrypter;
 import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.crypto.Sha256;
-import de.slackspace.openkeepass.domain.CompressionAlgorithm;
-import de.slackspace.openkeepass.domain.CrsAlgorithm;
-import de.slackspace.openkeepass.domain.KeePassFile;
-import de.slackspace.openkeepass.domain.KeePassHeader;
-import de.slackspace.openkeepass.domain.KeyFile;
+import de.slackspace.openkeepass.domain.*;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteable;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
@@ -33,6 +12,12 @@ import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
 import de.slackspace.openkeepass.util.StreamUtils;
 import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.xml.KeyFileXmlParser;
+import org.bouncycastle.util.encoders.Base64;
+
+import java.io.*;
+import java.util.Arrays;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * A KeePassDatabase is the central API class to read and write a KeePass database file.
@@ -85,31 +70,11 @@ public class KeePassDatabase {
 	
 	private KeePassDatabase(InputStream inputStream) {
 		try {
-			tryAvoidJCE();
-			
 			keepassFile = StreamUtils.toByteArray(inputStream);
 			keepassHeader.checkVersionSupport(keepassFile);
 			keepassHeader.read(keepassFile);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		}
-	}
-	
-	private void tryAvoidJCE() {
-		try {
-			Field field = Class.forName("javax.crypto.JceSecurity").getDeclaredField("isRestricted");
-			field.setAccessible(true);
-			field.set(null, java.lang.Boolean.FALSE);
-		} catch (ClassNotFoundException e) {
-			// ignore, the user will have to install JCE manually
-		} catch (NoSuchFieldException e) {
-			// ignore, the user will have to install JCE manually
-		} catch (SecurityException e) {
-			// ignore, the user will have to install JCE manually
-		} catch (IllegalArgumentException e) {
-			// ignore, the user will have to install JCE manually
-		} catch (IllegalAccessException e) {
-			// ignore, the user will have to install JCE manually
 		}
 	}
 	

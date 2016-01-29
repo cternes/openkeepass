@@ -1,26 +1,45 @@
 package de.slackspace.openkeepass.crypto;
 
+import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
+
+import javax.crypto.*;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.lang.reflect.Field;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.ShortBufferException;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
-import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 
 public class Aes {
 
 	private static final String KEY_TRANSFORMATION = "AES/ECB/NoPadding";
 	private static final String DATA_TRANSFORMATION = "AES/CBC/PKCS5Padding";
 	private static final String KEY_ALGORITHM = "AES";
-	
+
+	static {
+		tryAvoidJCE();
+	}
+
+	private static void tryAvoidJCE() {
+		try {
+			Field field = Class.forName("javax.crypto.JceSecurity").getDeclaredField("isRestricted");
+			field.setAccessible(true);
+			field.set(null, java.lang.Boolean.FALSE);
+		} catch (ClassNotFoundException e) {
+			// ignore, the user will have to install JCE manually
+		} catch (NoSuchFieldException e) {
+			// ignore, the user will have to install JCE manually
+		} catch (SecurityException e) {
+			// ignore, the user will have to install JCE manually
+		} catch (IllegalArgumentException e) {
+			// ignore, the user will have to install JCE manually
+		} catch (IllegalAccessException e) {
+			// ignore, the user will have to install JCE manually
+		}
+	}
+
+
 	public static byte[] decrypt(byte[] key, byte[] ivRaw, byte[] encryptedData) {
 		if(key == null) {
 			throw new IllegalArgumentException("Key must not be null");
