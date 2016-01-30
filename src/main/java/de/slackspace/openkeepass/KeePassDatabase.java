@@ -28,6 +28,7 @@ import java.util.zip.GZIPOutputStream;
  * 	<ul>
  * 		<li>KeePass Database V2 with password</li>
  * 		<li>KeePass Database V2 with keyfile</li>
+ * 		<li>KeePass Database V2 with combined password and keyfile</li>
  * </ul>
  * 
  * A typical read use-case should use the following idiom:
@@ -212,6 +213,7 @@ public class KeePassDatabase {
 			if (protectedBuffer.length != 32) {
 				protectedBuffer = Sha256.hash(protectedBuffer);
 			}
+			
 			return decryptAndParseDatabase(ByteUtils.concat(hashedPassword, protectedBuffer));
 		} catch (UnsupportedEncodingException e) {
 			throw new UnsupportedOperationException("The encoding UTF-8 is not supported");
