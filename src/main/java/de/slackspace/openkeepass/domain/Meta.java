@@ -127,6 +127,7 @@ public class Meta {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((customIcons == null) ? 0 : customIcons.hashCode());
 		result = prime * result + ((databaseDescription == null) ? 0 : databaseDescription.hashCode());
 		result = prime * result + ((databaseDescriptionChanged == null) ? 0 : databaseDescriptionChanged.hashCode());
 		result = prime * result + ((databaseName == null) ? 0 : databaseName.hashCode());
@@ -150,6 +151,11 @@ public class Meta {
 		if (getClass() != obj.getClass())
 			return false;
 		Meta other = (Meta) obj;
+		if (customIcons == null) {
+			if (other.customIcons != null)
+				return false;
+		} else if (!customIcons.equals(other.customIcons))
+			return false;
 		if (databaseDescription == null) {
 			if (other.databaseDescription != null)
 				return false;

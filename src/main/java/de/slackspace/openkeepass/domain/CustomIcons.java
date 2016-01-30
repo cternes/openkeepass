@@ -43,4 +43,30 @@ public class CustomIcons {
 
 		return null;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((customIcons == null) ? 0 : customIcons.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CustomIcons other = (CustomIcons) obj;
+		if (customIcons == null) {
+			if (other.customIcons != null)
+				return false;
+		} else if (!customIcons.equals(other.customIcons))
+			return false;
+		return true;
+	}
+	
 }
