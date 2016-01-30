@@ -136,7 +136,7 @@ public class GroupZipperTest {
 			visitedGroups.add(group);
 		}
 
-		Assert.assertEquals(5, visitedGroups.size());
+		Assert.assertEquals(6, visitedGroups.size());
 	}
 
 	private KeePassFile createFlatGroupStructure() {
