@@ -1,14 +1,13 @@
 package de.slackspace.openkeepass.crypto;
 
-import java.io.IOException;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.util.ByteUtils;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.io.IOException;
 
 public class DecrypterTest {
 

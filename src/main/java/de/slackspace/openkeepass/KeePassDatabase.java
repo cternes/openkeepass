@@ -9,6 +9,7 @@ import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteable;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
+import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.StreamUtils;
 import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.xml.KeyFileXmlParser;
@@ -160,7 +161,65 @@ public class KeePassDatabase {
 	}
 	
 	/**
-	 * Opens a KeePass database with the given password and returns the KeePassFile for further processing.
+	 * Opens a KeePass database with the given password and keyfile and returns the KeePassFile for further processing.
+	 * <p>
+	 * If the database cannot be decrypted with the provided password and keyfile an exception will be thrown.
+	 *
+	 * @param password the password to open the database
+	 * @param keyFile the password to open the database
+	 * @return a KeePassFile
+	 * @see KeePassFile
+	 */
+	public KeePassFile openDatabase(String password, File keyFile) {
+		if(password == null) {
+			throw new IllegalArgumentException("The password for the database must not be null. Please provide a valid password.");
+		}
+		if(keyFile == null) {
+			throw new IllegalArgumentException("You must provide a valid KeePass keyfile.");
+		}
+
+		try {
+			return openDatabase(password, new FileInputStream(keyFile));
+		} catch (FileNotFoundException e) {
+			throw new IllegalArgumentException("The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.");
+		}
+	}
+
+	/**
+	 * Opens a KeePass database with the given password and keyfile stream and returns the KeePassFile for further processing.
+	 * <p>
+	 * If the database cannot be decrypted with the provided password and keyfile stream an exception will be thrown.
+	 *
+	 * @param password the password to open the database
+	 * @param keyFileStream the keyfile to open the database as stream
+	 * @return a KeePassFile
+	 * @see KeePassFile
+	 */
+	public KeePassFile openDatabase(String password, InputStream keyFileStream) {
+		if(password == null) {
+			throw new IllegalArgumentException("The password for the database must not be null. Please provide a valid password.");
+		}
+		if(keyFileStream == null) {
+			throw new IllegalArgumentException("You must provide a non-empty KeePass keyfile stream.");
+		}
+
+		try {
+			byte[] passwordBytes = password.getBytes("UTF-8");
+			byte[] hashedPassword = Sha256.hash(passwordBytes);
+
+			KeyFile keyFile = keyFileXmlParser.fromXml(keyFileStream);
+			byte[] protectedBuffer = Base64.decode(keyFile.getKey().getData().getBytes("UTF-8"));
+			if (protectedBuffer.length != 32) {
+				protectedBuffer = Sha256.hash(protectedBuffer);
+			}
+			return decryptAndParseDatabase(ByteUtils.concat(hashedPassword, protectedBuffer));
+		} catch (UnsupportedEncodingException e) {
+			throw new UnsupportedOperationException("The encoding UTF-8 is not supported");
+		}
+	}
+
+	/**
+	 * Opens a KeePass database with the given keyfile and returns the KeePassFile for further processing.
 	 * <p>
 	 * If the database cannot be decrypted with the provided password an exception will be thrown.
 	 * 
