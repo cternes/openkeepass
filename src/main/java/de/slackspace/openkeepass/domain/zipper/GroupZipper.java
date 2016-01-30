@@ -320,6 +320,11 @@ public class GroupZipper {
 
 			return getNextRightNode(parent);
 		}
+		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException("Remove is not supported by GroupIterator");
+		}
 	}
 
 }
