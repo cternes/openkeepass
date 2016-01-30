@@ -13,6 +13,7 @@ import de.slackspace.openkeepass.domain.History;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.Property;
 import de.slackspace.openkeepass.domain.PropertyValue;
+import de.slackspace.openkeepass.domain.enricher.IconEnricher;
 
 public class KeePassDatabaseXmlParser {
 
@@ -20,6 +21,8 @@ public class KeePassDatabaseXmlParser {
 		KeePassFile keePassFile = JAXB.unmarshal(inputStream, KeePassFile.class);
 		
 		processAllProtectedValues(false, protectedStringCrypto, keePassFile);
+		
+		keePassFile = new IconEnricher().enrichNodesWithIconData(keePassFile);
 		
 		return keePassFile;
 	}

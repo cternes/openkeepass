@@ -198,16 +198,19 @@ public class KeepassDatabaseReaderTest {
 		CustomIcons customIcons = database.getMeta().getCustomIcons();
 		Assert.assertEquals(1, customIcons.getIcons().size());
 
+		List<Group> groups = database.getGroups();
+		Assert.assertEquals(1, groups.size());
+		
 		Group group = database.getGroupByName("SomeGroup");
 		Assert.assertNotNull(group);
 
 		Entry entry = database.getEntryByTitle("SomeEntry");
 		Assert.assertNotNull(entry);
 
-		byte[] groupData = group.getIconData(customIcons);
+		byte[] groupData = group.getIconData();
 		Assert.assertNotNull(groupData);
 
-		byte[] entryData = entry.getIconData(customIcons);
+		byte[] entryData = entry.getIconData();
 		Assert.assertNotNull(entryData);
 
 		Assert.assertArrayEquals("group and entry icon are different", groupData, entryData);
