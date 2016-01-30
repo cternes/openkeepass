@@ -13,8 +13,8 @@ import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 
 /**
- * Represents the metadata of the KeePass database like database name or how
- * much history entries will be preserved.
+ * Represents the metadata of the KeePass database like database name, custom icons
+ * or how much history entries will be preserved.
  * 
  */
 @XmlRootElement
@@ -55,6 +55,9 @@ public class Meta {
 	
 	@XmlElement(name = "HistoryMaxSize")
 	private long historyMaxSize;
+
+	@XmlElement(name = "CustomIcons")
+	private CustomIcons customIcons;
 
 	Meta() {}
 	
@@ -116,10 +119,15 @@ public class Meta {
 		return recycleBinEnabled;
 	}
 
+	public CustomIcons getCustomIcons() {
+		return customIcons;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((customIcons == null) ? 0 : customIcons.hashCode());
 		result = prime * result + ((databaseDescription == null) ? 0 : databaseDescription.hashCode());
 		result = prime * result + ((databaseDescriptionChanged == null) ? 0 : databaseDescriptionChanged.hashCode());
 		result = prime * result + ((databaseName == null) ? 0 : databaseName.hashCode());
@@ -143,6 +151,11 @@ public class Meta {
 		if (getClass() != obj.getClass())
 			return false;
 		Meta other = (Meta) obj;
+		if (customIcons == null) {
+			if (other.customIcons != null)
+				return false;
+		} else if (!customIcons.equals(other.customIcons))
+			return false;
 		if (databaseDescription == null) {
 			if (other.databaseDescription != null)
 				return false;
@@ -197,5 +210,4 @@ public class Meta {
 		return "Meta [generator=" + generator + ", databaseName=" + databaseName + ", databaseDescription="
 				+ databaseDescription + "]";
 	}
-	
 }

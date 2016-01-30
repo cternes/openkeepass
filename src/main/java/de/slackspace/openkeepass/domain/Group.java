@@ -26,30 +26,36 @@ public class Group implements KeePassFileElement {
 	@XmlElement(name = "UUID")
 	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
 	private UUID uuid;
-	
+
 	@XmlElement(name = "Name")
 	private String name;
-	
+
 	@XmlElement(name = "IconID")
-	private int iconId = 49; 
+	private int iconId = 49;
 	
+	private transient byte[] iconData;
+
+	@XmlElement(name = "CustomIconUUID")
+	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
+	private UUID customIconUUID;
+
 	@XmlElement(name = "Times")
 	private Times times;
-	
+
 	@XmlElement(name = "IsExpanded")
 	@XmlJavaTypeAdapter(BooleanXmlAdapter.class)
 	private Boolean isExpanded;
-	
+
 	@XmlElement(name = "Entry")
 	private List<Entry> entries = new ArrayList<Entry>();
 
 	@XmlElement(name = "Group")
 	private List<Group> groups = new ArrayList<Group>();
-	
+
 	Group() {
 		uuid = UUID.randomUUID();
 	}
-	
+
 	public Group(GroupBuilder builder) {
 		entries = builder.entries;
 		groups = builder.groups;
@@ -58,8 +64,9 @@ public class Group implements KeePassFileElement {
 		name = builder.name;
 		times = builder.times;
 		uuid = builder.uuid;
+		iconData = builder.iconData;
 	}
-	
+
 	/**
 	 * Retrieves the Uuid of this group.
 	 * 
@@ -86,7 +93,7 @@ public class Group implements KeePassFileElement {
 	public List<Group> getGroups() {
 		return groups;
 	}
-	
+
 	/**
 	 * Retrieves all entries of this group.
 	 * 
@@ -96,7 +103,7 @@ public class Group implements KeePassFileElement {
 	public List<Entry> getEntries() {
 		return entries;
 	}
-	
+
 	/**
 	 * Retrieves the entry with the given title.
 	 * 
@@ -124,6 +131,25 @@ public class Group implements KeePassFileElement {
 	 */
 	public int getIconId() {
 		return iconId;
+	}
+
+	/**
+	 * Returns the custom icon of this group.
+	 *
+	 * @return the UUID of the custom icon or null
+	 */
+	public UUID getCustomIconUuid() {
+		return customIconUUID;
+	}
+
+	/**
+	 * Returns the raw data of either the custom icon (if specified) or the
+	 * chosen stock icon.
+	 *
+	 * @return the raw icon data if available or null otherwise
+	 */
+	public byte[] getIconData() {
+		return iconData;
 	}
 
 	public Times getTimes() {
