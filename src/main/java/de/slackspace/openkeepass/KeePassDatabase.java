@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -85,31 +84,11 @@ public class KeePassDatabase {
 	
 	private KeePassDatabase(InputStream inputStream) {
 		try {
-			tryAvoidJCE();
-			
 			keepassFile = StreamUtils.toByteArray(inputStream);
 			keepassHeader.checkVersionSupport(keepassFile);
 			keepassHeader.read(keepassFile);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		}
-	}
-	
-	private void tryAvoidJCE() {
-		try {
-			Field field = Class.forName("javax.crypto.JceSecurity").getDeclaredField("isRestricted");
-			field.setAccessible(true);
-			field.set(null, java.lang.Boolean.FALSE);
-		} catch (ClassNotFoundException e) {
-			// ignore, the user will have to install JCE manually
-		} catch (NoSuchFieldException e) {
-			// ignore, the user will have to install JCE manually
-		} catch (SecurityException e) {
-			// ignore, the user will have to install JCE manually
-		} catch (IllegalArgumentException e) {
-			// ignore, the user will have to install JCE manually
-		} catch (IllegalAccessException e) {
-			// ignore, the user will have to install JCE manually
 		}
 	}
 	
