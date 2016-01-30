@@ -1,12 +1,12 @@
 package de.slackspace.openkeepass.crypto;
 
+import de.slackspace.openkeepass.domain.KeePassHeader;
+import de.slackspace.openkeepass.util.StreamUtils;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import de.slackspace.openkeepass.domain.KeePassHeader;
-import de.slackspace.openkeepass.util.StreamUtils;
 
 public class Decrypter {
 
@@ -52,8 +52,7 @@ public class Decrypter {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
 		stream.write(header.getMasterSeed(), 0, 32);
 		stream.write(transformedHashedPwd, 0, 32);
-		
-		byte[] aesKey = Sha256.hash(stream.toByteArray());
-		return aesKey;
+
+		return Sha256.hash(stream.toByteArray());
 	}
 }
