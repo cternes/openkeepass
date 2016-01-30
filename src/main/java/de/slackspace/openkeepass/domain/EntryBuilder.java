@@ -24,26 +24,30 @@ public class EntryBuilder {
 
 	Entry originalEntry;
 
+	byte[] iconData;
+
 	/**
 	 * Creates a new builder with a random UUID.
 	 */
 	public EntryBuilder() {
 		this.uuid = UUID.randomUUID();
 	}
-	
+
 	/**
 	 * Creates a new builder with the given UUID.
 	 * 
-	 * @param uuid the UUID which should be used
+	 * @param uuid
+	 *            the UUID which should be used
 	 */
 	public EntryBuilder(UUID uuid) {
 		this.uuid = uuid;
 	}
-	
+
 	/**
 	 * Creates a new builder with the given title.
 	 * 
-	 * @param title the title which should be used
+	 * @param title
+	 *            the title which should be used
 	 */
 	public EntryBuilder(String title) {
 		this();
@@ -53,7 +57,8 @@ public class EntryBuilder {
 	/**
 	 * Initializes the builder with values from the given entry.
 	 * 
-	 * @param entry the values from this will initialize the builder
+	 * @param entry
+	 *            the values from this will initialize the builder
 	 */
 	public EntryBuilder(Entry entry) {
 		if (entry == null) {
@@ -105,6 +110,15 @@ public class EntryBuilder {
 	}
 
 	/**
+	 * WARNING: not yet completely implemented, will not write data into KeePass file!
+	 * 
+	 */
+	public EntryBuilder iconData(byte[] iconData) {
+		this.iconData = iconData;
+		return this;
+	}
+
+	/**
 	 * Builds a new entry with the values from the builder.
 	 * 
 	 * @return a new entry
@@ -122,11 +136,11 @@ public class EntryBuilder {
 		if (originalEntry == null) {
 			throw new IllegalArgumentException("originalEntry is not set");
 		}
-		
+
 		if (history == null) {
 			history = new History();
 		}
-		
+
 		history.getHistoricEntries().add(originalEntry);
 		return build();
 	}
