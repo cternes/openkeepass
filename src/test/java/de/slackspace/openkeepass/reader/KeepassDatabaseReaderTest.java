@@ -18,6 +18,7 @@ import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
+import de.slackspace.openkeepass.domain.Property;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 import de.slackspace.openkeepass.util.ByteUtils;
 
@@ -134,6 +135,22 @@ public class KeepassDatabaseReaderTest {
 		Assert.assertEquals("gC03cizrzcBxytfKurWQ", entries.get(2).getPassword());
 		Assert.assertEquals("jXjHEh3c8wcl0hank0qG", entries.get(3).getPassword());
 		Assert.assertEquals("wkzB5KGIUoP8LKSSEngX", entries.get(4).getPassword());
+	}
+	
+	@Test
+	public void whenEntryHasCustomPropertiesShouldReadCustomProperties() throws FileNotFoundException {
+		FileInputStream file = new FileInputStream("target/test-classes/fullBlownDatabase.kdbx");
+
+		KeePassDatabase reader = KeePassDatabase.getInstance(file);
+		KeePassFile database = reader.openDatabase("123456");
+
+		Entry entry = database.getEntryByTitle("6th Entry");
+
+		Assert.assertEquals("6th Entry", entry.getTitle());
+		Property customProperty = entry.getPropertyByName("x");
+		
+		Assert.assertNotNull("CustomProperty should not be null", customProperty);
+		Assert.assertEquals("y", customProperty.getValue());
 	}
 
 	@Test
