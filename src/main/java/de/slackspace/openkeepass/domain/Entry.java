@@ -60,6 +60,8 @@ public class Entry implements KeePassFileElement {
 		setValue(false, TITLE, builder.title);
 		setValue(false, USER_NAME, builder.username);
 		setValue(false, URL, builder.url);
+		
+		this.properties.addAll(builder.customPropertyList);
 	}
 
 	public UUID getUuid() {
@@ -96,6 +98,20 @@ public class Entry implements KeePassFileElement {
 
 	public List<Property> getProperties() {
 		return properties;
+	}
+	
+	public List<Property> getCustomProperties() {
+		List<Property> customProperties = new ArrayList<Property>();
+		
+		for (Property property : properties) {
+			if(!property.getKey().equals(TITLE) && !property.getKey().equals(PASSWORD) 
+					&& !property.getKey().equals(URL) && !property.getKey().equals(NOTES)
+					&& !property.getKey().equals(USER_NAME)) {
+				customProperties.add(property);
+			}
+		}
+		
+		return customProperties;
 	}
 
 	public String getTitle() {
