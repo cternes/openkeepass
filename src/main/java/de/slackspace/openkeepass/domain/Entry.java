@@ -13,8 +13,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 
 /**
- * Represents an entry in the KeePass database.
- * It typically consists of a title, username and a password. 
+ * Represents an entry in the KeePass database. It typically consists of a
+ * title, username and a password.
  *
  */
 @XmlRootElement
@@ -33,7 +33,7 @@ public class Entry implements KeePassFileElement {
 
 	@XmlElement(name = "IconID")
 	private int iconId = 0;
-	
+
 	private transient byte[] iconData;
 
 	@XmlElement(name = "CustomIconUUID")
@@ -49,17 +49,19 @@ public class Entry implements KeePassFileElement {
 	Entry() {
 		this.uuid = UUID.randomUUID();
 	}
-	
+
 	public Entry(EntryBuilder builder) {
-		this.history = builder.history; 
+		this.history = builder.history;
 		this.uuid = builder.uuid;
 		this.iconData = builder.iconData;
-		
+
 		setValue(false, NOTES, builder.notes);
 		setValue(true, PASSWORD, builder.password);
 		setValue(false, TITLE, builder.title);
 		setValue(false, USER_NAME, builder.username);
 		setValue(false, URL, builder.url);
+
+		this.properties.addAll(builder.customPropertyList);
 	}
 
 	public UUID getUuid() {
@@ -98,6 +100,20 @@ public class Entry implements KeePassFileElement {
 		return properties;
 	}
 
+	public List<Property> getCustomProperties() {
+		List<Property> customProperties = new ArrayList<Property>();
+
+		for (Property property : properties) {
+			if (!property.getKey().equals(TITLE) && !property.getKey().equals(PASSWORD)
+					&& !property.getKey().equals(URL) && !property.getKey().equals(NOTES)
+					&& !property.getKey().equals(USER_NAME)) {
+				customProperties.add(property);
+			}
+		}
+
+		return customProperties;
+	}
+
 	public String getTitle() {
 		return getValueFromProperty(TITLE);
 	}
@@ -117,7 +133,6 @@ public class Entry implements KeePassFileElement {
 	public String getUsername() {
 		return getValueFromProperty(USER_NAME);
 	}
-
 
 	public boolean isTitleProtected() {
 		return getPropertyByName(TITLE).isProtected();
@@ -149,7 +164,8 @@ public class Entry implements KeePassFileElement {
 	/**
 	 * Retrieves a property by it's name (ignores case)
 	 * 
-	 * @param name the name of the property to find
+	 * @param name
+	 *            the name of the property to find
 	 * @return the property if found, null otherwise
 	 */
 	public Property getPropertyByName(String name) {
@@ -165,7 +181,7 @@ public class Entry implements KeePassFileElement {
 	public History getHistory() {
 		return history;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

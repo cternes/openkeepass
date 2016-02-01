@@ -32,7 +32,7 @@ public class Group implements KeePassFileElement {
 
 	@XmlElement(name = "IconID")
 	private int iconId = 49;
-	
+
 	private transient byte[] iconData;
 
 	@XmlElement(name = "CustomIconUUID")
@@ -107,12 +107,13 @@ public class Group implements KeePassFileElement {
 	/**
 	 * Retrieves the entry with the given title.
 	 * 
-	 * @param title the title of the entry which should be retrieved
+	 * @param title
+	 *            the title of the entry which should be retrieved
 	 * @return an entry with matching title
 	 */
 	public Entry getEntryByTitle(String title) {
 		for (Entry entry : entries) {
-			if(entry.getTitle().equalsIgnoreCase(title)) {
+			if (entry.getTitle().equalsIgnoreCase(title)) {
 				return entry;
 			}
 		}
@@ -159,10 +160,11 @@ public class Group implements KeePassFileElement {
 	/**
 	 * Retrieves the last expanded status of the group.
 	 * 
-	 * @return true if the group was expanded the last time it was opened in keepass
+	 * @return true if the group was expanded the last time it was opened in
+	 *         keepass
 	 */
 	public boolean isExpanded() {
-		if(isExpanded == null) {
+		if (isExpanded == null) {
 			return false;
 		}
 		return isExpanded.booleanValue();

@@ -15,7 +15,7 @@ import java.util.UUID;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CustomIcons {
-	
+
 	@XmlElement(name = "Icon")
 	private List<CustomIcon> customIcons = new ArrayList<CustomIcon>();
 
@@ -31,7 +31,8 @@ public class CustomIcons {
 	/**
 	 * Retrieves a custom icon based on its uuid.
 	 *
-	 * @param uuid the uuid which should be searched
+	 * @param uuid
+	 *            the uuid which should be searched
 	 * @return the custom icon if found, null otherwise
 	 */
 	public CustomIcon getIconByUuid(UUID uuid) {
@@ -68,5 +69,5 @@ public class CustomIcons {
 			return false;
 		return true;
 	}
-	
+
 }

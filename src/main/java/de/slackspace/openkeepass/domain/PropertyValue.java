@@ -13,8 +13,9 @@ import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
  * Represents the value part of a key value {@link Property}.
  * <p>
  * 
- * A value can be protected or not depending on the database setting. Protected values will be additionally encrypted in the database.
- * Typically values like passwords are protected.
+ * A value can be protected or not depending on the database setting. Protected
+ * values will be additionally encrypted in the database. Typically values like
+ * passwords are protected.
  *
  */
 @XmlRootElement
@@ -27,25 +28,26 @@ public class PropertyValue {
 
 	@XmlValue
 	private String value;
-	
-	PropertyValue() { }
-	
+
+	PropertyValue() {
+	}
+
 	public PropertyValue(boolean isProtected, String value) {
 		this.isProtected = isProtected;
 		this.value = value;
 	}
-	
+
 	public String getValue() {
 		return value;
 	}
 
 	public boolean isProtected() {
-		if(isProtected == null) {
+		if (isProtected == null) {
 			return false;
 		}
 		return isProtected.booleanValue();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "PropertyValue [value=" + value + "]";
@@ -81,5 +83,5 @@ public class PropertyValue {
 			return false;
 		return true;
 	}
-	
+
 }

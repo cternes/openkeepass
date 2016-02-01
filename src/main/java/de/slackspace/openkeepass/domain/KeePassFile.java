@@ -15,7 +15,8 @@ import de.slackspace.openkeepass.filter.Filter;
 import de.slackspace.openkeepass.filter.ListFilter;
 
 /**
- * A KeePassFile represents the structure of a KeePass database. This is the central entry point to read data from the KeePass database.
+ * A KeePassFile represents the structure of a KeePass database. This is the
+ * central entry point to read data from the KeePass database.
  */
 @XmlRootElement(name = "KeePassFile")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -30,13 +31,14 @@ public class KeePassFile implements KeePassFileElement {
 	@XmlTransient
 	private ProtectedStringCrypto protectedStringCrypto;
 
-	KeePassFile() {}
-	
+	KeePassFile() {
+	}
+
 	public KeePassFile(KeePassFileBuilder builder) {
 		this.meta = builder.meta;
 		this.root = builder.root;
 	}
-	
+
 	/**
 	 * Retrieves the meta section of a KeePass database.
 	 *
@@ -86,9 +88,11 @@ public class KeePassFile implements KeePassFileElement {
 	/**
 	 * Retrieves a single entry with an exactly matching title.
 	 * <p>
-	 * If there are multiple entries with the same title, the first one found will be returned.
+	 * If there are multiple entries with the same title, the first one found
+	 * will be returned.
 	 *
-	 * @param title the title which should be searched
+	 * @param title
+	 *            the title which should be searched
 	 * @return an entry with a matching title
 	 * @see Entry
 	 */
@@ -105,11 +109,15 @@ public class KeePassFile implements KeePassFileElement {
 	/**
 	 * Retrieves a list of entries with matching titles.
 	 * <p>
-	 * If the <tt>matchExactly</tt> flag is true, only entries which have an exactly matching title will be returned,
-	 * otherwise all entries which contain the given title will be returned.
+	 * If the <tt>matchExactly</tt> flag is true, only entries which have an
+	 * exactly matching title will be returned, otherwise all entries which
+	 * contain the given title will be returned.
 	 *
-	 * @param title        the title which should be searched
-	 * @param matchExactly if true only entries which have an exactly matching title will be returned
+	 * @param title
+	 *            the title which should be searched
+	 * @param matchExactly
+	 *            if true only entries which have an exactly matching title will
+	 *            be returned
 	 * @return a list of entries with matching titles
 	 * @see Entry
 	 */
@@ -139,15 +147,19 @@ public class KeePassFile implements KeePassFileElement {
 
 		});
 	}
-	
+
 	/**
 	 * Retrieves a list of group with matching names.
 	 * <p>
-	 * If the <tt>matchExactly</tt> flag is true, only groups which have an exactly matching name will be returned,
-	 * otherwise all groups which contain the given name will be returned.
+	 * If the <tt>matchExactly</tt> flag is true, only groups which have an
+	 * exactly matching name will be returned, otherwise all groups which
+	 * contain the given name will be returned.
 	 *
-	 * @param name        the name which should be searched
-	 * @param matchExactly if true only groups which have an exactly matching name will be returned
+	 * @param name
+	 *            the name which should be searched
+	 * @param matchExactly
+	 *            if true only groups which have an exactly matching name will
+	 *            be returned
 	 * @return a list of entries with matching names
 	 * @see Group
 	 */
@@ -193,7 +205,7 @@ public class KeePassFile implements KeePassFileElement {
 
 		return allEntries;
 	}
-	
+
 	/**
 	 * Retrieves a list of all groups in the KeePass database.
 	 * 
@@ -202,20 +214,22 @@ public class KeePassFile implements KeePassFileElement {
 	 */
 	public List<Group> getGroups() {
 		List<Group> allGroups = new ArrayList<Group>();
-		
+
 		if (root != null) {
 			getGroups(root, allGroups);
 		}
-		
+
 		return allGroups;
-	} 
-	
+	}
+
 	/**
 	 * Retrieves a single group with an exactly matching name.
 	 * <p>
-	 * If there are multiple groups with the same name, the first one found will be returned.
+	 * If there are multiple groups with the same name, the first one found will
+	 * be returned.
 	 *
-	 * @param name the name which should be searched
+	 * @param name
+	 *            the name which should be searched
 	 * @return a group with a matching name
 	 * @see Group
 	 */
@@ -241,11 +255,11 @@ public class KeePassFile implements KeePassFileElement {
 
 		return;
 	}
-	
+
 	private void getGroups(Group parentGroup, List<Group> groups) {
 		List<Group> parentGroups = parentGroup.getGroups();
 		groups.addAll(parentGroups);
-		
+
 		if (parentGroups.size() != 0) {
 			for (Group group : parentGroups) {
 				getGroups(group, groups);
@@ -258,7 +272,8 @@ public class KeePassFile implements KeePassFileElement {
 	/**
 	 * Retrieves an entry based on its UUID.
 	 *
-	 * @param UUID the uuid which should be searched
+	 * @param UUID
+	 *            the uuid which should be searched
 	 * @return the found entry or null
 	 */
 	public Entry getEntryByUUID(final UUID UUID) {
@@ -276,11 +291,10 @@ public class KeePassFile implements KeePassFileElement {
 				}
 			}
 		});
-		
+
 		if (entries.size() == 1) {
 			return entries.get(0);
-		}
-		else {
+		} else {
 			return null;
 		}
 	}

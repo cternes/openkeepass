@@ -7,7 +7,7 @@ import java.security.SecureRandom;
 public class RandomGenerator {
 
 	private SecureRandom random;
-	
+
 	public RandomGenerator() {
 		try {
 			random = SecureRandom.getInstance("SHA1PRNG", "SUN");
@@ -17,12 +17,11 @@ public class RandomGenerator {
 			throw new RuntimeException("Provider 'SUN' is unknown", e);
 		}
 	}
-	
-	
+
 	public byte[] getRandomBytes(int numBytes) {
 		byte[] randomBytes = new byte[numBytes];
 		random.nextBytes(randomBytes);
-		
+
 		return randomBytes;
 	}
 }

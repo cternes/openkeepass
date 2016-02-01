@@ -105,11 +105,11 @@ public class GroupZipper {
 		if (!canUp()) {
 			throw new RuntimeException("Could not move up because this group does not have a parent");
 		}
-		
+
 		this.index = parent.index;
 		this.node = parent.node;
 		this.parent = parent.parent;
-		
+
 		return this;
 	}
 
@@ -198,10 +198,9 @@ public class GroupZipper {
 	 * @return
 	 */
 	public GroupZipper replace(Group group) {
-		if(parent == null) {
+		if (parent == null) {
 			node = group;
-		}
-		else {
+		} else {
 			parent.getNode().getGroups().set(index, group);
 		}
 
@@ -261,7 +260,7 @@ public class GroupZipper {
 	private class GroupIterator implements Iterator<Group> {
 
 		boolean isFirst = true;
-		
+
 		/**
 		 * Checks if it is possible for any parent node to go right in the tree.
 		 * 
@@ -292,10 +291,10 @@ public class GroupZipper {
 
 		@Override
 		public boolean hasNext() {
-			if(isFirst) {
+			if (isFirst) {
 				return true;
 			}
-			
+
 			if (canDown() || canRight()) {
 				return true;
 			}
@@ -305,11 +304,11 @@ public class GroupZipper {
 
 		@Override
 		public Group next() {
-			if(isFirst) {
+			if (isFirst) {
 				isFirst = false;
 				return getNode();
 			}
-			
+
 			if (canDown()) {
 				return down().getNode();
 			}
@@ -320,7 +319,7 @@ public class GroupZipper {
 
 			return getNextRightNode(parent);
 		}
-		
+
 		@Override
 		public void remove() {
 			throw new UnsupportedOperationException("Remove is not supported by GroupIterator");

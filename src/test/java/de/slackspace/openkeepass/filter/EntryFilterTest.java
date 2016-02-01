@@ -14,21 +14,21 @@ public class EntryFilterTest {
 	@Test
 	public void whenInputFilterIsMatchExactlyItShouldReturnMatchingEntries() {
 		List<Entry> entries = createEntries();
-		
+
 		List<Entry> results = ListFilter.filter(entries, new Filter<Entry>() {
 			public boolean matches(Entry item) {
-				if(item.getTitle().equalsIgnoreCase("test")) {
+				if (item.getTitle().equalsIgnoreCase("test")) {
 					return true;
 				}
-				
+
 				return false;
 			};
 		});
-		
+
 		Assert.assertEquals(1, results.size());
 		Assert.assertEquals("test", results.get(0).getTitle());
 	}
-	
+
 	private List<Entry> createEntries() {
 		ArrayList<Entry> list = new ArrayList<Entry>();
 		list.add(createEntry("test", "testPassword"));
@@ -40,8 +40,8 @@ public class EntryFilterTest {
 
 	private Entry createEntry(String title, String password) {
 		Entry entry = new EntryBuilder(title).password(password).build();
-		
+
 		return entry;
 	}
-	
+
 }

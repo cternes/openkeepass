@@ -1,5 +1,7 @@
 package de.slackspace.openkeepass.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -25,6 +27,8 @@ public class EntryBuilder {
 	Entry originalEntry;
 
 	byte[] iconData;
+
+	List<Property> customPropertyList = new ArrayList<Property>();
 
 	/**
 	 * Creates a new builder with a random UUID.
@@ -72,6 +76,7 @@ public class EntryBuilder {
 		this.password = entry.getPassword();
 		this.notes = entry.getNotes();
 		this.url = entry.getUrl();
+		this.customPropertyList.addAll(entry.getCustomProperties());
 	}
 
 	public EntryBuilder title(String title) {
@@ -110,7 +115,8 @@ public class EntryBuilder {
 	}
 
 	/**
-	 * WARNING: not yet completely implemented, will not write data into KeePass file!
+	 * WARNING: not yet completely implemented, will not write data into KeePass
+	 * file!
 	 * 
 	 */
 	public EntryBuilder iconData(byte[] iconData) {

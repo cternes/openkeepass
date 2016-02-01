@@ -10,7 +10,7 @@ public class KeyFileXmlParser {
 
 	public KeyFile fromXml(InputStream inputStream) {
 		KeyFile keyFile = JAXB.unmarshal(inputStream, KeyFile.class);
-		
+
 		return keyFile;
 	}
 }

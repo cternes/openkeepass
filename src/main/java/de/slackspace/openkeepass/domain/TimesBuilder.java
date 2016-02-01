@@ -11,20 +11,20 @@ public class TimesBuilder {
 	Calendar lastModificationTime;
 
 	Calendar creationTime;
-	
+
 	Calendar lastAccessTime;
 
 	Calendar expiryTime;
-	
+
 	boolean expires;
-	
+
 	int usageCount;
-	
+
 	Calendar locationChanged;
-	
+
 	public TimesBuilder() {
 	}
-	
+
 	public TimesBuilder(Times times) {
 		this.lastModificationTime = times.getLastModificationTime();
 		this.creationTime = times.getCreationTime();
@@ -34,7 +34,7 @@ public class TimesBuilder {
 		this.usageCount = times.getUsageCount();
 		this.locationChanged = times.getLocationChanged();
 	}
-	
+
 	public TimesBuilder lastModificationTime(Calendar lastModificationTime) {
 		this.lastModificationTime = lastModificationTime;
 		return this;

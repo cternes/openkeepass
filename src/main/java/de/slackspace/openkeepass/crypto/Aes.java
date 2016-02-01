@@ -45,30 +45,30 @@ public class Aes {
 	}
 
 	public static byte[] decrypt(byte[] key, byte[] ivRaw, byte[] encryptedData) {
-		if(key == null) {
+		if (key == null) {
 			throw new IllegalArgumentException("Key must not be null");
 		}
-		if(ivRaw == null) {
+		if (ivRaw == null) {
 			throw new IllegalArgumentException("IV must not be null");
 		}
-		if(encryptedData == null) {
+		if (encryptedData == null) {
 			throw new IllegalArgumentException("EncryptedData must not be null");
 		}
-		
+
 		return transformData(key, ivRaw, encryptedData, Cipher.DECRYPT_MODE);
 	}
-	
+
 	public static byte[] encrypt(byte[] key, byte[] ivRaw, byte[] data) {
-		if(key == null) {
+		if (key == null) {
 			throw new IllegalArgumentException("Key must not be null");
 		}
-		if(ivRaw == null) {
+		if (ivRaw == null) {
 			throw new IllegalArgumentException("IV must not be null");
 		}
-		if(data == null) {
+		if (data == null) {
 			throw new IllegalArgumentException("Data must not be null");
 		}
-		
+
 		return transformData(key, ivRaw, data, Cipher.ENCRYPT_MODE);
 	}
 
@@ -93,40 +93,41 @@ public class Aes {
 			throw createCryptoException(e);
 		}
 	}
-	
+
 	public static byte[] transformKey(byte[] key, byte[] data, long rounds) {
-		if(key == null) {
+		if (key == null) {
 			throw new IllegalArgumentException("Key must not be null");
 		}
-		if(data == null) {
+		if (data == null) {
 			throw new IllegalArgumentException("Data must not be null");
 		}
-		if(rounds < 1) {
+		if (rounds < 1) {
 			throw new IllegalArgumentException("Rounds must be > 1");
 		}
-		
+
 		try {
 			Cipher c = Cipher.getInstance(KEY_TRANSFORMATION);
 			Key aesKey = new SecretKeySpec(key, KEY_ALGORITHM);
 			c.init(Cipher.ENCRYPT_MODE, aesKey);
-			
+
 			for (long i = 0; i < rounds; ++i) {
 				c.update(data, 0, 16, data, 0);
 				c.update(data, 16, 16, data, 16);
 			}
-			
+
 			return data;
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException(e);
 		} catch (NoSuchPaddingException e) {
 			throw new RuntimeException(e);
 		} catch (InvalidKeyException e) {
-			throw new RuntimeException("The key has the wrong size. Have you installed Java Cryptography Extension (JCE)?", e);
+			throw new RuntimeException(
+					"The key has the wrong size. Have you installed Java Cryptography Extension (JCE)?", e);
 		} catch (ShortBufferException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private static KeePassDatabaseUnreadable createCryptoException(Throwable e) {
 		return new KeePassDatabaseUnreadable("Could not decrypt keepass file. Master key wrong?", e);
 	}
