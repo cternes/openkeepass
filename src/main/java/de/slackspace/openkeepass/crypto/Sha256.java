@@ -7,22 +7,22 @@ import java.security.NoSuchAlgorithmException;
 public class Sha256 {
 
 	public static byte[] hash(String text) {
-		if(text == null) {
+		if (text == null) {
 			throw new IllegalArgumentException("Text must not be null");
 		}
-		
+
 		try {
 			return hash(text.getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			throw new UnsupportedOperationException("The encoding 'UTF-8' is not supported", e);
 		}
 	}
-	
+
 	public static byte[] hash(byte[] bytes) {
-		if(bytes == null) {
+		if (bytes == null) {
 			throw new IllegalArgumentException("Bytes must not be null");
 		}
-		
+
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
 			md.update(bytes);

@@ -13,54 +13,55 @@ import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 
 /**
- * Represents the metadata of the KeePass database like database name, custom icons
- * or how much history entries will be preserved.
+ * Represents the metadata of the KeePass database like database name, custom
+ * icons or how much history entries will be preserved.
  * 
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Meta {
-	
+
 	@XmlElement(name = "Generator")
 	private String generator;
-	
+
 	@XmlElement(name = "DatabaseName")
 	private String databaseName;
-	
+
 	@XmlElement(name = "DatabaseDescription")
 	private String databaseDescription;
-	
+
 	@XmlElement(name = "DatabaseNameChanged")
 	private Calendar databaseNameChanged;
 
 	@XmlElement(name = "DatabaseDescriptionChanged")
 	private Calendar databaseDescriptionChanged;
-	
+
 	@XmlElement(name = "MaintenanceHistoryDays")
 	private int maintenanceHistoryDays;
-	
+
 	@XmlElement(name = "RecycleBinUUID")
 	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
-	private UUID recycleBinUuid; 
-	
+	private UUID recycleBinUuid;
+
 	@XmlElement(name = "RecycleBinChanged")
 	private Calendar recycleBinChanged;
-	
+
 	@XmlElement(name = "RecycleBinEnabled")
 	@XmlJavaTypeAdapter(BooleanXmlAdapter.class)
 	private Boolean recycleBinEnabled;
-	
+
 	@XmlElement(name = "HistoryMaxItems")
 	private long historyMaxItems;
-	
+
 	@XmlElement(name = "HistoryMaxSize")
 	private long historyMaxSize;
 
 	@XmlElement(name = "CustomIcons")
 	private CustomIcons customIcons;
 
-	Meta() {}
-	
+	Meta() {
+	}
+
 	public Meta(MetaBuilder metaBuilder) {
 		this.databaseDescription = metaBuilder.databaseDescription;
 		this.databaseDescriptionChanged = metaBuilder.databaseDescriptionChanged;

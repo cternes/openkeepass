@@ -23,25 +23,26 @@ public class Times {
 
 	@XmlElement(name = "CreationTime")
 	private Calendar creationTime;
-	
+
 	@XmlElement(name = "LastAccessTime")
 	private Calendar lastAccessTime;
 
 	@XmlElement(name = "ExpiryTime")
 	private Calendar expiryTime;
-	
+
 	@XmlElement(name = "Expires")
 	@XmlJavaTypeAdapter(BooleanXmlAdapter.class)
 	private Boolean expires;
-	
+
 	@XmlElement(name = "UsageCount")
 	private int usageCount;
-	
+
 	@XmlElement(name = "LocationChanged")
 	private Calendar locationChanged;
 
-	Times() {}
-	
+	Times() {
+	}
+
 	public Times(TimesBuilder timesBuilder) {
 		this.creationTime = timesBuilder.creationTime;
 		this.expires = timesBuilder.expires;
@@ -142,5 +143,5 @@ public class Times {
 	public String toString() {
 		return "Times [lastModificationTime=" + lastModificationTime + ", creationTime=" + creationTime + "]";
 	}
-	
+
 }

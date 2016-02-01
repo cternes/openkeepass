@@ -56,7 +56,8 @@ public class GroupBuilder {
 	}
 
 	/**
-	 * WARNING: not yet completely implemented, will not write data into KeePass file!
+	 * WARNING: not yet completely implemented, will not write data into KeePass
+	 * file!
 	 * 
 	 */
 	public GroupBuilder iconData(byte[] iconData) {

@@ -15,15 +15,13 @@ public class GroupZipperTest {
 
 	@Test
 	public void shouldNavigateThroughTreeAndReplaceGroupAndEntryNode() {
-		KeePassFile keePassFile = createTreeStructure();		
+		KeePassFile keePassFile = createTreeStructure();
 
 		GroupZipper zipper = new GroupZipper(keePassFile).down().right().down();
 		Group shoppingGroup = zipper.getNode();
 		Entry shoppingEntry = shoppingGroup.getEntryByTitle("Second entry");
-		Group modifiedGroup = new GroupBuilder(shoppingGroup).name("Fashion")
-				.removeEntry(shoppingEntry)
-				.addEntry(new EntryBuilder(shoppingEntry).title("Entry #2").build())
-				.build();
+		Group modifiedGroup = new GroupBuilder(shoppingGroup).name("Fashion").removeEntry(shoppingEntry)
+				.addEntry(new EntryBuilder(shoppingEntry).title("Entry #2").build()).build();
 
 		zipper = zipper.replace(modifiedGroup);
 
@@ -33,37 +31,25 @@ public class GroupZipperTest {
 	}
 
 	private KeePassFile createTreeStructure() {
-		/* Should create the following structure:
+		/*
+		 * Should create the following structure:
 		 * 
-		 * Root
-		 * |
-		 * |-- First entry (E)
-		 * |-- Banking (G)
-		 * |
-		 * |-- Internet (G)
-		 *     |
-		 *     |-- Shopping (G)
-		 *     	   |-- Second entry (E)
-		 *     |
-		 *     |-- Stores (G)
-		 * |
-		 * |-- Music (G) 
+		 * Root | |-- First entry (E) |-- Banking (G) | |-- Internet (G) | |--
+		 * Shopping (G) |-- Second entry (E) | |-- Stores (G) | |-- Music (G)
 		 */
 		Group root = new GroupBuilder()
-				.addEntry(new EntryBuilder("First entry").build())
-				.addGroup(new GroupBuilder("Banking").build())
-				.addGroup(new GroupBuilder("Internet")
-						.addGroup(new GroupBuilder("Shopping")
-								.addEntry(new EntryBuilder("Second entry").build())
+				.addEntry(
+						new EntryBuilder("First entry")
 								.build())
-						.addGroup(new GroupBuilder("Stores").build())
-						.build())
-				.addGroup(new GroupBuilder("Music").build())
-				.build();
+				.addGroup(new GroupBuilder("Banking").build())
+				.addGroup(
+						new GroupBuilder("Internet")
+								.addGroup(new GroupBuilder("Shopping")
+										.addEntry(new EntryBuilder("Second entry").build()).build())
+						.addGroup(new GroupBuilder("Stores").build()).build())
+				.addGroup(new GroupBuilder("Music").build()).build();
 
-		KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB")
-				.addTopGroups(root)
-				.build();
+		KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB").addTopGroups(root).build();
 		return keePassFile;
 	}
 
@@ -86,7 +72,8 @@ public class GroupZipperTest {
 		GroupZipper zipper = new GroupZipper(keePassFile).down().right().right();
 
 		expectedException.expect(RuntimeException.class);
-		expectedException.expectMessage("Could not move right because the last node at this level has already been reached");
+		expectedException
+				.expectMessage("Could not move right because the last node at this level has already been reached");
 		zipper.right();
 	}
 
@@ -97,7 +84,8 @@ public class GroupZipperTest {
 		GroupZipper zipper = new GroupZipper(keePassFile).down();
 
 		expectedException.expect(RuntimeException.class);
-		expectedException.expectMessage("Could not move left because the first node at this level has already been reached");
+		expectedException
+				.expectMessage("Could not move left because the first node at this level has already been reached");
 		zipper.left();
 	}
 
@@ -131,7 +119,7 @@ public class GroupZipperTest {
 		Iterator<Group> iter = zipper.iterator();
 
 		List<Group> visitedGroups = new ArrayList<Group>();
-		while(iter.hasNext()) {
+		while (iter.hasNext()) {
 			Group group = iter.next();
 			visitedGroups.add(group);
 		}
@@ -140,15 +128,10 @@ public class GroupZipperTest {
 	}
 
 	private KeePassFile createFlatGroupStructure() {
-		Group root = new GroupBuilder()
-				.addGroup(new GroupBuilder("A").build())
-				.addGroup(new GroupBuilder("B").build())
-				.addGroup(new GroupBuilder("C").build())
-				.build();
+		Group root = new GroupBuilder().addGroup(new GroupBuilder("A").build()).addGroup(new GroupBuilder("B").build())
+				.addGroup(new GroupBuilder("C").build()).build();
 
-		KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB")
-				.addTopGroups(root)
-				.build();
+		KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB").addTopGroups(root).build();
 
 		return keePassFile;
 	}

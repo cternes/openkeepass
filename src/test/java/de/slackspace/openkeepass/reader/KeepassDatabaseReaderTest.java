@@ -136,7 +136,7 @@ public class KeepassDatabaseReaderTest {
 		Assert.assertEquals("jXjHEh3c8wcl0hank0qG", entries.get(3).getPassword());
 		Assert.assertEquals("wkzB5KGIUoP8LKSSEngX", entries.get(4).getPassword());
 	}
-	
+
 	@Test
 	public void whenEntryHasCustomPropertiesShouldReadCustomProperties() throws FileNotFoundException {
 		FileInputStream file = new FileInputStream("target/test-classes/fullBlownDatabase.kdbx");
@@ -148,7 +148,7 @@ public class KeepassDatabaseReaderTest {
 
 		Assert.assertEquals("6th Entry", entry.getTitle());
 		Property customProperty = entry.getPropertyByName("x");
-		
+
 		Assert.assertNotNull("CustomProperty should not be null", customProperty);
 		Assert.assertEquals("y", customProperty.getValue());
 	}

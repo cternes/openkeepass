@@ -18,7 +18,7 @@ import java.util.UUID;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CustomIcon {
-	
+
 	@XmlElement(name = "UUID")
 	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
 	private UUID uuid;
@@ -71,5 +71,5 @@ public class CustomIcon {
 			return false;
 		return true;
 	}
-	
+
 }

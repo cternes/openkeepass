@@ -22,7 +22,7 @@ public class HashedBlockInputStream extends InputStream {
 	public HashedBlockInputStream(InputStream is) {
 		baseStream = is;
 	}
-	
+
 	@Override
 	public int read(byte[] b) throws IOException {
 		return read(b, 0, b.length);
@@ -63,7 +63,7 @@ public class HashedBlockInputStream extends InputStream {
 			return false;
 
 		bufferPos = 0;
-		
+
 		long index = ByteUtils.readUnsignedInt(baseStream);
 		if (index != bufferIndex) {
 			throw new IOException("Invalid data format");

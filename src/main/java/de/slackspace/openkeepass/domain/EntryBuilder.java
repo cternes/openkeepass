@@ -27,7 +27,7 @@ public class EntryBuilder {
 	Entry originalEntry;
 
 	byte[] iconData;
-	
+
 	List<Property> customPropertyList = new ArrayList<Property>();
 
 	/**
@@ -115,7 +115,8 @@ public class EntryBuilder {
 	}
 
 	/**
-	 * WARNING: not yet completely implemented, will not write data into KeePass file!
+	 * WARNING: not yet completely implemented, will not write data into KeePass
+	 * file!
 	 * 
 	 */
 	public EntryBuilder iconData(byte[] iconData) {

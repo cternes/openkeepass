@@ -11,10 +11,10 @@ public class ByteUtilsTest {
 	@Test
 	public void shouldConvertUUIDToBytesAndBackAgain() {
 		UUID uuid = UUID.randomUUID();
-		
+
 		byte[] bytes = ByteUtils.uuidToBytes(uuid);
 		UUID uuid2 = ByteUtils.bytesToUUID(bytes);
-		
+
 		assertEquals(uuid, uuid2);
 	}
 }

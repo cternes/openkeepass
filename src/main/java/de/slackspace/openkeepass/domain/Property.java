@@ -6,8 +6,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Represents a key value pair of an {@link Entry}.
- * All properties like username or password of an Entry are represented with this class. 
+ * Represents a key value pair of an {@link Entry}. All properties like username
+ * or password of an Entry are represented with this class.
  *
  */
 @XmlRootElement
@@ -16,17 +16,18 @@ public class Property implements KeePassFileElement {
 
 	@XmlElement(name = "Key")
 	private String key;
-	
+
 	@XmlElement(name = "Value")
 	private PropertyValue propertyValue;
-	
-	Property() { }
-	
+
+	Property() {
+	}
+
 	public Property(String key, String value, boolean isProtected) {
 		this.key = key;
 		this.propertyValue = new PropertyValue(isProtected, value);
 	}
-	
+
 	public String getKey() {
 		return key;
 	}
@@ -34,7 +35,7 @@ public class Property implements KeePassFileElement {
 	public String getValue() {
 		return propertyValue.getValue();
 	}
-	
+
 	public boolean isProtected() {
 		return propertyValue.isProtected();
 	}
@@ -78,5 +79,5 @@ public class Property implements KeePassFileElement {
 			return false;
 		return true;
 	}
-	
+
 }
