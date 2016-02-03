@@ -30,7 +30,7 @@ public class GroupZipper {
 
 	/**
 	 * Create a zipper with the tree structure of the given KeePass file.
-	 * 
+	 *
 	 * @param keePassFile
 	 *            the underlying data structure
 	 */
@@ -47,7 +47,7 @@ public class GroupZipper {
 
 	/**
 	 * Returns true if it is possible to navigate down.
-	 * 
+	 *
 	 * @return true, if it is possible to navigate down
 	 */
 	public boolean canDown() {
@@ -62,7 +62,7 @@ public class GroupZipper {
 	 * Navigates down the tree to the first child node of the current node.
 	 * <p>
 	 * If the current node has no childs an exception will be thrown.
-	 * 
+	 *
 	 * @return
 	 * @throws RuntimeException
 	 *             if the current node has no child nodes
@@ -81,7 +81,7 @@ public class GroupZipper {
 
 	/**
 	 * Returns true if it is possible to navigate up.
-	 * 
+	 *
 	 * @return true, if it is possible to navigate up
 	 */
 	public boolean canUp() {
@@ -96,7 +96,7 @@ public class GroupZipper {
 	 * Navigates up the tree to the parent node of the current node.
 	 * <p>
 	 * If the current node has no parent an exception will be thrown.
-	 * 
+	 *
 	 * @return
 	 * @throws RuntimeException
 	 *             if the current node has no parent node
@@ -115,7 +115,7 @@ public class GroupZipper {
 
 	/**
 	 * Returns true if it is possible to navigate right.
-	 * 
+	 *
 	 * @return true, if it is possible to navigate right
 	 */
 	public boolean canRight() {
@@ -132,7 +132,7 @@ public class GroupZipper {
 
 	/**
 	 * Navigates right the tree to the next node at the same level.
-	 * 
+	 *
 	 * @return
 	 */
 	public GroupZipper right() {
@@ -149,7 +149,7 @@ public class GroupZipper {
 
 	/**
 	 * Returns true if it is possible to navigate left.
-	 * 
+	 *
 	 * @return true, if it is possible to navigate left
 	 */
 	public boolean canLeft() {
@@ -162,7 +162,7 @@ public class GroupZipper {
 
 	/**
 	 * Navigates left the tree to the previous node at the same level.
-	 * 
+	 *
 	 * @return
 	 */
 	public GroupZipper left() {
@@ -181,7 +181,7 @@ public class GroupZipper {
 	 * Returns the current node. This can be seen as a pointer to the current
 	 * element in the tree.
 	 * <p>
-	 * 
+	 *
 	 * @return
 	 */
 	public Group getNode() {
@@ -192,7 +192,7 @@ public class GroupZipper {
 	 * Replaces the current node with the given one.
 	 * <p>
 	 * Can be used to modify the tree.
-	 * 
+	 *
 	 * @param group
 	 *            the replacement node
 	 * @return
@@ -209,7 +209,7 @@ public class GroupZipper {
 
 	/**
 	 * Returns a new {@link KeePassFile} from the current tree structure.
-	 * 
+	 *
 	 * @return a new KeePass file
 	 */
 	public KeePassFile close() {
@@ -220,7 +220,7 @@ public class GroupZipper {
 
 	/**
 	 * Returns the root node of the tree.
-	 * 
+	 *
 	 * @return the root node of the tree
 	 */
 	public Group getRoot() {
@@ -233,7 +233,7 @@ public class GroupZipper {
 
 	/**
 	 * Replaces the meta with the given one.
-	 * 
+	 *
 	 * @param meta
 	 *            the given meta object
 	 * @return
@@ -250,7 +250,7 @@ public class GroupZipper {
 
 	/**
 	 * Returns an iterator over the groups in this tree.
-	 * 
+	 *
 	 * @return an iterator to iterate through the tree
 	 */
 	public Iterator<Group> iterator() {
@@ -263,7 +263,7 @@ public class GroupZipper {
 
 		/**
 		 * Checks if it is possible for any parent node to go right in the tree.
-		 * 
+		 *
 		 */
 		private boolean canGoRightAtAnyLevel(GroupZipper parent) {
 			if (parent == null) {
@@ -285,7 +285,7 @@ public class GroupZipper {
 			if (parent.canRight()) {
 				return up().right().getNode();
 			} else {
-				return getNextRightNode(up());
+				return getNextRightNode(parent.up());
 			}
 		}
 
