@@ -33,7 +33,7 @@ public class GroupZipperTest {
 	private KeePassFile createTreeStructure() {
 		/*
 		 * Should create the following structure:
-		 * 
+		 *
 		 * Root | |-- First entry (E) |-- Banking (G) | |-- Internet (G) | |--
 		 * Shopping (G) |-- Second entry (E) | |-- Stores (G) | |-- Music (G)
 		 */
@@ -125,6 +125,58 @@ public class GroupZipperTest {
 		}
 
 		Assert.assertEquals(6, visitedGroups.size());
+	}
+
+	@Test
+	public void shouldVisitAllDeeplyNestedNodes() {
+		Group rootA = new GroupBuilder("A")
+			.addGroup(new GroupBuilder("B")
+				.addGroup(new GroupBuilder("C")
+					.addGroup(new GroupBuilder("D").build())
+					.addGroup(new GroupBuilder("E").build())
+					.build()
+				)
+				.addGroup(new GroupBuilder("F").build())
+				.addGroup(new GroupBuilder("G")
+					.addGroup(new GroupBuilder("H")
+						.addGroup(new GroupBuilder("I")
+							.addGroup(new GroupBuilder("J").build())
+							.build()
+						)
+						.addGroup(new GroupBuilder("K").build())
+						.build()
+					)
+					.addGroup(new GroupBuilder("L").build())
+					.build()
+				)
+				.build()
+			)
+			.addGroup(new GroupBuilder("M").build())
+			.addGroup(new GroupBuilder("N")
+				.addGroup(new GroupBuilder("O")
+					.addGroup(new GroupBuilder("P")
+						.addGroup(new GroupBuilder("Q").build())
+						.build()
+					)
+					.build()
+				)
+				.addGroup(new GroupBuilder("R").build())
+				.addGroup(new GroupBuilder("S")
+					.addGroup(new GroupBuilder("T").build())
+					.build()
+				)
+				.build()
+			)
+			.build();
+		KeePassFile db = new KeePassFileBuilder("deepTest").addTopGroups(rootA).build();
+		GroupZipper zipper = new GroupZipper(db);
+		Iterator<Group> iterator = zipper.iterator();
+		StringBuilder sb = new StringBuilder();
+		while (iterator.hasNext()) {
+			Group next = iterator.next();
+			sb.append(next.getName());
+		}
+		Assert.assertEquals("ABCDEFGHIJKLMNOPQRST", sb.toString());
 	}
 
 	private KeePassFile createFlatGroupStructure() {
