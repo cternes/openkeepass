@@ -19,6 +19,13 @@ public class CustomIcons {
 	@XmlElement(name = "Icon")
 	private List<CustomIcon> customIcons = new ArrayList<CustomIcon>();
 
+	CustomIcons() {
+	}
+
+	public CustomIcons(CustomIconsBuilder customIconsBuilder) {
+		this.customIcons = customIconsBuilder.customIcons;
+	}
+
 	/**
 	 * Returns all custom icons found inside the database.
 	 *
