@@ -54,6 +54,8 @@ public class Entry implements KeePassFileElement {
 		this.history = builder.history;
 		this.uuid = builder.uuid;
 		this.iconData = builder.iconData;
+		this.iconId = builder.iconId;
+		this.customIconUUID = builder.customIconUUID;
 
 		setValue(false, NOTES, builder.notes);
 		setValue(true, PASSWORD, builder.password);
@@ -163,7 +165,7 @@ public class Entry implements KeePassFileElement {
 
 	/**
 	 * Retrieves a property by it's name (ignores case)
-	 * 
+	 *
 	 * @param name
 	 *            the name of the property to find
 	 * @return the property if found, null otherwise

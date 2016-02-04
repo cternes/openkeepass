@@ -26,7 +26,11 @@ public class EntryBuilder {
 
 	Entry originalEntry;
 
+	int iconId;
+
 	byte[] iconData;
+
+	UUID customIconUUID;
 
 	List<Property> customPropertyList = new ArrayList<Property>();
 
@@ -39,7 +43,7 @@ public class EntryBuilder {
 
 	/**
 	 * Creates a new builder with the given UUID.
-	 * 
+	 *
 	 * @param uuid
 	 *            the UUID which should be used
 	 */
@@ -49,7 +53,7 @@ public class EntryBuilder {
 
 	/**
 	 * Creates a new builder with the given title.
-	 * 
+	 *
 	 * @param title
 	 *            the title which should be used
 	 */
@@ -60,7 +64,7 @@ public class EntryBuilder {
 
 	/**
 	 * Initializes the builder with values from the given entry.
-	 * 
+	 *
 	 * @param entry
 	 *            the values from this will initialize the builder
 	 */
@@ -76,6 +80,9 @@ public class EntryBuilder {
 		this.password = entry.getPassword();
 		this.notes = entry.getNotes();
 		this.url = entry.getUrl();
+		this.iconId = entry.getIconId();
+		this.iconData = entry.getIconData();
+		this.customIconUUID = entry.getCustomIconUuid();
 		this.customPropertyList.addAll(entry.getCustomProperties());
 	}
 
@@ -114,19 +121,24 @@ public class EntryBuilder {
 		return this;
 	}
 
-	/**
-	 * WARNING: not yet completely implemented, will not write data into KeePass
-	 * file!
-	 * 
-	 */
 	public EntryBuilder iconData(byte[] iconData) {
 		this.iconData = iconData;
 		return this;
 	}
 
+	public EntryBuilder iconId(int iconId) {
+		this.iconId = iconId;
+		return this;
+	}
+
+	public EntryBuilder customIconUuid(UUID uuid) {
+		this.customIconUUID = uuid;
+		return this;
+	}
+
 	/**
 	 * Builds a new entry with the values from the builder.
-	 * 
+	 *
 	 * @return a new entry
 	 */
 	public Entry build() {
