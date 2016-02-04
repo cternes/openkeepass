@@ -18,6 +18,8 @@ public class GroupBuilder {
 
 	byte[] iconData;
 
+	UUID customIconUuid;
+
 	List<Entry> entries = new ArrayList<Entry>();
 
 	List<Group> groups = new ArrayList<Group>();
@@ -39,6 +41,8 @@ public class GroupBuilder {
 		this.uuid = group.getUuid();
 		this.name = group.getName();
 		this.iconId = group.getIconId();
+		this.iconData = group.getIconData();
+		this.customIconUuid = group.getCustomIconUuid();
 		this.times = group.getTimes();
 		this.isExpanded = group.isExpanded();
 		this.groups = group.getGroups();
@@ -55,13 +59,13 @@ public class GroupBuilder {
 		return this;
 	}
 
-	/**
-	 * WARNING: not yet completely implemented, will not write data into KeePass
-	 * file!
-	 * 
-	 */
 	public GroupBuilder iconData(byte[] iconData) {
 		this.iconData = iconData;
+		return this;
+	}
+
+	public GroupBuilder customIconUuid(UUID uuid) {
+		this.customIconUuid = uuid;
 		return this;
 	}
 

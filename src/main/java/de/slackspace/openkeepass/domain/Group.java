@@ -15,7 +15,7 @@ import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 
 /**
  * A Group represents a structure that consists of entries and subgroups.
- * 
+ *
  * @see Entry
  *
  */
@@ -65,11 +65,12 @@ public class Group implements KeePassFileElement {
 		times = builder.times;
 		uuid = builder.uuid;
 		iconData = builder.iconData;
+		customIconUUID = builder.customIconUuid;
 	}
 
 	/**
 	 * Retrieves the Uuid of this group.
-	 * 
+	 *
 	 * @return the Uuid of this group
 	 */
 	public UUID getUuid() {
@@ -78,7 +79,7 @@ public class Group implements KeePassFileElement {
 
 	/**
 	 * Retrieves the name of the group.
-	 * 
+	 *
 	 * @return the name of the group
 	 */
 	public String getName() {
@@ -87,7 +88,7 @@ public class Group implements KeePassFileElement {
 
 	/**
 	 * Retrieves all subgroups of this group.
-	 * 
+	 *
 	 * @return all subgroups of this group
 	 */
 	public List<Group> getGroups() {
@@ -96,7 +97,7 @@ public class Group implements KeePassFileElement {
 
 	/**
 	 * Retrieves all entries of this group.
-	 * 
+	 *
 	 * @return all entries of this group
 	 * @see Entry
 	 */
@@ -106,7 +107,7 @@ public class Group implements KeePassFileElement {
 
 	/**
 	 * Retrieves the entry with the given title.
-	 * 
+	 *
 	 * @param title
 	 *            the title of the entry which should be retrieved
 	 * @return an entry with matching title
@@ -127,7 +128,7 @@ public class Group implements KeePassFileElement {
 
 	/**
 	 * Retrieves the icon of this group.
-	 * 
+	 *
 	 * @return the icon of this group
 	 */
 	public int getIconId() {
@@ -159,7 +160,7 @@ public class Group implements KeePassFileElement {
 
 	/**
 	 * Retrieves the last expanded status of the group.
-	 * 
+	 *
 	 * @return true if the group was expanded the last time it was opened in
 	 *         keepass
 	 */
