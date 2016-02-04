@@ -26,6 +26,14 @@ public class CustomIcon {
 	@XmlElement(name = "Data")
 	private byte[] data;
 
+	CustomIcon() {
+	}
+
+	public CustomIcon(CustomIconBuilder customIconBuilder) {
+		this.uuid = customIconBuilder.uuid;
+		this.data = customIconBuilder.data;
+	}
+
 	/**
 	 * Returns the uuid of this custom icon.
 	 *
