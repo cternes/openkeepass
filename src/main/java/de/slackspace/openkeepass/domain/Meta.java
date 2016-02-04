@@ -15,7 +15,7 @@ import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 /**
  * Represents the metadata of the KeePass database like database name, custom
  * icons or how much history entries will be preserved.
- * 
+ *
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -74,6 +74,7 @@ public class Meta {
 		this.recycleBinChanged = metaBuilder.recycleBinChanged;
 		this.recycleBinEnabled = metaBuilder.recycleBinEnabled;
 		this.recycleBinUuid = metaBuilder.recycleBinUuid;
+		this.customIcons = metaBuilder.customIcons;
 	}
 
 	public String getDatabaseName() {

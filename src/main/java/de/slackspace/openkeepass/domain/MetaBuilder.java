@@ -31,9 +31,11 @@ public class MetaBuilder {
 
 	long historyMaxSize;
 
+	CustomIcons customIcons;
+
 	/**
 	 * Creates a new builder with the given database name.
-	 * 
+	 *
 	 * @param databaseName
 	 *            the name which should be used
 	 */
@@ -43,7 +45,7 @@ public class MetaBuilder {
 
 	/**
 	 * Initializes the builder with values from the given meta.
-	 * 
+	 *
 	 * @param meta
 	 *            the values from this will initialize the builder
 	 */
@@ -59,6 +61,7 @@ public class MetaBuilder {
 		this.recycleBinChanged = meta.getRecycleBinChanged();
 		this.historyMaxItems = meta.getHistoryMaxItems();
 		this.historyMaxSize = meta.getHistoryMaxSize();
+		this.customIcons = meta.getCustomIcons();
 	}
 
 	public MetaBuilder databaseName(String databaseName) {
@@ -116,9 +119,14 @@ public class MetaBuilder {
 		return this;
 	}
 
+	public MetaBuilder customIcons(CustomIcons customIcons) {
+		this.customIcons = customIcons;
+		return this;
+	}
+
 	/**
 	 * Builds a new meta with the values from the builder.
-	 * 
+	 *
 	 * @return a new meta object
 	 */
 	public Meta build() {
