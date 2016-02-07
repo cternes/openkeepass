@@ -1,5 +1,6 @@
 package de.slackspace.openkeepass.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  */
 public class CustomIconsBuilder {
 
-	List<CustomIcon> customIcons;
+	List<CustomIcon> customIcons = new ArrayList<CustomIcon>();
 
 	public CustomIconsBuilder() {
 	}
@@ -19,6 +20,11 @@ public class CustomIconsBuilder {
 
 	public CustomIconsBuilder customIcons(List<CustomIcon> customIcons) {
 		this.customIcons = customIcons;
+		return this;
+	}
+
+	public CustomIconsBuilder addIcon(CustomIcon icon) {
+		customIcons.add(icon);
 		return this;
 	}
 

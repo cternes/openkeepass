@@ -3,6 +3,9 @@ package de.slackspace.openkeepass.reader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.UUID;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,6 +14,10 @@ import de.slackspace.openkeepass.KeePassDatabase;
 import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
+import de.slackspace.openkeepass.domain.CustomIcon;
+import de.slackspace.openkeepass.domain.CustomIconBuilder;
+import de.slackspace.openkeepass.domain.CustomIcons;
+import de.slackspace.openkeepass.domain.CustomIconsBuilder;
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.EntryBuilder;
 import de.slackspace.openkeepass.domain.Group;
@@ -76,10 +83,10 @@ public class KeepassDatabaseWriterTest {
 	public void shouldBuildKeePassFileWithTreeStructure() throws FileNotFoundException {
 		/*
 		 * Should create the following structure:
-		 * 
+		 *
 		 * Root | |-- First entry (E) |-- Banking (G) | |-- Internet (G) | |--
 		 * Shopping (G) |-- Second entry (E)
-		 * 
+		 *
 		 */
 		Group root = new GroupBuilder().addEntry(new EntryBuilder("First entry").build())
 				.addGroup(new GroupBuilder("Banking").build())
@@ -148,5 +155,35 @@ public class KeepassDatabaseWriterTest {
 		KeePassFile readModifiedDb = KeePassDatabase.getInstance(modifiedDbFile).openDatabase(password);
 		Assert.assertEquals("differentName", readModifiedDb.getMeta().getDatabaseName());
 		Assert.assertEquals("Misc", readModifiedDb.getTopGroups().get(0).getName());
+	}
+
+	@Test
+	public void shouldWriteDatabaseWithCustomIcon() throws FileNotFoundException {
+		String base64Icon = "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAB+FBMVEUAAAA/mUPidDHiLi5Cn0XkNTPmeUrkdUg/m0Q0pEfcpSbwaVdKskg+lUP4zA/iLi3msSHkOjVAmETdJSjtYFE/lkPnRj3sWUs8kkLeqCVIq0fxvhXqUkbVmSjwa1n1yBLepyX1xxP0xRXqUkboST9KukpHpUbuvRrzrhF/ljbwaljuZFM4jELaoSdLtElJrUj1xxP6zwzfqSU4i0HYnydMtUlIqUfywxb60AxZqEXaoifgMCXptR9MtklHpEY2iUHWnSjvvRr70QujkC+pUC/90glMuEnlOjVMt0j70QriLS1LtEnnRj3qUUXfIidOjsxAhcZFo0bjNDH0xxNLr0dIrUdmntVTkMoyfL8jcLBRuErhJyrgKyb4zA/5zg3tYFBBmUTmQTnhMinruBzvvhnxwxZ/st+Ktt5zp9hqota2vtK6y9FemNBblc9HiMiTtMbFtsM6gcPV2r6dwroseLrMrbQrdLGdyKoobKbo3Zh+ynrgVllZulTsXE3rV0pIqUf42UVUo0JyjEHoS0HmsiHRGR/lmRz/1hjqnxjvpRWfwtOhusaz0LRGf7FEfbDVmqHXlJeW0pbXq5bec3fX0nTnzmuJuWvhoFFhm0FtrziBsjaAaDCYWC+uSi6jQS3FsSfLJiTirCOkuCG1KiG+wSC+GBvgyhTszQ64Z77KAAAARXRSTlMAIQRDLyUgCwsE6ebm5ubg2dLR0byXl4FDQzU1NDEuLSUgC+vr6urq6ubb29vb2tra2tG8vLu7u7uXl5eXgYGBgYGBLiUALabIAAABsElEQVQoz12S9VPjQBxHt8VaOA6HE+AOzv1wd7pJk5I2adpCC7RUcHd3d3fXf5PvLkxheD++z+yb7GSRlwD/+Hj/APQCZWxM5M+goF+RMbHK594v+tPoiN1uHxkt+xzt9+R9wnRTZZQpXQ0T5uP1IQxToyOAZiQu5HEpjeA4SWIoksRxNiGC1tRZJ4LNxgHgnU5nJZBDvuDdl8lzQRBsQ+s9PZt7s7Pz8wsL39/DkIfZ4xlB2Gqsq62ta9oxVlVrNZpihFRpGO9fzQw1ms0NDWZz07iGkJmIFH8xxkc3a/WWlubmFkv9AB2SEpDvKxbjidN2faseaNV3zoHXvv7wMODJdkOHAegweAfFPx4G67KluxzottCU9n8CUqXzcIQdXOytAHqXxomvykhEKN9EFutG22p//0rbNvHVxiJywa8yS2KDfV1dfbu31H8jF1RHiTKtWYeHxUvq3bn0pyjCRaiRU6aDO+gb3aEfEeVNsDgm8zzLy9egPa7Qt8TSJdwhjplk06HH43ZNJ3s91KKCHQ5x4sw1fRGYDZ0n1L4FKb9/BP5JLYxToheoFCVxz57PPS8UhhEpLBVeAAAAAElFTkSuQmCC";
+
+		UUID iconUuid = UUID.randomUUID();
+		byte[] customPng = DatatypeConverter.parseBase64Binary(base64Icon);
+
+		// build database
+		CustomIcon customIcon = new CustomIconBuilder().uuid(iconUuid).data(customPng).build();
+		CustomIcons customIcons = new CustomIconsBuilder().addIcon(customIcon).build();
+
+		Meta meta = new MetaBuilder("iconTest").customIcons(customIcons).build();
+		Entry entry1 = new EntryBuilder("1").customIconUuid(iconUuid).build();
+		Group groupA = new GroupBuilder("A").customIconUuid(iconUuid).addEntry(entry1).build();
+
+		KeePassFile keePassFile = new KeePassFileBuilder(meta).addTopGroups(groupA).build();
+
+		// write
+		String dbFilename = "target/test-classes/databaseWithCustomIcon.kdbx";
+		KeePassDatabase.write(keePassFile, "abcdefg", dbFilename);
+
+		// read and assert
+		KeePassFile readDb = KeePassDatabase.getInstance(dbFilename).openDatabase("abcdefg");
+		Assert.assertEquals("iconTest", readDb.getMeta().getDatabaseName());
+		Assert.assertEquals(iconUuid, readDb.getGroupByName("A").getCustomIconUuid());
+		Assert.assertEquals(base64Icon, DatatypeConverter.printBase64Binary(readDb.getGroupByName("A").getIconData()));
+		Assert.assertEquals(iconUuid, readDb.getEntryByTitle("1").getCustomIconUuid());
+		Assert.assertEquals(base64Icon, DatatypeConverter.printBase64Binary(readDb.getEntryByTitle("1").getIconData()));
 	}
 }
