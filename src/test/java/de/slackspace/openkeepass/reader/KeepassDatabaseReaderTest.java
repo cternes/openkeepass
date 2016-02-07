@@ -9,16 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import de.slackspace.openkeepass.domain.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.KeePassDatabase;
-import de.slackspace.openkeepass.domain.CompressionAlgorithm;
-import de.slackspace.openkeepass.domain.CrsAlgorithm;
-import de.slackspace.openkeepass.domain.Entry;
-import de.slackspace.openkeepass.domain.KeePassFile;
-import de.slackspace.openkeepass.domain.KeePassHeader;
-import de.slackspace.openkeepass.domain.Property;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 import de.slackspace.openkeepass.util.ByteUtils;
 
@@ -254,6 +249,17 @@ public class KeepassDatabaseReaderTest {
 
 		Entry entry = database.getEntryByUUID(UUID.fromString("1fbddfcd-52ff-1d4b-b2e8-27f671e4ea22"));
 		Assert.assertEquals("Sample Entry #2", entry.getTitle());
+	}
+
+	@Test
+	public void whenGettingGroupByUUIDShouldReturnFoundGroup() throws FileNotFoundException {
+		FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
+
+		KeePassDatabase reader = KeePassDatabase.getInstance(file);
+		KeePassFile database = reader.openDatabase("abcdefg");
+
+		Group group = database.getGroupByUUID(UUID.fromString("16abcc27-cca3-9544-8012-df4e98d4a3d8"));
+		Assert.assertEquals("General", group.getName());
 	}
 
 }

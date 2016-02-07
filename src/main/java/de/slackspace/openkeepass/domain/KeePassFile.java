@@ -208,7 +208,7 @@ public class KeePassFile implements KeePassFileElement {
 
 	/**
 	 * Retrieves a list of all groups in the KeePass database.
-	 * 
+	 *
 	 * @return a list of all groups
 	 * @see Group
 	 */
@@ -294,6 +294,36 @@ public class KeePassFile implements KeePassFileElement {
 
 		if (entries.size() == 1) {
 			return entries.get(0);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Retrieves a group based on its UUID.
+	 *
+	 * @param UUID
+	 *            the uuid which should be searched
+	 * @return the found group or null
+	 */
+	public Group getGroupByUUID(final UUID UUID) {
+		List<Group> allGroups = getGroups();
+
+		List<Group> groups = ListFilter.filter(allGroups, new Filter<Group>() {
+
+			@Override
+			public boolean matches(Group item) {
+
+				if (item.getUuid() != null && item.getUuid().compareTo(UUID) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		});
+
+		if (groups.size() == 1) {
+			return groups.get(0);
 		} else {
 			return null;
 		}
