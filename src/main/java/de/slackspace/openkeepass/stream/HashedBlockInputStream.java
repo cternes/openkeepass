@@ -11,7 +11,7 @@ import de.slackspace.openkeepass.util.StreamUtils;
 
 public class HashedBlockInputStream extends InputStream {
 
-	private final static int HASH_SIZE = 32;
+	private static final int HASH_SIZE = 32;
 
 	private InputStream baseStream;
 	private int bufferPos = 0;
@@ -103,7 +103,7 @@ public class HashedBlockInputStream extends InputStream {
 		try {
 			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e) {
-			throw new IOException("SHA-256 not implemented here.");
+			throw new IOException("SHA-256 not implemented here.", e);
 		}
 
 		byte[] computedHash = md.digest(buffer);
