@@ -25,6 +25,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<sonar.java.source>1.6</sonar.java.source>
 		<maven.compiler.source>1.6</maven.compiler.source>
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<bouncycastle.version>1.54</bouncycastle.version>
