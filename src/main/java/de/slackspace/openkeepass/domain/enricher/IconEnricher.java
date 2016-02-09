@@ -21,7 +21,7 @@ import de.slackspace.openkeepass.util.StreamUtils;
  * Adds the raw icon data of all nodes in a KeePass file to the nodes itself.
  * This makes it possible to call {@link Group#getIconData()} and
  * {@link Entry#getIconData()} on the nodes to retrieve the icon data.
- * 
+ *
  * @see Group#getIconData()
  * @see Entry#getIconData()
  */
@@ -33,7 +33,7 @@ public class IconEnricher {
 	/**
 	 * Iterates through all nodes of the given KeePass file and replace the
 	 * nodes with enriched icon data nodes.
-	 * 
+	 *
 	 * @param keePassFile
 	 *            the KeePass file which should be iterated
 	 * @return an enriched KeePass file
@@ -99,7 +99,7 @@ public class IconEnricher {
 		try {
 			return StreamUtils.toByteArray(inputStream);
 		} catch (IOException e) {
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 }
