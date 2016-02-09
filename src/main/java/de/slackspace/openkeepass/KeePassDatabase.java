@@ -81,6 +81,8 @@ import de.slackspace.openkeepass.xml.KeyFileXmlParser;
  */
 public class KeePassDatabase {
 
+	private static final String MSG_UTF8_NOT_SUPPORTED = "The encoding UTF-8 is not supported";
+	private static final String UTF_8 = "UTF-8";
 	private KeePassHeader keepassHeader = new KeePassHeader();
 	private byte[] keepassFile;
 
@@ -136,7 +138,6 @@ public class KeePassDatabase {
 					keePassDatabaseStream.close();
 				} catch (IOException e) {
 					// Ignore
-					e.printStackTrace();
 				}
 			}
 		}
@@ -178,12 +179,12 @@ public class KeePassDatabase {
 		}
 
 		try {
-			byte[] passwordBytes = password.getBytes("UTF-8");
+			byte[] passwordBytes = password.getBytes(UTF_8);
 			byte[] hashedPassword = Sha256.hash(passwordBytes);
 
 			return decryptAndParseDatabase(hashedPassword);
 		} catch (UnsupportedEncodingException e) {
-			throw new UnsupportedOperationException("The encoding UTF-8 is not supported");
+			throw new UnsupportedOperationException(MSG_UTF8_NOT_SUPPORTED, e);
 		}
 	}
 
@@ -242,18 +243,18 @@ public class KeePassDatabase {
 		}
 
 		try {
-			byte[] passwordBytes = password.getBytes("UTF-8");
+			byte[] passwordBytes = password.getBytes(UTF_8);
 			byte[] hashedPassword = Sha256.hash(passwordBytes);
 
 			KeyFile keyFile = keyFileXmlParser.fromXml(keyFileStream);
-			byte[] protectedBuffer = Base64.decode(keyFile.getKey().getData().getBytes("UTF-8"));
+			byte[] protectedBuffer = Base64.decode(keyFile.getKey().getData().getBytes(UTF_8));
 			if (protectedBuffer.length != 32) {
 				protectedBuffer = Sha256.hash(protectedBuffer);
 			}
 
 			return decryptAndParseDatabase(ByteUtils.concat(hashedPassword, protectedBuffer));
 		} catch (UnsupportedEncodingException e) {
-			throw new UnsupportedOperationException("The encoding UTF-8 is not supported");
+			throw new UnsupportedOperationException(MSG_UTF8_NOT_SUPPORTED, e);
 		}
 	}
 
@@ -301,11 +302,11 @@ public class KeePassDatabase {
 
 		try {
 			KeyFile keyFile = keyFileXmlParser.fromXml(keyFileStream);
-			byte[] protectedBuffer = Base64.decode(keyFile.getKey().getData().getBytes("UTF-8"));
+			byte[] protectedBuffer = Base64.decode(keyFile.getKey().getData().getBytes(UTF_8));
 
 			return decryptAndParseDatabase(protectedBuffer);
 		} catch (UnsupportedEncodingException e) {
-			throw new UnsupportedOperationException("The encoding UTF-8 is not supported");
+			throw new UnsupportedOperationException(MSG_UTF8_NOT_SUPPORTED, e);
 		}
 	}
 
@@ -415,7 +416,7 @@ public class KeePassDatabase {
 			KeePassHeader header = new KeePassHeader();
 			header.initialize();
 
-			byte[] passwordBytes = password.getBytes("UTF-8");
+			byte[] passwordBytes = password.getBytes(UTF_8);
 			byte[] hashedPassword = Sha256.hash(passwordBytes);
 
 			// Marshall xml
@@ -457,7 +458,6 @@ public class KeePassDatabase {
 					stream.close();
 				} catch (IOException e) {
 					// Ignore
-					e.printStackTrace();
 				}
 			}
 		}
