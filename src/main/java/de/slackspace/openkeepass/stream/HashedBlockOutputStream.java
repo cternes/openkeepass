@@ -7,11 +7,11 @@ import java.security.NoSuchAlgorithmException;
 
 public class HashedBlockOutputStream extends OutputStream {
 
-	private final static int DEFAULT_BUFFER_SIZE = 1024 * 1024;
+	private static final int DEFAULT_BUFFER_SIZE = 1024 * 1024;
 
 	private OutputStream baseStream;
 	private int bufferPos = 0;
-	private byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];;
+	private byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
 	private long bufferIndex = 0;
 
 	public HashedBlockOutputStream(OutputStream os) {
@@ -71,7 +71,7 @@ public class HashedBlockOutputStream extends OutputStream {
 			try {
 				md = MessageDigest.getInstance("SHA-256");
 			} catch (NoSuchAlgorithmException e) {
-				throw new IOException("SHA-256 not implemented here.");
+				throw new IOException("SHA-256 not implemented here.", e);
 			}
 
 			byte[] hash;
