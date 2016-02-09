@@ -150,7 +150,8 @@ public class Entry implements KeePassFileElement {
 			property = new Property(propertyName, propertyValue, isProtected);
 			properties.add(property);
 		} else {
-			property = new Property(propertyName, propertyValue, isProtected);
+			properties.remove(property);
+			properties.add(new Property(propertyName, propertyValue, isProtected));
 		}
 	}
 
@@ -224,7 +225,7 @@ public class Entry implements KeePassFileElement {
 	@Override
 	public String toString() {
 		return "Entry [uuid=" + uuid + ", getTitle()=" + getTitle() + ", getPassword()=" + getPassword()
-				+ ", getUsername()=" + getUsername() + "]";
+		+ ", getUsername()=" + getUsername() + "]";
 	}
 
 }
