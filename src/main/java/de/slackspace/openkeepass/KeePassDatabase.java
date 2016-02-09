@@ -39,45 +39,45 @@ import de.slackspace.openkeepass.xml.KeyFileXmlParser;
  * database file.
  * <p>
  * Currently the following KeePass files are supported:
- * 
+ *
  * <ul>
  * <li>KeePass Database V2 with password</li>
  * <li>KeePass Database V2 with keyfile</li>
  * <li>KeePass Database V2 with combined password and keyfile</li>
  * </ul>
- * 
+ *
  * A typical read use-case should use the following idiom:
- * 
+ *
  * <pre>
- * // open database 
+ * // open database
  * KeePassFile database = KeePassDatabase.getInstance("keePassDatabasePath").openDatabase("secret");
- * 
- * // get password entries 
+ *
+ * // get password entries
  * List&lt;Entry&gt; entries = database.getEntries();
  * ...
  * </pre>
- * 
+ *
  * If the database could not be opened a <tt>RuntimeException</tt> will be
  * thrown.
  * <p>
  * A typical write use-case should use the following idiom:
- * 
+ *
  * <pre>
  * // build an entry
  * Entry entryOne = new EntryBuilder("First entry").username("Carl").password("secret").build();
  *
  * // build more entries or groups as you like
  * ...
- *  
+ *
  * // build KeePass model
  * KeePassFile keePassFile = new KeePassFileBuilder("testDB").addTopEntries(entryOne).build();
  *
  * // write KeePass database file
  * KeePassDatabase.write(keePassFile, "secret", new FileOutputStream("keePassDatabasePath"));
  * </pre>
- * 
+ *
  * @see KeePassFile
- * 
+ *
  */
 public class KeePassDatabase {
 
@@ -101,7 +101,7 @@ public class KeePassDatabase {
 	/**
 	 * Retrieves a KeePassDatabase instance. The instance returned is based on
 	 * the given database filename and tries to parse the database header of it.
-	 * 
+	 *
 	 * @param keePassDatabaseFile
 	 *            a KeePass database filename, must not be NULL
 	 * @return a KeePassDatabase
@@ -113,7 +113,7 @@ public class KeePassDatabase {
 	/**
 	 * Retrieves a KeePassDatabase instance. The instance returned is based on
 	 * the given database file and tries to parse the database header of it.
-	 * 
+	 *
 	 * @param keePassDatabaseFile
 	 *            a KeePass database file, must not be NULL
 	 * @return a KeePassDatabase
@@ -129,7 +129,7 @@ public class KeePassDatabase {
 			return getInstance(keePassDatabaseStream);
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(
-					"The KeePass database file could not be found. You must provide a valid KeePass database file.");
+					"The KeePass database file could not be found. You must provide a valid KeePass database file.", e);
 		} finally {
 			if (keePassDatabaseStream != null) {
 				try {
@@ -145,7 +145,7 @@ public class KeePassDatabase {
 	/**
 	 * Retrieves a KeePassDatabase instance. The instance returned is based on
 	 * the given input stream and tries to parse the database header of it.
-	 * 
+	 *
 	 * @param keePassDatabaseStream
 	 *            an input stream of a KeePass database, must not be NULL
 	 * @return a KeePassDatabase
@@ -165,7 +165,7 @@ public class KeePassDatabase {
 	 * <p>
 	 * If the database cannot be decrypted with the provided password an
 	 * exception will be thrown.
-	 * 
+	 *
 	 * @param password
 	 *            the password to open the database
 	 * @return a KeePassFile
@@ -214,7 +214,7 @@ public class KeePassDatabase {
 			return openDatabase(password, new FileInputStream(keyFile));
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(
-					"The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.");
+					"The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.", e);
 		}
 	}
 
@@ -263,7 +263,7 @@ public class KeePassDatabase {
 	 * <p>
 	 * If the database cannot be decrypted with the provided password an
 	 * exception will be thrown.
-	 * 
+	 *
 	 * @param keyFile
 	 *            the password to open the database
 	 * @return a KeePassFile the keyfile to open the database
@@ -278,7 +278,7 @@ public class KeePassDatabase {
 			return openDatabase(new FileInputStream(keyFile));
 		} catch (FileNotFoundException e) {
 			throw new IllegalArgumentException(
-					"The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.");
+					"The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.", e);
 		}
 	}
 
@@ -288,7 +288,7 @@ public class KeePassDatabase {
 	 * <p>
 	 * If the database cannot be decrypted with the provided keyfile an
 	 * exception will be thrown.
-	 * 
+	 *
 	 * @param keyFileStream
 	 *            the keyfile to open the database as stream
 	 * @return a KeePassFile
@@ -352,7 +352,7 @@ public class KeePassDatabase {
 
 	/**
 	 * Gets the KeePassDatabase header.
-	 * 
+	 *
 	 * @return the database header
 	 */
 	public KeePassHeader getHeader() {
@@ -364,7 +364,7 @@ public class KeePassDatabase {
 	 * the given file location.
 	 * <p>
 	 * If the KeePassFile cannot be encrypted an exception will be thrown.
-	 * 
+	 *
 	 * @param keePassFile
 	 *            the keePass model which should be written
 	 * @param password
@@ -391,7 +391,7 @@ public class KeePassDatabase {
 	 * the given stream.
 	 * <p>
 	 * If the KeePassFile cannot be encrypted an exception will be thrown.
-	 * 
+	 *
 	 * @param keePassFile
 	 *            the keePass model which should be written
 	 * @param password
@@ -399,7 +399,7 @@ public class KeePassDatabase {
 	 * @param stream
 	 *            the target stream where the output will be written
 	 * @see KeePassFile
-	 * 
+	 *
 	 */
 	public static void write(KeePassFile keePassFile, String password, OutputStream stream) {
 		if (stream == null) {
