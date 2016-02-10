@@ -1,6 +1,7 @@
 package de.slackspace.openkeepass.domain.zipper;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.KeePassFile;
@@ -64,12 +65,12 @@ public class GroupZipper {
 	 * If the current node has no childs an exception will be thrown.
 	 *
 	 * @return
-	 * @throws RuntimeException
+	 * @throws NoSuchElementException
 	 *             if the current node has no child nodes
 	 */
 	public GroupZipper down() {
 		if (!canDown()) {
-			throw new RuntimeException("Could not move down because this group does not have any children");
+			throw new NoSuchElementException("Could not move down because this group does not have any children");
 		}
 
 		parent = new GroupZipper(parent, node, index);
@@ -98,12 +99,12 @@ public class GroupZipper {
 	 * If the current node has no parent an exception will be thrown.
 	 *
 	 * @return
-	 * @throws RuntimeException
+	 * @throws NoSuchElementException
 	 *             if the current node has no parent node
 	 */
 	public GroupZipper up() {
 		if (!canUp()) {
-			throw new RuntimeException("Could not move up because this group does not have a parent");
+			throw new NoSuchElementException("Could not move up because this group does not have a parent");
 		}
 
 		this.index = parent.index;
@@ -134,10 +135,12 @@ public class GroupZipper {
 	 * Navigates right the tree to the next node at the same level.
 	 *
 	 * @return
+	 * @throws NoSuchElementException
+	 *             if the last node at the current level has already been reached
 	 */
 	public GroupZipper right() {
 		if (!canRight()) {
-			throw new RuntimeException(
+			throw new NoSuchElementException(
 					"Could not move right because the last node at this level has already been reached");
 		}
 
@@ -164,10 +167,12 @@ public class GroupZipper {
 	 * Navigates left the tree to the previous node at the same level.
 	 *
 	 * @return
+	 * @throws NoSuchElementException
+	 *             if the first node at the current level has already been reached
 	 */
 	public GroupZipper left() {
 		if (!canLeft()) {
-			throw new RuntimeException(
+			throw new NoSuchElementException(
 					"Could not move left because the first node at this level has already been reached");
 		}
 
@@ -304,6 +309,10 @@ public class GroupZipper {
 
 		@Override
 		public Group next() {
+			if(!hasNext()) {
+				throw new NoSuchElementException();
+			}
+			
 			if (isFirst) {
 				isFirst = false;
 				return getNode();
