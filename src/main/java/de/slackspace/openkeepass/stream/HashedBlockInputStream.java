@@ -64,7 +64,7 @@ public class HashedBlockInputStream extends InputStream {
 
 		bufferPos = 0;
 
-		long index = ByteUtils.readUnsignedInt(baseStream);
+		long index = ByteUtils.readInt(baseStream);
 		if (index != bufferIndex) {
 			throw new IOException("Invalid data format");
 		}

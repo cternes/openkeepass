@@ -41,12 +41,6 @@ public class ByteUtils {
 		return buffer.getInt();
 	}
 
-	public static int readUnsignedInt(InputStream inputStream) throws IOException {
-		int value = readInt(inputStream);
-
-		return ByteUtils.toUnsignedInt(value);
-	}
-
 	public static UUID bytesToUUID(byte[] bytes) {
 		ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
 		long mostSigBits = byteBuffer.getLong();
