@@ -13,6 +13,7 @@ public class CustomIconBuilder {
 	byte[] data;
 
 	public CustomIconBuilder() {
+		// default no-args constructor
 	}
 
 	public CustomIconBuilder(CustomIcon customIcon) {

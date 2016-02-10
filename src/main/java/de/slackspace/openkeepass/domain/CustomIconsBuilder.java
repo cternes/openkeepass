@@ -12,6 +12,7 @@ public class CustomIconsBuilder {
 	List<CustomIcon> customIcons = new ArrayList<CustomIcon>();
 
 	public CustomIconsBuilder() {
+		// default no-args constructor
 	}
 
 	public CustomIconsBuilder(CustomIcons customIcons) {

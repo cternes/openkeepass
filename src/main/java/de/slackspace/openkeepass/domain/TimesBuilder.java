@@ -23,6 +23,7 @@ public class TimesBuilder {
 	Calendar locationChanged;
 
 	public TimesBuilder() {
+		// default no-args constructor
 	}
 
 	public TimesBuilder(Times times) {
