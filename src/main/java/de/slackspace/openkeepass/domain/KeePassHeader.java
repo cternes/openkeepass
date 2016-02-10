@@ -9,6 +9,7 @@ import java.nio.ByteOrder;
 
 import de.slackspace.openkeepass.crypto.RandomGenerator;
 import de.slackspace.openkeepass.exception.KeePassHeaderUnreadableException;
+import de.slackspace.openkeepass.stream.SafeInputStream;
 import de.slackspace.openkeepass.util.ByteUtils;
 
 public class KeePassHeader {
@@ -89,10 +90,13 @@ public class KeePassHeader {
 	}
 
 	public void checkVersionSupport(byte[] keepassFile) throws IOException {
-		BufferedInputStream bufferedInputStream = new BufferedInputStream(new ByteArrayInputStream(keepassFile));
+		BufferedInputStream inputStream = new BufferedInputStream(new ByteArrayInputStream(keepassFile));
 
 		byte[] signature = new byte[VERSION_SIGNATURE_LENGTH];
-		bufferedInputStream.read(signature);
+		int readBytes = inputStream.read(signature);
+		if(readBytes == -1) {
+			throw new UnsupportedOperationException("Could not read KeePass header. The provided file seems to be no KeePass database file!");
+		}
 
 		ByteBuffer signatureBuffer = ByteBuffer.wrap(signature);
 		signatureBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -119,15 +123,16 @@ public class KeePassHeader {
 	 * @throws IOException
 	 *             if the header cannot be read
 	 */
+	@SuppressWarnings("resource")
 	public void read(byte[] keepassFile) throws IOException {
-		BufferedInputStream bufferedInputStream = new BufferedInputStream(new ByteArrayInputStream(keepassFile));
-		bufferedInputStream.skip(VERSION_SIGNATURE_LENGTH); // skip version
+		SafeInputStream inputStream = new SafeInputStream(new BufferedInputStream(new ByteArrayInputStream(keepassFile)));
+		inputStream.skipSafe(VERSION_SIGNATURE_LENGTH); // skip version
 
 		while (true) {
 			try {
-				int fieldId = bufferedInputStream.read();
+				int fieldId = inputStream.read();
 				byte[] fieldLength = new byte[2];
-				bufferedInputStream.read(fieldLength);
+				inputStream.readSafe(fieldLength);
 
 				ByteBuffer fieldLengthBuffer = ByteBuffer.wrap(fieldLength);
 				fieldLengthBuffer.order(ByteOrder.LITTLE_ENDIAN);
@@ -135,7 +140,7 @@ public class KeePassHeader {
 
 				if (fieldLengthInt > 0) {
 					byte[] data = new byte[fieldLengthInt];
-					bufferedInputStream.read(data);
+					inputStream.readSafe(data);
 					setValue(fieldId, data);
 				}
 

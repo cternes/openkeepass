@@ -29,6 +29,7 @@ import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteable;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
+import de.slackspace.openkeepass.stream.SafeInputStream;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.StreamUtils;
 import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
@@ -310,16 +311,17 @@ public class KeePassDatabase {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	private KeePassFile decryptAndParseDatabase(byte[] key) {
 		try {
 			byte[] aesDecryptedDbFile = decrypter.decryptDatabase(key, keepassHeader, keepassFile);
 
 			byte[] startBytes = new byte[32];
-			ByteArrayInputStream decryptedStream = new ByteArrayInputStream(aesDecryptedDbFile);
+			SafeInputStream decryptedStream = new SafeInputStream(new ByteArrayInputStream(aesDecryptedDbFile));
 
 			// Metadata must be skipped here
-			decryptedStream.skip(KeePassHeader.VERSION_SIGNATURE_LENGTH + keepassHeader.getHeaderSize());
-			decryptedStream.read(startBytes);
+			decryptedStream.skipSafe(KeePassHeader.VERSION_SIGNATURE_LENGTH + keepassHeader.getHeaderSize());
+			decryptedStream.readSafe(startBytes);
 
 			// Compare startBytes
 			if (!Arrays.equals(keepassHeader.getStreamStartBytes(), startBytes)) {
