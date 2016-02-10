@@ -31,6 +31,6 @@ public class BooleanXmlAdapter extends XmlAdapter<String, Boolean> {
 	 */
 	@Override
 	public Boolean unmarshal(String value) throws Exception {
-		return value.equalsIgnoreCase("true");
+		return "true".equalsIgnoreCase(value);
 	}
 }
