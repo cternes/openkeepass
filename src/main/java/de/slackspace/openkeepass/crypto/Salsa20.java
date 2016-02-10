@@ -61,7 +61,7 @@ public class Salsa20 implements ProtectedStringCrypto {
 			salsa20Engine.update(protectedBuffer, 0, protectedBuffer.length, plainText, 0);
 			return new String(plainText, ENCODING);
 		} catch (ShortBufferException e) {
-			throw new AssertionError("Buffer was too short", e);
+			throw new AssertionError(e);
 		} catch (UnsupportedEncodingException e) {
 			throw new UnsupportedOperationException(MSG_UNKNOWN_UTF8_ENCODING, e);
 		}
@@ -85,7 +85,7 @@ public class Salsa20 implements ProtectedStringCrypto {
 		} catch (UnsupportedEncodingException e) {
 			throw new UnsupportedOperationException(MSG_UNKNOWN_UTF8_ENCODING, e);
 		} catch (ShortBufferException e) {
-			throw new AssertionError("Buffer was too short", e);
+			throw new AssertionError(e);
 		}
 	}
 
