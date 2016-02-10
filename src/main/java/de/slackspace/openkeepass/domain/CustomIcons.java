@@ -17,13 +17,13 @@ import java.util.UUID;
 public class CustomIcons {
 
 	@XmlElement(name = "Icon")
-	private List<CustomIcon> customIcons = new ArrayList<CustomIcon>();
+	private List<CustomIcon> customIconList = new ArrayList<CustomIcon>();
 
 	CustomIcons() {
 	}
 
 	public CustomIcons(CustomIconsBuilder customIconsBuilder) {
-		this.customIcons = customIconsBuilder.customIcons;
+		this.customIconList = customIconsBuilder.customIcons;
 	}
 
 	/**
@@ -32,7 +32,7 @@ public class CustomIcons {
 	 * @return a list of custom icons
 	 */
 	public List<CustomIcon> getIcons() {
-		return customIcons;
+		return customIconList;
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class CustomIcons {
 	 * @return the custom icon if found, null otherwise
 	 */
 	public CustomIcon getIconByUuid(UUID uuid) {
-		for (CustomIcon customIcon : customIcons) {
+		for (CustomIcon customIcon : customIconList) {
 			if (customIcon.getUuid() != null && customIcon.getUuid().compareTo(uuid) == 0) {
 				return customIcon;
 			}
@@ -56,7 +56,7 @@ public class CustomIcons {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((customIcons == null) ? 0 : customIcons.hashCode());
+		result = prime * result + ((customIconList == null) ? 0 : customIconList.hashCode());
 		return result;
 	}
 
@@ -69,10 +69,10 @@ public class CustomIcons {
 		if (getClass() != obj.getClass())
 			return false;
 		CustomIcons other = (CustomIcons) obj;
-		if (customIcons == null) {
-			if (other.customIcons != null)
+		if (customIconList == null) {
+			if (other.customIconList != null)
 				return false;
-		} else if (!customIcons.equals(other.customIcons))
+		} else if (!customIconList.equals(other.customIconList))
 			return false;
 		return true;
 	}
