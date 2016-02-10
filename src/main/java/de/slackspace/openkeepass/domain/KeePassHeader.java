@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 import de.slackspace.openkeepass.crypto.RandomGenerator;
+import de.slackspace.openkeepass.exception.KeePassHeaderUnreadableException;
 import de.slackspace.openkeepass.util.ByteUtils;
 
 public class KeePassHeader {
@@ -142,7 +143,7 @@ public class KeePassHeader {
 					break;
 				}
 			} catch (IOException e) {
-				throw new RuntimeException("Could not read header input", e);
+				throw new KeePassHeaderUnreadableException("Could not read header input", e);
 			}
 		}
 	}
@@ -179,7 +180,7 @@ public class KeePassHeader {
 
 			return stream.toByteArray();
 		} catch (IOException e) {
-			throw new RuntimeException("Could not write header value to stream", e);
+			throw new KeePassHeaderUnreadableException("Could not write header value to stream", e);
 		}
 	}
 
@@ -193,7 +194,7 @@ public class KeePassHeader {
 
 			return stream.toByteArray();
 		} catch (IOException e) {
-			throw new RuntimeException("Could not write end of header to stream", e);
+			throw new KeePassHeaderUnreadableException("Could not write end of header to stream", e);
 		}
 	}
 
