@@ -11,6 +11,8 @@ import de.slackspace.openkeepass.util.StreamUtils;
 
 public class HashedBlockInputStream extends InputStream {
 
+	private static final String MSG_INVALID_DATA_FORMAT = "Invalid data format";
+
 	private static final int HASH_SIZE = 32;
 
 	private InputStream baseStream;
@@ -66,25 +68,25 @@ public class HashedBlockInputStream extends InputStream {
 
 		long index = ByteUtils.readInt(baseStream);
 		if (index != bufferIndex) {
-			throw new IOException("Invalid data format");
+			throw new IOException(MSG_INVALID_DATA_FORMAT);
 		}
 		bufferIndex++;
 
 		byte[] storedHash = new byte[32];
 		StreamUtils.read(baseStream, storedHash);
 		if (storedHash == null || storedHash.length != HASH_SIZE) {
-			throw new IOException("Invalid data format");
+			throw new IOException(MSG_INVALID_DATA_FORMAT);
 		}
 
 		int bufferSize = ByteUtils.readInt(baseStream);
 		if (bufferSize < 0) {
-			throw new IOException("Invalid data format");
+			throw new IOException(MSG_INVALID_DATA_FORMAT);
 		}
 
 		if (bufferSize == 0) {
 			for (int hash = 0; hash < HASH_SIZE; hash++) {
 				if (storedHash[hash] != 0) {
-					throw new IOException("Invalid data format");
+					throw new IOException(MSG_INVALID_DATA_FORMAT);
 				}
 			}
 
@@ -96,7 +98,7 @@ public class HashedBlockInputStream extends InputStream {
 		buffer = new byte[bufferSize];
 		StreamUtils.read(baseStream, buffer);
 		if (buffer == null || buffer.length != bufferSize) {
-			throw new IOException("Invalid data format");
+			throw new IOException(MSG_INVALID_DATA_FORMAT);
 		}
 
 		MessageDigest md = null;

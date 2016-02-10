@@ -17,7 +17,7 @@ public class BooleanXmlAdapter extends XmlAdapter<String, Boolean> {
 	 */
 	@Override
 	public String marshal(Boolean value) throws Exception {
-		if (value != null && value == true) {
+		if (value != null && value) {
 			return "True";
 		}
 		return "False";
