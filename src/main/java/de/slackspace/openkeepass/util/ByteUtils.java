@@ -20,13 +20,13 @@ public class ByteUtils {
 	}
 
 	public static String toHexString(byte[] bytes) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < bytes.length; i++) {
-			buffer.append(Character.forDigit((bytes[i] >> 4) & 0xF, 16));
-			buffer.append(Character.forDigit((bytes[i] & 0xF), 16));
+			builder.append(Character.forDigit((bytes[i] >> 4) & 0xF, 16));
+			builder.append(Character.forDigit(bytes[i] & 0xF, 16));
 		}
 
-		return buffer.toString();
+		return builder.toString();
 	}
 
 	public static int toUnsignedInt(int value) {
