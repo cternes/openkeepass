@@ -14,7 +14,8 @@ import org.bouncycastle.util.encoders.Hex;
 
 public class Salsa20 implements ProtectedStringCrypto {
 
-	private static final String SALSA20 = "Salsa20";
+	private static final String MSG_UNKNOWN_UTF8_ENCODING = "The encoding UTF-8 is not supported";
+	private static final String SALSA20_ALGORITHM = "Salsa20";
 	private static final String ENCODING = "UTF-8";
 	private static final String SALSA20IV = "E830094B97205D2A";
 
@@ -28,11 +29,11 @@ public class Salsa20 implements ProtectedStringCrypto {
 		byte[] salsaKey = Sha256.hash(protectedStreamKey);
 
 		try {
-			salsa20Engine = Cipher.getInstance(SALSA20, BouncyCastleProvider.PROVIDER_NAME);
-			salsa20Engine.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(salsaKey, SALSA20),
+			salsa20Engine = Cipher.getInstance(SALSA20_ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
+			salsa20Engine.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(salsaKey, SALSA20_ALGORITHM),
 					new IvParameterSpec(Hex.decode(SALSA20IV)));
 		} catch (Exception e) {
-			throw new RuntimeException("Could not find provider '" + SALSA20 + "'", e);
+			throw new UnsupportedOperationException("Could not find provider '" + SALSA20_ALGORITHM + "'", e);
 		}
 	}
 
@@ -47,6 +48,7 @@ public class Salsa20 implements ProtectedStringCrypto {
 		return salsa20;
 	}
 
+	@Override
 	public String decrypt(String protectedString) {
 		if (protectedString == null) {
 			throw new IllegalArgumentException("ProtectedString must not be null");
@@ -61,10 +63,11 @@ public class Salsa20 implements ProtectedStringCrypto {
 		} catch (ShortBufferException e) {
 			throw new RuntimeException(e);
 		} catch (UnsupportedEncodingException e) {
-			throw new UnsupportedOperationException("The encoding UTF-8 is not supported", e);
+			throw new UnsupportedOperationException(MSG_UNKNOWN_UTF8_ENCODING, e);
 		}
 	}
 
+	@Override
 	public String encrypt(String plainString) {
 		if (plainString == null) {
 			throw new IllegalArgumentException("PlainString must not be null");
@@ -80,7 +83,7 @@ public class Salsa20 implements ProtectedStringCrypto {
 
 			return new String(protectedBuffer, ENCODING);
 		} catch (UnsupportedEncodingException e) {
-			throw new UnsupportedOperationException("The encoding UTF-8 is not supported", e);
+			throw new UnsupportedOperationException(MSG_UNKNOWN_UTF8_ENCODING, e);
 		} catch (ShortBufferException e) {
 			throw new RuntimeException(e);
 		}

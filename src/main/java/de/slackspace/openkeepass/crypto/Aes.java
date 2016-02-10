@@ -85,9 +85,9 @@ public class Aes {
 			cipher.init(operationMode, aesKey, iv);
 			return cipher.doFinal(encryptedData);
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
+			throw new UnsupportedOperationException("The specified algorithm is unknown", e);
 		} catch (NoSuchPaddingException e) {
-			throw new RuntimeException(e);
+			throw new UnsupportedOperationException("The specified padding is unknown", e);
 		} catch (InvalidKeyException e) {
 			throw createCryptoException(e);
 		} catch (InvalidAlgorithmParameterException e) {
@@ -122,11 +122,11 @@ public class Aes {
 
 			return data;
 		} catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
+			throw new UnsupportedOperationException("The specified algorithm is unknown", e);
 		} catch (NoSuchPaddingException e) {
-			throw new RuntimeException(e);
+			throw new UnsupportedOperationException("The specified padding is unknown", e);
 		} catch (InvalidKeyException e) {
-			throw new RuntimeException(
+			throw new KeePassDatabaseUnreadable(
 					"The key has the wrong size. Have you installed Java Cryptography Extension (JCE)? Is the master key correct?", e);
 		} catch (ShortBufferException e) {
 			throw new RuntimeException(e);
