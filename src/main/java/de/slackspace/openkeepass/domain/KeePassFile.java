@@ -247,7 +247,7 @@ public class KeePassFile implements KeePassFileElement {
 		List<Group> groups = parentGroup.getGroups();
 		entries.addAll(parentGroup.getEntries());
 
-		if (groups.size() != 0) {
+		if (!groups.isEmpty()) {
 			for (Group group : groups) {
 				getEntries(group, entries);
 			}
@@ -260,7 +260,7 @@ public class KeePassFile implements KeePassFileElement {
 		List<Group> parentGroups = parentGroup.getGroups();
 		groups.addAll(parentGroups);
 
-		if (parentGroups.size() != 0) {
+		if (!parentGroups.isEmpty()) {
 			for (Group group : parentGroups) {
 				getGroups(group, groups);
 			}
