@@ -25,6 +25,8 @@ public class Aes {
 	private static final String DATA_TRANSFORMATION = "AES/CBC/PKCS5Padding";
 	private static final String KEY_ALGORITHM = "AES";
 
+	private Aes() {}
+	
 	static {
 		tryAvoidJCE();
 	}

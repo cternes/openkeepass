@@ -6,6 +6,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class Sha256 {
 
+	private Sha256() {}
+	
 	public static byte[] hash(String text) {
 		if (text == null) {
 			throw new IllegalArgumentException("Text must not be null");

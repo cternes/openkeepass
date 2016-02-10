@@ -8,6 +8,8 @@ import java.util.UUID;
 
 public class ByteUtils {
 
+	private ByteUtils() {}
+	
 	public static byte[] hexStringToByteArray(String s) {
 		int len = s.length();
 		byte[] data = new byte[len / 2];

@@ -10,6 +10,8 @@ public class StreamUtils {
 	private static final int BUFFER_SIZE = 4096;
 	private static final int EOF = -1;
 
+	private StreamUtils() {}
+	
 	public static int read(InputStream input, byte[] buffer) throws IOException {
 		int remaining = buffer.length;
 		while (remaining > 0) {
