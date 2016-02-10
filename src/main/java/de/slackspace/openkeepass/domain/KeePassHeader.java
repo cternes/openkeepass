@@ -47,13 +47,13 @@ public class KeePassHeader {
 	private static final int OLD_DATABASE_V1_FILE_SIGNATURE_1_INT = 0x9AA2D903 & 0xFF;
 	private static final int OLD_DATABASE_V1_FILE_SIGNATURE_2_INT = 0xB54BFB65 & 0xFF;
 
-	private byte[] cipher;
+	private byte[] encryptionCipher;
 	private byte[] encryptionIV;
 	private byte[] streamStartBytes;
 	private byte[] masterSeed;
 	private byte[] transformSeed;
 	private byte[] protectedStreamKey;
-	private CompressionAlgorithm compression;
+	private CompressionAlgorithm compressionAlgorithm;
 	private long transformRounds;
 	private CrsAlgorithm crsAlgorithm;
 
@@ -268,15 +268,15 @@ public class KeePassHeader {
 		ByteBuffer buffer = wrapInBuffer(value);
 		int intValue = buffer.getInt();
 
-		compression = CompressionAlgorithm.parseValue(intValue);
+		compressionAlgorithm = CompressionAlgorithm.parseValue(intValue);
 	}
 
 	public void setCompression(CompressionAlgorithm algorithm) {
-		compression = algorithm;
+		compressionAlgorithm = algorithm;
 	}
 
 	private byte[] getCompressionFlag() {
-		int intValue = CompressionAlgorithm.getIntValue(compression);
+		int intValue = CompressionAlgorithm.getIntValue(compressionAlgorithm);
 		return wrapInBuffer(intValue);
 	}
 
@@ -284,15 +284,15 @@ public class KeePassHeader {
 		if (value == null || value.length != 16) {
 			throw new IllegalArgumentException("The encryption cipher must contain 16 bytes!");
 		}
-		cipher = value;
+		encryptionCipher = value;
 	}
 
 	public byte[] getCipher() {
-		return cipher;
+		return encryptionCipher;
 	}
 
 	public CompressionAlgorithm getCompression() {
-		return compression;
+		return compressionAlgorithm;
 	}
 
 	public long getTransformRounds() {
