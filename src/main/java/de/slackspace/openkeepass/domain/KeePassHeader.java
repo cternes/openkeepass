@@ -86,6 +86,8 @@ public class KeePassHeader {
 		case INNER_RANDOM_STREAM_ID:
 			setInnerRandomStreamId(value);
 			break;
+		default: // other field Ids are not necessary but do not harm the application
+				break;
 		}
 	}
 
@@ -223,9 +225,8 @@ public class KeePassHeader {
 			return getStreamStartBytes();
 		case INNER_RANDOM_STREAM_ID:
 			return getInnerRandomStreamId();
+		default: throw new UnsupportedOperationException("A header field with id '" + headerId + "' is unknown");
 		}
-
-		return new byte[0];
 	}
 
 	private void setInnerRandomStreamId(byte[] value) {
