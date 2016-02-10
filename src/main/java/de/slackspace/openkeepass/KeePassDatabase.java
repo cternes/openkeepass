@@ -58,7 +58,7 @@ import de.slackspace.openkeepass.xml.KeyFileXmlParser;
  * ...
  * </pre>
  *
- * If the database could not be opened a <tt>RuntimeException</tt> will be
+ * If the database could not be opened an exception of type <tt>KeePassDatabaseUnreadable</tt> will be
  * thrown.
  * <p>
  * A typical write use-case should use the following idiom:
@@ -97,7 +97,7 @@ public class KeePassDatabase {
 			keepassHeader.checkVersionSupport(keepassFile);
 			keepassHeader.read(keepassFile);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new KeePassDatabaseUnreadable("Could not open database file", e);
 		}
 	}
 
@@ -349,7 +349,7 @@ public class KeePassDatabase {
 
 			return keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed), protectedStringCrypto);
 		} catch (IOException e) {
-			throw new RuntimeException("Could not open database file", e);
+			throw new KeePassDatabaseUnreadable("Could not open database file", e);
 		}
 	}
 
@@ -385,7 +385,7 @@ public class KeePassDatabase {
 		try {
 			write(keePassFile, password, new FileOutputStream(keePassDatabaseFile));
 		} catch (FileNotFoundException e) {
-			throw new RuntimeException(e);
+			throw new KeePassDatabaseUnreadable("Could not find database file", e);
 		}
 	}
 
@@ -453,7 +453,7 @@ public class KeePassDatabase {
 			// Write database to stream
 			stream.write(encryptedDatabase);
 		} catch (IOException e) {
-			throw new RuntimeException("Could not write database file", e);
+			throw new KeePassDatabaseUnwriteable("Could not write database file", e);
 		} finally {
 			if (stream != null) {
 				try {
