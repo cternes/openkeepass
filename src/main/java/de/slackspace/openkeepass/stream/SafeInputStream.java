@@ -19,7 +19,7 @@ public class SafeInputStream extends InputStream {
 	 * @throws IOException if no bytes could be read from underlying stream
 	 * 
 	 */
-	public void safeRead(byte[] buf) throws IOException {
+	public void readSafe(byte[] buf) throws IOException {
 		int readBytes = inputStream.read(buf);
 		
 		if(readBytes == -1) {
@@ -34,7 +34,7 @@ public class SafeInputStream extends InputStream {
 	 * @param numBytes the number of bytes to skip
 	 * @throws IOException if the given number of bytes could not be skipped
 	 */
-	public void safeSkip(long numBytes) throws IOException {
+	public void skipSafe(long numBytes) throws IOException {
 		long skippedBytes = inputStream.skip(numBytes);
 		
 		if(skippedBytes == -1) {

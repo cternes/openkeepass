@@ -33,7 +33,10 @@ public class ByteUtils {
 
 	public static int readInt(InputStream inputStream) throws IOException {
 		byte[] bytesToRead = new byte[4];
-		inputStream.read(bytesToRead);
+		int readBytes = inputStream.read(bytesToRead);
+		if(readBytes == -1) {
+			return -1;
+		}
 
 		ByteBuffer buffer = ByteBuffer.wrap(bytesToRead);
 		buffer.order(ByteOrder.LITTLE_ENDIAN);

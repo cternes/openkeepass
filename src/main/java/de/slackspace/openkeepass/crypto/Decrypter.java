@@ -1,12 +1,13 @@
 package de.slackspace.openkeepass.crypto;
 
-import de.slackspace.openkeepass.domain.KeePassHeader;
-import de.slackspace.openkeepass.util.StreamUtils;
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
+import de.slackspace.openkeepass.domain.KeePassHeader;
+import de.slackspace.openkeepass.stream.SafeInputStream;
+import de.slackspace.openkeepass.util.StreamUtils;
 
 public class Decrypter {
 
@@ -25,10 +26,10 @@ public class Decrypter {
 	private byte[] processDatabaseEncryption(boolean encrypt, byte[] database, KeePassHeader header, byte[] aesKey)
 			throws IOException {
 		byte[] metaData = new byte[KeePassHeader.VERSION_SIGNATURE_LENGTH + header.getHeaderSize()];
-		BufferedInputStream bufferedInputStream = new BufferedInputStream(new ByteArrayInputStream(database));
-		bufferedInputStream.read(metaData);
+		SafeInputStream inputStream = new SafeInputStream(new BufferedInputStream(new ByteArrayInputStream(database)));
+		inputStream.readSafe(metaData);
 
-		byte[] payload = StreamUtils.toByteArray(bufferedInputStream);
+		byte[] payload = StreamUtils.toByteArray(inputStream);
 		byte[] processedPayload;
 		if (encrypt) {
 			processedPayload = Aes.encrypt(aesKey, header.getEncryptionIV(), payload);
