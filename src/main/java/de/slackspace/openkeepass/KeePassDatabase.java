@@ -82,8 +82,10 @@ import de.slackspace.openkeepass.xml.KeyFileXmlParser;
  */
 public class KeePassDatabase {
 
-	private static final String MSG_UTF8_NOT_SUPPORTED = "The encoding UTF-8 is not supported";
 	private static final String UTF_8 = "UTF-8";
+	private static final String MSG_UTF8_NOT_SUPPORTED = "The encoding UTF-8 is not supported";
+	private static final String MSG_EMPTY_MASTER_KEY = "The password for the database must not be null. Please provide a valid password.";
+	
 	private KeePassHeader keepassHeader = new KeePassHeader();
 	private byte[] keepassFile;
 
@@ -157,8 +159,7 @@ public class KeePassDatabase {
 			throw new IllegalArgumentException("You must provide a non-empty KeePass database stream.");
 		}
 
-		KeePassDatabase reader = new KeePassDatabase(keePassDatabaseStream);
-		return reader;
+		return new KeePassDatabase(keePassDatabaseStream);
 	}
 
 	/**
@@ -175,8 +176,7 @@ public class KeePassDatabase {
 	 */
 	public KeePassFile openDatabase(String password) {
 		if (password == null) {
-			throw new IllegalArgumentException(
-					"The password for the database must not be null. Please provide a valid password.");
+			throw new IllegalArgumentException(MSG_EMPTY_MASTER_KEY);
 		}
 
 		try {
@@ -205,8 +205,7 @@ public class KeePassDatabase {
 	 */
 	public KeePassFile openDatabase(String password, File keyFile) {
 		if (password == null) {
-			throw new IllegalArgumentException(
-					"The password for the database must not be null. Please provide a valid password.");
+			throw new IllegalArgumentException(MSG_EMPTY_MASTER_KEY);
 		}
 		if (keyFile == null) {
 			throw new IllegalArgumentException("You must provide a valid KeePass keyfile.");
@@ -236,8 +235,7 @@ public class KeePassDatabase {
 	 */
 	public KeePassFile openDatabase(String password, InputStream keyFileStream) {
 		if (password == null) {
-			throw new IllegalArgumentException(
-					"The password for the database must not be null. Please provide a valid password.");
+			throw new IllegalArgumentException(MSG_EMPTY_MASTER_KEY);
 		}
 		if (keyFileStream == null) {
 			throw new IllegalArgumentException("You must provide a non-empty KeePass keyfile stream.");

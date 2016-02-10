@@ -26,6 +26,15 @@ public class Entry implements KeePassFileElement {
 	private static final String URL = "URL";
 	private static final String PASSWORD = "Password";
 	private static final String TITLE = "Title";
+	private static final List<String> PROPERTY_KEYS = new ArrayList<String>();
+	
+	static {
+		PROPERTY_KEYS.add(USER_NAME);
+		PROPERTY_KEYS.add(NOTES);
+		PROPERTY_KEYS.add(URL);
+		PROPERTY_KEYS.add(PASSWORD);
+		PROPERTY_KEYS.add(TITLE);
+	}
 
 	@XmlElement(name = "UUID")
 	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
@@ -106,16 +115,14 @@ public class Entry implements KeePassFileElement {
 		List<Property> customProperties = new ArrayList<Property>();
 
 		for (Property property : properties) {
-			if (!property.getKey().equals(TITLE) && !property.getKey().equals(PASSWORD)
-					&& !property.getKey().equals(URL) && !property.getKey().equals(NOTES)
-					&& !property.getKey().equals(USER_NAME)) {
+			if(!PROPERTY_KEYS.contains(property.getKey())) {
 				customProperties.add(property);
 			}
 		}
 
 		return customProperties;
 	}
-
+	
 	public String getTitle() {
 		return getValueFromProperty(TITLE);
 	}

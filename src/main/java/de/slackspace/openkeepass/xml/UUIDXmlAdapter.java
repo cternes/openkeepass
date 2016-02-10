@@ -22,9 +22,7 @@ public class UUIDXmlAdapter extends XmlAdapter<byte[], UUID> {
 	 */
 	@Override
 	public byte[] marshal(UUID value) throws Exception {
-		byte[] bytes = ByteUtils.uuidToBytes(value);
-
-		return bytes;
+		return ByteUtils.uuidToBytes(value);
 	}
 
 	/*
