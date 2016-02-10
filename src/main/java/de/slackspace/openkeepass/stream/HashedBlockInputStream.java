@@ -30,26 +30,25 @@ public class HashedBlockInputStream extends InputStream {
 
 	@Override
 	public int read(byte[] b, int offset, int length) throws IOException {
-		if (atEnd)
+		if (atEnd) {
 			return -1;
+		}
 
 		int remaining = length;
+		int bufferOffset = offset;
 
 		while (remaining > 0) {
-			if (bufferPos == buffer.length) {
-				// Get more from the source into the buffer
-				if (!readHashedBlock()) {
-					return length - remaining;
-				}
-
+			// Get more from the source into the buffer
+			if (bufferPos == buffer.length && !readHashedBlock()) {
+				return length - remaining;
 			}
 
 			// Copy from buffer out
 			int copyLen = Math.min(buffer.length - bufferPos, remaining);
 
-			System.arraycopy(buffer, bufferPos, b, offset, copyLen);
+			System.arraycopy(buffer, bufferPos, b, bufferOffset, copyLen);
 
-			offset += copyLen;
+			bufferOffset += copyLen;
 			bufferPos += copyLen;
 
 			remaining -= copyLen;
@@ -59,8 +58,9 @@ public class HashedBlockInputStream extends InputStream {
 	}
 
 	private boolean readHashedBlock() throws IOException {
-		if (atEnd)
+		if (atEnd) {
 			return false;
+		}
 
 		bufferPos = 0;
 
@@ -128,9 +128,8 @@ public class HashedBlockInputStream extends InputStream {
 		if (atEnd)
 			return -1;
 
-		if (bufferPos == buffer.length) {
-			if (!readHashedBlock())
-				return -1;
+		if (bufferPos == buffer.length && !readHashedBlock()) {
+			return -1;
 		}
 
 		int output = buffer[bufferPos];

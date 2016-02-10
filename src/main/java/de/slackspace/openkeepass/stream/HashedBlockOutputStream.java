@@ -46,19 +46,22 @@ public class HashedBlockOutputStream extends OutputStream {
 
 	@Override
 	public void write(byte[] b, int offset, int count) throws IOException {
-		while (count > 0) {
+		int bufferOffset = offset;
+		int bufferCount = count;
+		
+		while (bufferCount > 0) {
 			if (bufferPos == buffer.length) {
 				writeHashedBlock();
 			}
 
-			int copyLen = Math.min(buffer.length - bufferPos, count);
+			int copyLen = Math.min(buffer.length - bufferPos, bufferCount);
 
-			System.arraycopy(b, offset, buffer, bufferPos, copyLen);
+			System.arraycopy(b, bufferOffset, buffer, bufferPos, copyLen);
 
-			offset += copyLen;
+			bufferOffset += copyLen;
 			bufferPos += copyLen;
 
-			count -= copyLen;
+			bufferCount -= copyLen;
 		}
 	}
 
