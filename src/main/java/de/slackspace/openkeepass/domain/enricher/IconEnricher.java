@@ -15,6 +15,7 @@ import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.GroupBuilder;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.zipper.GroupZipper;
+import de.slackspace.openkeepass.exception.IconUnreadableException;
 import de.slackspace.openkeepass.util.StreamUtils;
 
 /**
@@ -99,7 +100,7 @@ public class IconEnricher {
 		try {
 			return StreamUtils.toByteArray(inputStream);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new IconUnreadableException("Could not read icon data from resource '" + ICONS + iconId + PNG + "'", e);
 		}
 	}
 }
