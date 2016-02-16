@@ -64,7 +64,7 @@ public class GroupZipper {
 	 * <p>
 	 * If the current node has no childs an exception will be thrown.
 	 *
-	 * @return
+	 * @return a new groupzipper which points to the first child node of the current node
 	 * @throws NoSuchElementException
 	 *             if the current node has no child nodes
 	 */
@@ -98,7 +98,7 @@ public class GroupZipper {
 	 * <p>
 	 * If the current node has no parent an exception will be thrown.
 	 *
-	 * @return
+	 * @return a new groupzipper which points to the parent node of the current node
 	 * @throws NoSuchElementException
 	 *             if the current node has no parent node
 	 */
@@ -134,7 +134,7 @@ public class GroupZipper {
 	/**
 	 * Navigates right the tree to the next node at the same level.
 	 *
-	 * @return
+	 * @return a new groupzipper which points to next node at the same level
 	 * @throws NoSuchElementException
 	 *             if the last node at the current level has already been reached
 	 */
@@ -166,7 +166,7 @@ public class GroupZipper {
 	/**
 	 * Navigates left the tree to the previous node at the same level.
 	 *
-	 * @return
+	 * @return a new groupzipper which points to the previous node at the same level
 	 * @throws NoSuchElementException
 	 *             if the first node at the current level has already been reached
 	 */
@@ -187,7 +187,7 @@ public class GroupZipper {
 	 * element in the tree.
 	 * <p>
 	 *
-	 * @return
+	 * @return the current node
 	 */
 	public Group getNode() {
 		return node;
@@ -200,7 +200,7 @@ public class GroupZipper {
 	 *
 	 * @param group
 	 *            the replacement node
-	 * @return
+	 * @return a new groupzipper with a replaced current node
 	 */
 	public GroupZipper replace(Group group) {
 		if (parent == null) {
@@ -241,7 +241,7 @@ public class GroupZipper {
 	 *
 	 * @param meta
 	 *            the given meta object
-	 * @return
+	 * @return a new groupzipper with replaced meta
 	 */
 	public GroupZipper replaceMeta(Meta meta) {
 		this.meta = meta;
@@ -312,7 +312,7 @@ public class GroupZipper {
 			if(!hasNext()) {
 				throw new NoSuchElementException();
 			}
-			
+
 			if (isFirst) {
 				isFirst = false;
 				return getNode();
