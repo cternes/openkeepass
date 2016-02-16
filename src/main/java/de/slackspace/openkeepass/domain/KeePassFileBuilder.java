@@ -22,7 +22,7 @@ public class KeePassFileBuilder {
 	/**
 	 * Creates a builder and initializes it with the structure from the given
 	 * KeePass file.
-	 * 
+	 *
 	 * @param keePassFile
 	 *            the KeePass file which will be used to initialize the builder
 	 */
@@ -35,7 +35,7 @@ public class KeePassFileBuilder {
 
 	/**
 	 * Creates a builder with the given databasename.
-	 * 
+	 *
 	 * @param databaseName
 	 *            the name of the database
 	 */
@@ -45,7 +45,7 @@ public class KeePassFileBuilder {
 
 	/**
 	 * Creates a builder with the given meta object.
-	 * 
+	 *
 	 * @param meta
 	 *            the meta object to initialize the builder meta
 	 */
@@ -60,10 +60,10 @@ public class KeePassFileBuilder {
 
 	/**
 	 * Adds the given groups right under the root node.
-	 * 
+	 *
 	 * @param groups
 	 *            the groups which should be added
-	 * @return
+	 * @return the builder with added groups
 	 */
 	public KeePassFileBuilder addTopGroups(Group... groups) {
 		for (Group group : groups) {
@@ -75,10 +75,10 @@ public class KeePassFileBuilder {
 
 	/**
 	 * Add the given entries right under the root node.
-	 * 
+	 *
 	 * @param entries
 	 *            the entries which should be added
-	 * @return
+	 * @return the builder with added entries
 	 */
 	public KeePassFileBuilder addTopEntries(Entry... entries) {
 		for (Entry entry : entries) {
@@ -90,7 +90,7 @@ public class KeePassFileBuilder {
 
 	/**
 	 * Builds a new KeePass file.
-	 * 
+	 *
 	 * @return a new KeePass file
 	 * @see KeePassFile
 	 */
@@ -107,7 +107,7 @@ public class KeePassFileBuilder {
 	 * {@link KeePassFile} as underlying data.
 	 * <p>
 	 * A GroupZipper can be used to easily modify existing KeePass files.
-	 * 
+	 *
 	 * @return a new group zipper
 	 */
 	public GroupZipper getZipper() {
