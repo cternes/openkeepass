@@ -30,6 +30,7 @@
 		<maven.compiler.target>1.6</maven.compiler.target>
 		<bouncycastle.version>1.54</bouncycastle.version>
 		<junit.version>4.12</junit.version>
+		<equalsverifier.version>1.7.7</equalsverifier.version>
 	</properties>
 
 	<scm>
@@ -50,6 +51,12 @@
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+    		<groupId>nl.jqno.equalsverifier</groupId>
+    		<artifactId>equalsverifier</artifactId>
+    		<version>${equalsverifier.version}</version>
+   			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
