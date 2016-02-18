@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
+import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * A Group represents a structure that consists of entries and subgroups.
@@ -21,6 +22,7 @@ import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Immutable
 public class Group implements KeePassFileElement {
 
 	@XmlElement(name = "UUID")
@@ -170,5 +172,70 @@ public class Group implements KeePassFileElement {
 		}
 		return isExpanded.booleanValue();
 	}
+
+	@Override
+	public final int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((customIconUUID == null) ? 0 : customIconUUID.hashCode());
+		result = prime * result + ((entries == null) ? 0 : entries.hashCode());
+		result = prime * result + ((groups == null) ? 0 : groups.hashCode());
+		result = prime * result + iconId;
+		result = prime * result + ((isExpanded == null) ? 0 : isExpanded.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((times == null) ? 0 : times.hashCode());
+		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
+		return result;
+	}
+
+	@Override
+	public final boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof Group))
+			return false;
+		Group other = (Group) obj;
+		if (customIconUUID == null) {
+			if (other.customIconUUID != null)
+				return false;
+		} else if (!customIconUUID.equals(other.customIconUUID))
+			return false;
+		if (entries == null) {
+			if (other.entries != null)
+				return false;
+		} else if (!entries.equals(other.entries))
+			return false;
+		if (groups == null) {
+			if (other.groups != null)
+				return false;
+		} else if (!groups.equals(other.groups))
+			return false;
+		if (iconId != other.iconId)
+			return false;
+		if (isExpanded == null) {
+			if (other.isExpanded != null)
+				return false;
+		} else if (!isExpanded.equals(other.isExpanded))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (times == null) {
+			if (other.times != null)
+				return false;
+		} else if (!times.equals(other.times))
+			return false;
+		if (uuid == null) {
+			if (other.uuid != null)
+				return false;
+		} else if (!uuid.equals(other.uuid))
+			return false;
+		return true;
+	}
+
 
 }
