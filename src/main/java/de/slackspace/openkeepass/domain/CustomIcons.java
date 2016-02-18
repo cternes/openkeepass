@@ -9,15 +9,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import jdk.nashorn.internal.ir.annotations.Immutable;
-
 /**
  * Represents a list of custom icons in the metadata of a KeePass file.
  *
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@Immutable
 public class CustomIcons {
 
 	@XmlElement(name = "Icon")

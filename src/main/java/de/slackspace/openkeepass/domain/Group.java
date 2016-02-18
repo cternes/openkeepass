@@ -12,7 +12,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * A Group represents a structure that consists of entries and subgroups.
@@ -22,7 +21,6 @@ import jdk.nashorn.internal.ir.annotations.Immutable;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@Immutable
 public class Group implements KeePassFileElement {
 
 	@XmlElement(name = "UUID")

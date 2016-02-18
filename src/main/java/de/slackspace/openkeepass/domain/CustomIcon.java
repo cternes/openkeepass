@@ -10,7 +10,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * Represents a custom icon in the KeePass database.
@@ -18,7 +17,6 @@ import jdk.nashorn.internal.ir.annotations.Immutable;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@Immutable
 public class CustomIcon {
 
 	@XmlElement(name = "UUID")

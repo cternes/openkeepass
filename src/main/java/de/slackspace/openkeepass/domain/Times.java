@@ -9,7 +9,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * Represents statistical information of an {@link Entry}.
@@ -17,7 +16,6 @@ import jdk.nashorn.internal.ir.annotations.Immutable;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@Immutable
 public class Times {
 
 	@XmlElement(name = "LastModificationTime")

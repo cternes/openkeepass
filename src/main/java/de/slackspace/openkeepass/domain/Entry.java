@@ -11,7 +11,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * Represents an entry in the KeePass database. It typically consists of a
@@ -20,7 +19,6 @@ import jdk.nashorn.internal.ir.annotations.Immutable;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@Immutable
 public class Entry implements KeePassFileElement {
 
 	private static final String USER_NAME = "UserName";

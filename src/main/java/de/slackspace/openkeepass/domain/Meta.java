@@ -11,7 +11,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * Represents the metadata of the KeePass database like database name, custom
@@ -20,7 +19,6 @@ import jdk.nashorn.internal.ir.annotations.Immutable;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-@Immutable
 public class Meta {
 
 	@XmlElement(name = "Generator")
