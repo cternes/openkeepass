@@ -5,6 +5,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import jdk.nashorn.internal.ir.annotations.Immutable;
+
 /**
  * Represents a key value pair of an {@link Entry}. All properties like username
  * or password of an Entry are represented with this class.
@@ -12,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Immutable
 public class Property implements KeePassFileElement {
 
 	@XmlElement(name = "Key")
@@ -50,7 +53,7 @@ public class Property implements KeePassFileElement {
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((key == null) ? 0 : key.hashCode());
@@ -59,12 +62,12 @@ public class Property implements KeePassFileElement {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Property))
 			return false;
 		Property other = (Property) obj;
 		if (key == null) {
