@@ -1,6 +1,7 @@
 package de.slackspace.openkeepass.domain;
 
-import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
+import java.util.Arrays;
+import java.util.UUID;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -8,8 +9,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import java.util.Arrays;
-import java.util.UUID;
+import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
+import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * Represents a custom icon in the KeePass database.
@@ -17,6 +18,7 @@ import java.util.UUID;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Immutable
 public class CustomIcon {
 
 	@XmlElement(name = "UUID")
@@ -53,7 +55,7 @@ public class CustomIcon {
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + Arrays.hashCode(data);
@@ -62,12 +64,12 @@ public class CustomIcon {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof CustomIcon))
 			return false;
 		CustomIcon other = (CustomIcon) obj;
 		if (!Arrays.equals(data, other.data))
