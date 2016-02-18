@@ -8,8 +8,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import jdk.nashorn.internal.ir.annotations.Immutable;
+
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Immutable
 public class History {
 
 	@XmlElement(name = "Entry")
@@ -20,7 +23,7 @@ public class History {
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((entries == null) ? 0 : entries.hashCode());
@@ -28,12 +31,12 @@ public class History {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof History))
 			return false;
 		History other = (History) obj;
 		if (entries == null) {
