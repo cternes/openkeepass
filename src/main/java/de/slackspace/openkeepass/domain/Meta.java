@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
+import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * Represents the metadata of the KeePass database like database name, custom
@@ -19,6 +20,7 @@ import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Immutable
 public class Meta {
 
 	@XmlElement(name = "Generator")
@@ -126,7 +128,7 @@ public class Meta {
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((customIcons == null) ? 0 : customIcons.hashCode());
@@ -145,12 +147,12 @@ public class Meta {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Meta))
 			return false;
 		Meta other = (Meta) obj;
 		if (customIcons == null) {
