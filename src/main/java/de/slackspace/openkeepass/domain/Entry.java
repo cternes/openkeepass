@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
+import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * Represents an entry in the KeePass database. It typically consists of a
@@ -19,6 +20,7 @@ import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Immutable
 public class Entry implements KeePassFileElement {
 
 	private static final String USER_NAME = "UserName";
@@ -27,7 +29,7 @@ public class Entry implements KeePassFileElement {
 	private static final String PASSWORD = "Password";
 	private static final String TITLE = "Title";
 	private static final List<String> PROPERTY_KEYS = new ArrayList<String>();
-	
+
 	static {
 		PROPERTY_KEYS.add(USER_NAME);
 		PROPERTY_KEYS.add(NOTES);
@@ -122,7 +124,7 @@ public class Entry implements KeePassFileElement {
 
 		return customProperties;
 	}
-	
+
 	public String getTitle() {
 		return getValueFromProperty(TITLE);
 	}
@@ -193,7 +195,7 @@ public class Entry implements KeePassFileElement {
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((history == null) ? 0 : history.hashCode());
@@ -203,12 +205,12 @@ public class Entry implements KeePassFileElement {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Entry))
 			return false;
 		Entry other = (Entry) obj;
 		if (history == null) {
