@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
+import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * Represents statistical information of an {@link Entry}.
@@ -16,6 +17,7 @@ import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Immutable
 public class Times {
 
 	@XmlElement(name = "LastModificationTime")
@@ -82,7 +84,7 @@ public class Times {
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((creationTime == null) ? 0 : creationTime.hashCode());
@@ -96,12 +98,12 @@ public class Times {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Times))
 			return false;
 		Times other = (Times) obj;
 		if (creationTime == null) {
