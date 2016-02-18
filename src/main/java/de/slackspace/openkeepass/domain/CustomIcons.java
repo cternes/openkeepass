@@ -1,12 +1,15 @@
 package de.slackspace.openkeepass.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+
+import jdk.nashorn.internal.ir.annotations.Immutable;
 
 /**
  * Represents a list of custom icons in the metadata of a KeePass file.
@@ -14,6 +17,7 @@ import java.util.UUID;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@Immutable
 public class CustomIcons {
 
 	@XmlElement(name = "Icon")
@@ -53,7 +57,7 @@ public class CustomIcons {
 	}
 
 	@Override
-	public int hashCode() {
+	public final int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((customIconList == null) ? 0 : customIconList.hashCode());
@@ -61,12 +65,12 @@ public class CustomIcons {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof CustomIcons))
 			return false;
 		CustomIcons other = (CustomIcons) obj;
 		if (customIconList == null) {
