@@ -7,7 +7,7 @@ import java.util.List;
  * A builder to create {@link CustomIcons} objects.
  *
  */
-public class CustomIconsBuilder {
+public class CustomIconsBuilder implements CustomIconsContract {
 
 	List<CustomIcon> customIcons = new ArrayList<CustomIcon>();
 
@@ -36,5 +36,10 @@ public class CustomIconsBuilder {
 	 */
 	public CustomIcons build() {
 		return new CustomIcons(this);
+	}
+
+	@Override
+	public List<CustomIcon> getCustomIcons() {
+		return customIcons;
 	}
 }
