@@ -25,8 +25,8 @@ import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.KeyFile;
-import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
-import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteable;
+import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
+import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
 import de.slackspace.openkeepass.stream.SafeInputStream;
@@ -99,7 +99,7 @@ public class KeePassDatabase {
 			keepassHeader.checkVersionSupport(keepassFile);
 			keepassHeader.read(keepassFile);
 		} catch (IOException e) {
-			throw new KeePassDatabaseUnreadable("Could not open database file", e);
+			throw new KeePassDatabaseUnreadableException("Could not open database file", e);
 		}
 	}
 
@@ -323,7 +323,7 @@ public class KeePassDatabase {
 
 			// Compare startBytes
 			if (!Arrays.equals(keepassHeader.getStreamStartBytes(), startBytes)) {
-				throw new KeePassDatabaseUnreadable(
+				throw new KeePassDatabaseUnreadableException(
 						"The keepass database file seems to be corrupt or cannot be decrypted.");
 			}
 
@@ -347,7 +347,7 @@ public class KeePassDatabase {
 
 			return keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed), protectedStringCrypto);
 		} catch (IOException e) {
-			throw new KeePassDatabaseUnreadable("Could not open database file", e);
+			throw new KeePassDatabaseUnreadableException("Could not open database file", e);
 		}
 	}
 
@@ -383,7 +383,7 @@ public class KeePassDatabase {
 		try {
 			write(keePassFile, password, new FileOutputStream(keePassDatabaseFile));
 		} catch (FileNotFoundException e) {
-			throw new KeePassDatabaseUnreadable("Could not find database file", e);
+			throw new KeePassDatabaseUnreadableException("Could not find database file", e);
 		}
 	}
 
@@ -409,7 +409,7 @@ public class KeePassDatabase {
 
 		try {
 			if (!validateKeePassFile(keePassFile)) {
-				throw new KeePassDatabaseUnwriteable(
+				throw new KeePassDatabaseUnwriteableException(
 						"The provided keePassFile is not valid. A valid keePassFile must contain of meta and root group and the root group must at least contain one group.");
 			}
 
@@ -451,7 +451,7 @@ public class KeePassDatabase {
 			// Write database to stream
 			stream.write(encryptedDatabase);
 		} catch (IOException e) {
-			throw new KeePassDatabaseUnwriteable("Could not write database file", e);
+			throw new KeePassDatabaseUnwriteableException("Could not write database file", e);
 		} finally {
 			if (stream != null) {
 				try {

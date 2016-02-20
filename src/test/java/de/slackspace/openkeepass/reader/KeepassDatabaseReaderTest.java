@@ -14,7 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.KeePassDatabase;
-import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
+import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.util.ByteUtils;
 
 public class KeepassDatabaseReaderTest {
@@ -191,7 +191,7 @@ public class KeepassDatabaseReaderTest {
 		Assert.assertEquals("V6uoqOm7esGRqm20VvMz", entries.get(0).getPassword());
 	}
 
-	@Test(expected = KeePassDatabaseUnreadable.class)
+	@Test(expected = KeePassDatabaseUnreadableException.class)
 	public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldNotOpenKeePassFileWithPassword()
 			throws FileNotFoundException {
 		FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithPasswordAndKeyfile.kdbx");
@@ -199,7 +199,7 @@ public class KeepassDatabaseReaderTest {
 		KeePassDatabase.getInstance(keePassFile).openDatabase("test123");
 	}
 
-	@Test(expected = KeePassDatabaseUnreadable.class)
+	@Test(expected = KeePassDatabaseUnreadableException.class)
 	public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldNotOpenKeePassFileWithKeyFile()
 			throws FileNotFoundException {
 		FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithPasswordAndKeyfile.kdbx");

@@ -14,7 +14,7 @@ import javax.crypto.ShortBufferException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
+import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 
 public class Aes {
 
@@ -126,15 +126,15 @@ public class Aes {
 		} catch (NoSuchPaddingException e) {
 			throw new UnsupportedOperationException("The specified padding is unknown", e);
 		} catch (InvalidKeyException e) {
-			throw new KeePassDatabaseUnreadable(
+			throw new KeePassDatabaseUnreadableException(
 					"The key has the wrong size. Have you installed Java Cryptography Extension (JCE)? Is the master key correct?", e);
 		} catch (ShortBufferException e) {
 			throw new AssertionError(e);
 		}
 	}
 
-	private static KeePassDatabaseUnreadable createCryptoException(Throwable e) {
-		return new KeePassDatabaseUnreadable("Could not decrypt keepass file. Master key wrong?", e);
+	private static KeePassDatabaseUnreadableException createCryptoException(Throwable e) {
+		return new KeePassDatabaseUnreadableException("Could not decrypt keepass file. Master key wrong?", e);
 	}
 
 }
