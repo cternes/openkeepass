@@ -41,16 +41,17 @@ public class Times {
 	private Calendar locationChanged;
 
 	Times() {
+		// default no-args constructor
 	}
 
-	public Times(TimesBuilder timesBuilder) {
-		this.creationTime = timesBuilder.creationTime;
-		this.expires = timesBuilder.expires;
-		this.expiryTime = timesBuilder.expiryTime;
-		this.lastAccessTime = timesBuilder.lastAccessTime;
-		this.lastModificationTime = timesBuilder.lastModificationTime;
-		this.locationChanged = timesBuilder.locationChanged;
-		this.usageCount = timesBuilder.usageCount;
+	public Times(TimesContract timesContract) {
+		this.creationTime = timesContract.getCreationTime();
+		this.expires = timesContract.getExpires();
+		this.expiryTime = timesContract.getExpiryTime();
+		this.lastAccessTime = timesContract.getLastAccessTime();
+		this.lastModificationTime = timesContract.getLastModificationTime();
+		this.locationChanged = timesContract.getLocationChanged();
+		this.usageCount = timesContract.getUsageCount();
 	}
 
 	public Calendar getLastModificationTime() {

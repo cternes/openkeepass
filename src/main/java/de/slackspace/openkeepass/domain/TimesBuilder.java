@@ -6,21 +6,21 @@ import java.util.Calendar;
  * A builder to create {@link Times} objects.
  *
  */
-public class TimesBuilder {
+public class TimesBuilder implements TimesContract {
 
-	Calendar lastModificationTime;
+	private Calendar lastModificationTime;
 
-	Calendar creationTime;
+	private	Calendar creationTime;
 
-	Calendar lastAccessTime;
+	private Calendar lastAccessTime;
 
-	Calendar expiryTime;
+	private Calendar expiryTime;
 
-	boolean expires;
+	private boolean expires;
 
-	int usageCount;
+	private int usageCount;
 
-	Calendar locationChanged;
+	private Calendar locationChanged;
 
 	public TimesBuilder() {
 		// default no-args constructor
@@ -73,10 +73,45 @@ public class TimesBuilder {
 
 	/**
 	 * Builds a new times with the values from the builder.
-	 * 
+	 *
 	 * @return a new times object
 	 */
 	public Times build() {
 		return new Times(this);
+	}
+
+	@Override
+	public Calendar getLastModificationTime() {
+		return lastModificationTime;
+	}
+
+	@Override
+	public Calendar getCreationTime() {
+		return creationTime;
+	}
+
+	@Override
+	public Calendar getLastAccessTime() {
+		return lastAccessTime;
+	}
+
+	@Override
+	public Calendar getExpiryTime() {
+		return expiryTime;
+	}
+
+	@Override
+	public boolean getExpires() {
+		return expires;
+	}
+
+	@Override
+	public int getUsageCount() {
+		return usageCount;
+	}
+
+	@Override
+	public Calendar getLocationChanged() {
+		return locationChanged;
 	}
 }
