@@ -115,7 +115,7 @@ public class KeePassFileBuilder {
 	}
 
 	private void setTopGroupNameIfNotExisting() {
-		if (rootBuilder.groups.isEmpty()) {
+		if (rootBuilder.getGroups().isEmpty()) {
 			rootBuilder.addGroup(topGroupBuilder.name(meta.getDatabaseName()).build());
 		}
 	}

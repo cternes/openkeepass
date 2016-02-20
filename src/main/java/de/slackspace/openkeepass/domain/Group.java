@@ -56,16 +56,16 @@ public class Group implements KeePassFileElement {
 		uuid = UUID.randomUUID();
 	}
 
-	public Group(GroupBuilder builder) {
-		entries = builder.entries;
-		groups = builder.groups;
-		iconId = builder.iconId;
-		isExpanded = builder.isExpanded;
-		name = builder.name;
-		times = builder.times;
-		uuid = builder.uuid;
-		iconData = builder.iconData;
-		customIconUUID = builder.customIconUuid;
+	public Group(GroupContract groupContract) {
+		entries = groupContract.getEntries();
+		groups = groupContract.getGroups();
+		iconId = groupContract.getIconId();
+		isExpanded = groupContract.isExpanded();
+		name = groupContract.getName();
+		times = groupContract.getTimes();
+		uuid = groupContract.getUuid();
+		iconData = groupContract.getIconData();
+		customIconUUID = groupContract.getCustomIconUuid();
 	}
 
 	/**

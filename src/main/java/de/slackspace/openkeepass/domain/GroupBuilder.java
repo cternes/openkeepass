@@ -4,25 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class GroupBuilder {
+public class GroupBuilder implements GroupContract {
 
-	UUID uuid;
+	private UUID uuid;
 
-	String name;
+	private String name;
 
-	int iconId = 49;
+	private int iconId = 49;
 
-	Times times;
+	private Times times;
 
-	boolean isExpanded;
+	private boolean isExpanded;
 
-	byte[] iconData;
+	private byte[] iconData;
 
-	UUID customIconUuid;
+	private UUID customIconUuid;
 
-	List<Entry> entries = new ArrayList<Entry>();
+	private List<Entry> entries = new ArrayList<Entry>();
 
-	List<Group> groups = new ArrayList<Group>();
+	private List<Group> groups = new ArrayList<Group>();
 
 	public GroupBuilder() {
 		this.uuid = UUID.randomUUID();
@@ -101,6 +101,51 @@ public class GroupBuilder {
 
 	public Group build() {
 		return new Group(this);
+	}
+
+	@Override
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public int getIconId() {
+		return iconId;
+	}
+
+	@Override
+	public Times getTimes() {
+		return times;
+	}
+
+	@Override
+	public boolean isExpanded() {
+		return isExpanded;
+	}
+
+	@Override
+	public byte[] getIconData() {
+		return iconData;
+	}
+
+	@Override
+	public UUID getCustomIconUuid() {
+		return customIconUuid;
+	}
+
+	@Override
+	public List<Entry> getEntries() {
+		return entries;
+	}
+
+	@Override
+	public List<Group> getGroups() {
+		return groups;
 	}
 
 }
