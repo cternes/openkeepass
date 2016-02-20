@@ -109,7 +109,10 @@ public class KeePassFileBuilder {
 	 * A GroupZipper can be used to easily modify existing KeePass files.
 	 *
 	 * @return a new group zipper
+	 * @deprecated use {@link GroupZipper} directly instead
+	 * @see GroupZipper
 	 */
+	@Deprecated
 	public GroupZipper getZipper() {
 		return new GroupZipper(keePassFile);
 	}
