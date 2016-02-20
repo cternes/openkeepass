@@ -17,7 +17,6 @@ public class KeePassFileBuilder {
 	Group root;
 	private GroupBuilder rootBuilder = new GroupBuilder();
 	private GroupBuilder topGroupBuilder = new GroupBuilder();
-	private KeePassFile keePassFile;
 
 	/**
 	 * Creates a builder and initializes it with the structure from the given
@@ -27,7 +26,6 @@ public class KeePassFileBuilder {
 	 *            the KeePass file which will be used to initialize the builder
 	 */
 	public KeePassFileBuilder(KeePassFile keePassFile) {
-		this.keePassFile = keePassFile;
 		this.meta = keePassFile.getMeta();
 
 		rootBuilder = new GroupBuilder(keePassFile.getRoot());
@@ -100,18 +98,6 @@ public class KeePassFileBuilder {
 		root = rootBuilder.build();
 
 		return new KeePassFile(this);
-	}
-
-	/**
-	 * Returns a {@link GroupZipper} with the structure of the builders
-	 * {@link KeePassFile} as underlying data.
-	 * <p>
-	 * A GroupZipper can be used to easily modify existing KeePass files.
-	 *
-	 * @return a new group zipper
-	 */
-	public GroupZipper getZipper() {
-		return new GroupZipper(keePassFile);
 	}
 
 	private void setTopGroupNameIfNotExisting() {

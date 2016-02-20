@@ -121,7 +121,7 @@ public class KeepassDatabaseWriterTest {
 		Group group = database.getGroupByName("test");
 		Group modifiedGroup = new GroupBuilder(group).name("test2").build();
 
-		GroupZipper zipper = new KeePassFileBuilder(database).getZipper().down().right().right().right().right().down();
+		GroupZipper zipper = new GroupZipper(database).down().right().right().right().right().down();
 		KeePassFile modifiedDatabase = zipper.replace(modifiedGroup).close();
 
 		String dbFilename = "target/test-classes/fullBlownDatabaseModified.kdbx";
