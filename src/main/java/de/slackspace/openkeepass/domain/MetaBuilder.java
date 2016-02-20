@@ -7,7 +7,7 @@ import java.util.UUID;
  * A builder to create {@link Meta} objects.
  *
  */
-public class MetaBuilder {
+public class MetaBuilder implements MetaContract {
 
 	String generator = "KeePass";
 
@@ -131,6 +131,66 @@ public class MetaBuilder {
 	 */
 	public Meta build() {
 		return new Meta(this);
+	}
+
+	@Override
+	public String getGenerator() {
+		return generator;
+	}
+
+	@Override
+	public String getDatabaseName() {
+		return databaseName;
+	}
+
+	@Override
+	public String getDatabaseDescription() {
+		return databaseDescription;
+	}
+
+	@Override
+	public Calendar getDatabaseNameChanged() {
+		return databaseNameChanged;
+	}
+
+	@Override
+	public Calendar getDatabaseDescriptionChanged() {
+		return databaseDescriptionChanged;
+	}
+
+	@Override
+	public int getMaintenanceHistoryDays() {
+		return maintenanceHistoryDays;
+	}
+
+	@Override
+	public UUID getRecycleBinUuid() {
+		return recycleBinUuid;
+	}
+
+	@Override
+	public Calendar getRecycleBinChanged() {
+		return recycleBinChanged;
+	}
+
+	@Override
+	public boolean getRecycleBinEnabled() {
+		return recycleBinEnabled;
+	}
+
+	@Override
+	public long getHistoryMaxItems() {
+		return historyMaxItems;
+	}
+
+	@Override
+	public long getHistoryMaxSize() {
+		return historyMaxSize;
+	}
+
+	@Override
+	public CustomIcons getCustomIcons() {
+		return customIcons;
 	}
 
 }

@@ -62,19 +62,19 @@ public class Meta {
 	Meta() {
 	}
 
-	public Meta(MetaBuilder metaBuilder) {
-		this.databaseDescription = metaBuilder.databaseDescription;
-		this.databaseDescriptionChanged = metaBuilder.databaseDescriptionChanged;
-		this.databaseName = metaBuilder.databaseName;
-		this.databaseNameChanged = metaBuilder.databaseNameChanged;
-		this.generator = metaBuilder.generator;
-		this.historyMaxItems = metaBuilder.historyMaxItems;
-		this.historyMaxSize = metaBuilder.historyMaxSize;
-		this.maintenanceHistoryDays = metaBuilder.maintenanceHistoryDays;
-		this.recycleBinChanged = metaBuilder.recycleBinChanged;
-		this.recycleBinEnabled = metaBuilder.recycleBinEnabled;
-		this.recycleBinUuid = metaBuilder.recycleBinUuid;
-		this.customIcons = metaBuilder.customIcons;
+	public Meta(MetaContract metaContract) {
+		this.databaseDescription = metaContract.getDatabaseDescription();
+		this.databaseDescriptionChanged = metaContract.getDatabaseDescriptionChanged();
+		this.databaseName = metaContract.getDatabaseName();
+		this.databaseNameChanged = metaContract.getDatabaseNameChanged();
+		this.generator = metaContract.getGenerator();
+		this.historyMaxItems = metaContract.getHistoryMaxItems();
+		this.historyMaxSize = metaContract.getHistoryMaxSize();
+		this.maintenanceHistoryDays = metaContract.getMaintenanceHistoryDays();
+		this.recycleBinChanged = metaContract.getRecycleBinChanged();
+		this.recycleBinEnabled = metaContract.getRecycleBinEnabled();
+		this.recycleBinUuid = metaContract.getRecycleBinUuid();
+		this.customIcons = metaContract.getCustomIcons();
 	}
 
 	public String getDatabaseName() {
