@@ -34,9 +34,9 @@ public class KeePassFile implements KeePassFileElement {
 	KeePassFile() {
 	}
 
-	public KeePassFile(KeePassFileBuilder builder) {
-		this.meta = builder.meta;
-		this.root = builder.root;
+	public KeePassFile(KeePassFileContract keePassFileContract) {
+		this.meta = keePassFileContract.getMeta();
+		this.root = keePassFileContract.getRoot();
 	}
 
 	/**

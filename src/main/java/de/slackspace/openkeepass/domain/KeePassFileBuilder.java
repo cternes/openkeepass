@@ -11,7 +11,7 @@ import de.slackspace.openkeepass.domain.zipper.GroupZipper;
  * To modify an existing one use the {@link GroupZipper}.
  *
  */
-public class KeePassFileBuilder {
+public class KeePassFileBuilder implements KeePassFileContract {
 
 	Meta meta;
 	Group root;
@@ -104,5 +104,15 @@ public class KeePassFileBuilder {
 		if (rootBuilder.getGroups().isEmpty()) {
 			rootBuilder.addGroup(topGroupBuilder.name(meta.getDatabaseName()).build());
 		}
+	}
+
+	@Override
+	public Meta getMeta() {
+		return meta;
+	}
+
+	@Override
+	public Group getRoot() {
+		return root;
 	}
 }
