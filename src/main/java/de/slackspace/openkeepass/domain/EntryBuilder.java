@@ -8,31 +8,31 @@ import java.util.UUID;
  * A builder to create {@link Entry} objects.
  *
  */
-public class EntryBuilder {
+public class EntryBuilder implements EntryContract {
 
-	UUID uuid;
+	private UUID uuid;
 
-	History history;
+	private History history;
 
-	String title;
+	private String title;
 
-	String username;
+	private String username;
 
-	String password;
+	private String password;
 
-	String notes;
+	private String notes;
 
-	String url;
+	private String url;
 
-	Entry originalEntry;
+	private Entry originalEntry;
 
-	int iconId;
+	private int iconId;
 
-	byte[] iconData;
+	private byte[] iconData;
 
-	UUID customIconUUID;
+	private UUID customIconUUID;
 
-	List<Property> customPropertyList = new ArrayList<Property>();
+	private List<Property> customPropertyList = new ArrayList<Property>();
 
 	/**
 	 * Creates a new builder with a random UUID.
@@ -161,5 +161,60 @@ public class EntryBuilder {
 
 		history.getHistoricEntries().add(originalEntry);
 		return build();
+	}
+
+	@Override
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	@Override
+	public byte[] getIconData() {
+		return iconData;
+	}
+
+	@Override
+	public int getIconId() {
+		return iconId;
+	}
+
+	@Override
+	public UUID getCustomIconUUID() {
+		return customIconUUID;
+	}
+
+	@Override
+	public String getTitle() {
+		return title;
+	}
+
+	@Override
+	public String getUsername() {
+		return username;
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String getNotes() {
+		return notes;
+	}
+
+	@Override
+	public String getUrl() {
+		return url;
+	}
+
+	@Override
+	public List<Property> getCustomPropertyList() {
+		return customPropertyList;
+	}
+
+	@Override
+	public History getHistory() {
+		return history;
 	}
 }

@@ -59,20 +59,20 @@ public class Entry implements KeePassFileElement {
 		this.uuid = UUID.randomUUID();
 	}
 
-	public Entry(EntryBuilder builder) {
-		this.history = builder.history;
-		this.uuid = builder.uuid;
-		this.iconData = builder.iconData;
-		this.iconId = builder.iconId;
-		this.customIconUUID = builder.customIconUUID;
+	public Entry(EntryContract entryContract) {
+		this.history = entryContract.getHistory();
+		this.uuid = entryContract.getUuid();
+		this.iconData = entryContract.getIconData();
+		this.iconId = entryContract.getIconId();
+		this.customIconUUID = entryContract.getCustomIconUUID();
 
-		setValue(false, NOTES, builder.notes);
-		setValue(true, PASSWORD, builder.password);
-		setValue(false, TITLE, builder.title);
-		setValue(false, USER_NAME, builder.username);
-		setValue(false, URL, builder.url);
+		setValue(false, NOTES, entryContract.getNotes());
+		setValue(true, PASSWORD, entryContract.getPassword());
+		setValue(false, TITLE, entryContract.getTitle());
+		setValue(false, USER_NAME, entryContract.getUsername());
+		setValue(false, URL, entryContract.getUrl());
 
-		this.properties.addAll(builder.customPropertyList);
+		this.properties.addAll(entryContract.getCustomPropertyList());
 	}
 
 	public UUID getUuid() {
