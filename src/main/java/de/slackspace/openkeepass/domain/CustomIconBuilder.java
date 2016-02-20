@@ -6,7 +6,7 @@ import java.util.UUID;
  * A builder to create {@link CustomIcon} objects.
  *
  */
-public class CustomIconBuilder {
+public class CustomIconBuilder implements CustomIconContract {
 
 	UUID uuid;
 
@@ -38,5 +38,15 @@ public class CustomIconBuilder {
 	 */
 	public CustomIcon build() {
 		return new CustomIcon(this);
+	}
+
+	@Override
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	@Override
+	public byte[] getData() {
+		return data;
 	}
 }

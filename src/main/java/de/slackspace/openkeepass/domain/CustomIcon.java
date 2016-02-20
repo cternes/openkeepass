@@ -29,9 +29,9 @@ public class CustomIcon {
 	CustomIcon() {
 	}
 
-	public CustomIcon(CustomIconBuilder customIconBuilder) {
-		this.uuid = customIconBuilder.uuid;
-		this.data = customIconBuilder.data;
+	public CustomIcon(CustomIconContract customIconContract) {
+		this.uuid = customIconContract.getUuid();
+		this.data = customIconContract.getData();
 	}
 
 	/**
