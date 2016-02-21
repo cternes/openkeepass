@@ -16,6 +16,7 @@ import java.util.zip.GZIPOutputStream;
 
 import org.bouncycastle.util.encoders.Base64;
 
+import de.slackspace.openkeepass.crypto.CryptoInformation;
 import de.slackspace.openkeepass.crypto.Decrypter;
 import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 import de.slackspace.openkeepass.crypto.Salsa20;
@@ -85,7 +86,7 @@ public class KeePassDatabase {
 	private static final String UTF_8 = "UTF-8";
 	private static final String MSG_UTF8_NOT_SUPPORTED = "The encoding UTF-8 is not supported";
 	private static final String MSG_EMPTY_MASTER_KEY = "The password for the database must not be null. Please provide a valid password.";
-	
+
 	private KeePassHeader keepassHeader = new KeePassHeader();
 	private byte[] keepassFile;
 
@@ -312,7 +313,9 @@ public class KeePassDatabase {
 	@SuppressWarnings("resource")
 	private KeePassFile decryptAndParseDatabase(byte[] key) {
 		try {
-			byte[] aesDecryptedDbFile = decrypter.decryptDatabase(key, keepassHeader, keepassFile);
+			// TODO:
+			CryptoInformation cryptoInformation = new CryptoInformation();
+			byte[] aesDecryptedDbFile = decrypter.decryptDatabase(key, cryptoInformation, keepassFile);
 
 			byte[] startBytes = new byte[32];
 			SafeInputStream decryptedStream = new SafeInputStream(new ByteArrayInputStream(aesDecryptedDbFile));
@@ -445,7 +448,9 @@ public class KeePassDatabase {
 			streamToEncrypt.write(streamToUnhashBlock.toByteArray());
 
 			// Encrypt
-			byte[] encryptedDatabase = new Decrypter().encryptDatabase(hashedPassword, header,
+			// TODO:
+			CryptoInformation cryptoInformation = new CryptoInformation();
+			byte[] encryptedDatabase = new Decrypter().encryptDatabase(hashedPassword, cryptoInformation,
 					streamToEncrypt.toByteArray());
 
 			// Write database to stream
