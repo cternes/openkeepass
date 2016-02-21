@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
+import de.slackspace.openkeepass.domain.xml.adapter.UUIDXmlAdapter;
 
 /**
  * Represents a custom icon in the KeePass database.

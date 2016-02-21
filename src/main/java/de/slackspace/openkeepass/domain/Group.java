@@ -10,8 +10,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
-import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
+import de.slackspace.openkeepass.domain.xml.adapter.BooleanXmlAdapter;
+import de.slackspace.openkeepass.domain.xml.adapter.UUIDXmlAdapter;
 
 /**
  * A Group represents a structure that consists of entries and subgroups.

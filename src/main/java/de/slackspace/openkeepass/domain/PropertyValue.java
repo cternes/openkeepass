@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlValue;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import de.slackspace.openkeepass.xml.BooleanXmlAdapter;
+import de.slackspace.openkeepass.domain.xml.adapter.BooleanXmlAdapter;
 
 /**
  * Represents the value part of a key value {@link Property}.
