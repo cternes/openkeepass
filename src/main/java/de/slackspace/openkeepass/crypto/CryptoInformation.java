@@ -10,46 +10,41 @@ public class CryptoInformation {
 
 	private long transformRounds;
 
-	public byte[] getMasterSeed() {
-		return masterSeed;
+	private int headerSize;
+
+	private byte[] encryptionIv;
+
+	public CryptoInformation(int versionSignatureLength, byte[] masterSeed, byte[] transformSeed, byte[] encryptionIv, long transformRounds, int headerSize) {
+		this.versionSignatureLength = versionSignatureLength;
+		this.masterSeed = masterSeed;
+		this.transformSeed = transformSeed;
+		this.encryptionIv = encryptionIv;
+		this.transformRounds = transformRounds;
+		this.headerSize = headerSize;
 	}
 
-	public void setMasterSeed(byte[] masterSeed) {
-		this.masterSeed = masterSeed;
+	public byte[] getMasterSeed() {
+		return masterSeed;
 	}
 
 	public byte[] getTransformSeed() {
 		return transformSeed;
 	}
 
-	public void setTransformSeed(byte[] transformSeed) {
-		this.transformSeed = transformSeed;
-	}
-
 	public long getTransformRounds() {
 		return transformRounds;
 	}
 
-	public void setTransformRounds(long transformRounds) {
-		this.transformRounds = transformRounds;
-	}
-
 	public int getHeaderSize() {
-		// TODO Auto-generated method stub
-		return 0;
+		return headerSize;
 	}
 
 	public byte[] getEncryptionIV() {
-		// TODO Auto-generated method stub
-		return null;
+		return encryptionIv;
 	}
 
 	public int getVersionSignatureLength() {
 		return versionSignatureLength;
-	}
-
-	public void setVersionSignatureLength(int versionSignatureLength) {
-		this.versionSignatureLength = versionSignatureLength;
 	}
 
 }

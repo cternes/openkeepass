@@ -313,8 +313,8 @@ public class KeePassDatabase {
 	@SuppressWarnings("resource")
 	private KeePassFile decryptAndParseDatabase(byte[] key) {
 		try {
-			// TODO:
-			CryptoInformation cryptoInformation = new CryptoInformation();
+			CryptoInformation cryptoInformation = new CryptoInformation(KeePassHeader.VERSION_SIGNATURE_LENGTH, keepassHeader.getMasterSeed(),
+					keepassHeader.getTransformSeed(), keepassHeader.getEncryptionIV(), keepassHeader.getTransformRounds(), keepassHeader.getHeaderSize());
 			byte[] aesDecryptedDbFile = decrypter.decryptDatabase(key, cryptoInformation, keepassFile);
 
 			byte[] startBytes = new byte[32];
@@ -448,8 +448,8 @@ public class KeePassDatabase {
 			streamToEncrypt.write(streamToUnhashBlock.toByteArray());
 
 			// Encrypt
-			// TODO:
-			CryptoInformation cryptoInformation = new CryptoInformation();
+			CryptoInformation cryptoInformation = new CryptoInformation(KeePassHeader.VERSION_SIGNATURE_LENGTH, header.getMasterSeed(),
+					header.getTransformSeed(), header.getEncryptionIV(), header.getTransformRounds(), header.getHeaderSize());
 			byte[] encryptedDatabase = new Decrypter().encryptDatabase(hashedPassword, cryptoInformation,
 					streamToEncrypt.toByteArray());
 
