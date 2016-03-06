@@ -8,9 +8,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 import de.slackspace.openkeepass.filter.Filter;
 import de.slackspace.openkeepass.filter.ListFilter;
 
@@ -27,9 +25,6 @@ public class KeePassFile implements KeePassFileElement {
 
 	@XmlElement(name = "Root")
 	private Group root;
-
-	@XmlTransient
-	private ProtectedStringCrypto protectedStringCrypto;
 
 	KeePassFile() {
 	}
