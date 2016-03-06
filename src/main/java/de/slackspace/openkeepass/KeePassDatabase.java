@@ -26,8 +26,12 @@ import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.KeyFile;
+import de.slackspace.openkeepass.domain.enricher.IconEnricher;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
+import de.slackspace.openkeepass.processor.DecryptionStrategy;
+import de.slackspace.openkeepass.processor.EncryptionStrategy;
+import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
 import de.slackspace.openkeepass.stream.SafeInputStream;
@@ -348,7 +352,9 @@ public class KeePassDatabase {
 				throw new UnsupportedOperationException("Only Salsa20 is supported as CrsAlgorithm at the moment!");
 			}
 
-			return keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed), protectedStringCrypto);
+			KeePassFile unprocessedKeepassFile = keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed));
+			new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(protectedStringCrypto), unprocessedKeepassFile);
+			return new IconEnricher().enrichNodesWithIconData(unprocessedKeepassFile);
 		} catch (IOException e) {
 			throw new KeePassDatabaseUnreadableException("Could not open database file", e);
 		}
@@ -424,7 +430,8 @@ public class KeePassDatabase {
 
 			// Marshall xml
 			ProtectedStringCrypto protectedStringCrypto = Salsa20.createInstance(header.getProtectedStreamKey());
-			byte[] keePassFilePayload = new KeePassDatabaseXmlParser().toXml(keePassFile, protectedStringCrypto)
+			new ProtectedValueProcessor().processProtectedValues(new EncryptionStrategy(protectedStringCrypto), keePassFile);
+			byte[] keePassFilePayload = new KeePassDatabaseXmlParser().toXml(keePassFile)
 					.toByteArray();
 
 			// Unzip

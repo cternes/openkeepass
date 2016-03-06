@@ -28,6 +28,8 @@ import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.Meta;
 import de.slackspace.openkeepass.domain.MetaBuilder;
 import de.slackspace.openkeepass.domain.zipper.GroupZipper;
+import de.slackspace.openkeepass.processor.DecryptionStrategy;
+import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 
@@ -39,8 +41,8 @@ public class KeepassDatabaseWriterTest {
 	@Test
 	public void whenWritingDatabaseFileShouldBeAbleToReadItAlso() throws FileNotFoundException {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
-		KeePassFile keePassFile = new KeePassDatabaseXmlParser().fromXml(fileInputStream,
-				Salsa20.createInstance(protectedStreamKey));
+		KeePassFile keePassFile = new KeePassDatabaseXmlParser().fromXml(fileInputStream);
+		new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), keePassFile);
 
 		FileOutputStream file = new FileOutputStream("target/test-classes/writeDatabase.kdbx");
 		KeePassDatabase.write(keePassFile, "abcdefg", file);
