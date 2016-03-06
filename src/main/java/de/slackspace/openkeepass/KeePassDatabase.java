@@ -29,6 +29,7 @@ import de.slackspace.openkeepass.domain.enricher.IconEnricher;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteable;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
+import de.slackspace.openkeepass.processor.EncryptionStrategy;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
@@ -348,7 +349,7 @@ public class KeePassDatabase {
 				throw new UnsupportedOperationException("Only Salsa20 is supported as CrsAlgorithm at the moment!");
 			}
 
-			KeePassFile unprocessedKeepassFile = keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed), protectedStringCrypto);
+			KeePassFile unprocessedKeepassFile = keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed));
 			new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(protectedStringCrypto), unprocessedKeepassFile);
 			return new IconEnricher().enrichNodesWithIconData(unprocessedKeepassFile);
 		} catch (IOException e) {
@@ -426,7 +427,8 @@ public class KeePassDatabase {
 
 			// Marshall xml
 			ProtectedStringCrypto protectedStringCrypto = Salsa20.createInstance(header.getProtectedStreamKey());
-			byte[] keePassFilePayload = new KeePassDatabaseXmlParser().toXml(keePassFile, protectedStringCrypto)
+			new ProtectedValueProcessor().processProtectedValues(new EncryptionStrategy(protectedStringCrypto), keePassFile);
+			byte[] keePassFilePayload = new KeePassDatabaseXmlParser().toXml(keePassFile)
 					.toByteArray();
 
 			// Unzip

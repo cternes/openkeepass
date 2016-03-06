@@ -139,8 +139,7 @@ public class KeePassDatabaseXmlParserTest {
 
 	private KeePassFile parseKeePassXml() throws FileNotFoundException {
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
-		KeePassFile keePassFile = new KeePassDatabaseXmlParser().fromXml(fileInputStream,
-				Salsa20.createInstance(protectedStreamKey));
+		KeePassFile keePassFile = new KeePassDatabaseXmlParser().fromXml(fileInputStream);
 
 		new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), keePassFile);
 
@@ -152,16 +151,15 @@ public class KeePassDatabaseXmlParserTest {
 		// Read decrypted and write again
 		FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
 		KeePassDatabaseXmlParser parser = new KeePassDatabaseXmlParser();
-		KeePassFile keePassFile = parser.fromXml(fileInputStream, Salsa20.createInstance(protectedStreamKey));
-		new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), keePassFile);
+		KeePassFile keePassFile = parser.fromXml(fileInputStream);
 
-		ByteArrayOutputStream outputStream = parser.toXml(keePassFile, Salsa20.createInstance(protectedStreamKey));
+		ByteArrayOutputStream outputStream = parser.toXml(keePassFile);
 		OutputStream fileOutputStream = new FileOutputStream("target/test-classes/testDatabase_decrypted2.xml");
 		outputStream.writeTo(fileOutputStream);
 
 		// Read written file
 		FileInputStream writtenInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted2.xml");
-		KeePassFile writtenKeePassFile = parser.fromXml(writtenInputStream, Salsa20.createInstance(protectedStreamKey));
+		KeePassFile writtenKeePassFile = parser.fromXml(writtenInputStream);
 		new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), writtenKeePassFile);
 
 		Assert.assertEquals("Password", writtenKeePassFile.getEntryByTitle("Sample Entry").getPassword());
