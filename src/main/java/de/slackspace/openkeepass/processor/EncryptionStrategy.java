@@ -4,9 +4,14 @@ import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 
 public class EncryptionStrategy implements ProtectionStrategy {
 
-	@Override
-	public String apply(ProtectedStringCrypto crypto, String value) {
-		return crypto.encrypt(value);
+	private ProtectedStringCrypto crypto;
+
+	public EncryptionStrategy(ProtectedStringCrypto crypto) {
+		this.crypto = crypto;
 	}
 
+	@Override
+	public String apply(String value) {
+		return crypto.encrypt(value);
+	}
 }

@@ -25,8 +25,11 @@ import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.KeyFile;
+import de.slackspace.openkeepass.domain.enricher.IconEnricher;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteable;
+import de.slackspace.openkeepass.processor.DecryptionStrategy;
+import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
 import de.slackspace.openkeepass.stream.SafeInputStream;
@@ -85,7 +88,7 @@ public class KeePassDatabase {
 	private static final String UTF_8 = "UTF-8";
 	private static final String MSG_UTF8_NOT_SUPPORTED = "The encoding UTF-8 is not supported";
 	private static final String MSG_EMPTY_MASTER_KEY = "The password for the database must not be null. Please provide a valid password.";
-	
+
 	private KeePassHeader keepassHeader = new KeePassHeader();
 	private byte[] keepassFile;
 
@@ -345,7 +348,9 @@ public class KeePassDatabase {
 				throw new UnsupportedOperationException("Only Salsa20 is supported as CrsAlgorithm at the moment!");
 			}
 
-			return keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed), protectedStringCrypto);
+			KeePassFile unprocessedKeepassFile = keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed), protectedStringCrypto);
+			new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(protectedStringCrypto), unprocessedKeepassFile);
+			return new IconEnricher().enrichNodesWithIconData(unprocessedKeepassFile);
 		} catch (IOException e) {
 			throw new KeePassDatabaseUnreadable("Could not open database file", e);
 		}
