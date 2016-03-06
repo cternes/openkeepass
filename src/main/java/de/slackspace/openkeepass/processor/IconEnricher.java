@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.domain.enricher;
+package de.slackspace.openkeepass.processor;
 
 import java.io.IOException;
 import java.io.InputStream;
