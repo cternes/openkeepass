@@ -1,7 +1,8 @@
 package de.slackspace.openkeepass.domain.enricher;
 
 import de.slackspace.openkeepass.domain.*;
-import de.slackspace.openkeepass.domain.enricher.IconEnricher;
+import de.slackspace.openkeepass.processor.IconEnricher;
+
 import org.junit.Assert;
 import org.junit.Test;
 
