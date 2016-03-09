@@ -7,6 +7,7 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
+import de.slackspace.openkeepass.crypto.RandomGenerator;
 import de.slackspace.openkeepass.util.ByteUtils;
 
 public class KeepassHeaderTest {
@@ -98,7 +99,8 @@ public class KeepassHeaderTest {
 	@Test
 	public void shouldInitializeCryptoValues() {
 		KeePassHeader header = new KeePassHeader();
-		header.initialize();
+		RandomGenerator byteGenerator = new RandomGenerator();
+		header.initialize(byteGenerator);
 
 		Assert.assertEquals(32, header.getMasterSeed().length);
 		Assert.assertEquals(32, header.getTransformSeed().length);

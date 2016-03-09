@@ -19,6 +19,7 @@ import org.bouncycastle.util.encoders.Base64;
 import de.slackspace.openkeepass.crypto.CryptoInformation;
 import de.slackspace.openkeepass.crypto.Decrypter;
 import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
+import de.slackspace.openkeepass.crypto.RandomGenerator;
 import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.crypto.Sha256;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
@@ -423,7 +424,8 @@ public class KeePassDatabase {
 			}
 
 			KeePassHeader header = new KeePassHeader();
-			header.initialize();
+			RandomGenerator byteGenerator = new RandomGenerator();
+			header.initialize(byteGenerator);
 
 			byte[] passwordBytes = password.getBytes(UTF_8);
 			byte[] hashedPassword = Sha256.hash(passwordBytes);

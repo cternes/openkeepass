@@ -4,7 +4,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 
-public class RandomGenerator {
+import de.slackspace.openkeepass.domain.ByteGenerator;
+
+public class RandomGenerator implements ByteGenerator {
 
 	private SecureRandom random;
 

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-import de.slackspace.openkeepass.crypto.RandomGenerator;
 import de.slackspace.openkeepass.exception.KeePassHeaderUnreadableException;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.SafeInputStream;
@@ -87,7 +86,7 @@ public class KeePassHeader {
 			setInnerRandomStreamId(value);
 			break;
 		default: // other field Ids are not necessary but do not harm the application
-				break;
+			break;
 		}
 	}
 
@@ -119,7 +118,7 @@ public class KeePassHeader {
 
 	/**
 	 * Initializes the header values from a given byte array.
-	 * 
+	 *
 	 * @param keepassFile
 	 *            the byte array to read from
 	 * @throws IOException
@@ -157,7 +156,7 @@ public class KeePassHeader {
 
 	/**
 	 * Returns the whole header as byte array.
-	 * 
+	 *
 	 * @return header as byte array
 	 */
 	public byte[] getBytes() {
@@ -387,17 +386,15 @@ public class KeePassHeader {
 	 * <li>Cipher: AES</li>
 	 * </ul>
 	 */
-	public void initialize() {
-		RandomGenerator random = new RandomGenerator();
-
+	public void initialize(ByteGenerator byteGenerator) {
 		setCompression(CompressionAlgorithm.Gzip);
 		setCrsAlgorithm(CrsAlgorithm.Salsa20);
 		setTransformRounds(8000);
-		setMasterSeed(random.getRandomBytes(32));
-		setTransformSeed(random.getRandomBytes(32));
-		setEncryptionIV(random.getRandomBytes(16));
-		setProtectedStreamKey(random.getRandomBytes(32));
-		setStreamStartBytes(random.getRandomBytes(32));
+		setMasterSeed(byteGenerator.getRandomBytes(32));
+		setTransformSeed(byteGenerator.getRandomBytes(32));
+		setEncryptionIV(byteGenerator.getRandomBytes(16));
+		setProtectedStreamKey(byteGenerator.getRandomBytes(32));
+		setStreamStartBytes(byteGenerator.getRandomBytes(32));
 		setCipher(DATABASE_V2_AES_CIPHER);
 	}
 }
