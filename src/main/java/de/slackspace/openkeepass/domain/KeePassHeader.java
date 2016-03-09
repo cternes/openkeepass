@@ -56,6 +56,35 @@ public class KeePassHeader {
 	private long transformRounds;
 	private CrsAlgorithm crsAlgorithm;
 
+	public KeePassHeader() {
+		// empty constructor
+	}
+
+	/**
+	 * Initializes the header with default values and creates new random values
+	 * for crypto keys.
+	 * <p>
+	 * Default values:
+	 * <ul>
+	 * <li>Compression: GZIP</li>
+	 * <li>CrsAlgorithm: Salsa20</li>
+	 * <li>TransformRounds: 8000
+	 * <li>
+	 * <li>Cipher: AES</li>
+	 * </ul>
+	 */
+	public KeePassHeader(ByteGenerator byteGenerator) {
+		setCompression(CompressionAlgorithm.Gzip);
+		setCrsAlgorithm(CrsAlgorithm.Salsa20);
+		setTransformRounds(8000);
+		setMasterSeed(byteGenerator.getRandomBytes(32));
+		setTransformSeed(byteGenerator.getRandomBytes(32));
+		setEncryptionIV(byteGenerator.getRandomBytes(16));
+		setProtectedStreamKey(byteGenerator.getRandomBytes(32));
+		setStreamStartBytes(byteGenerator.getRandomBytes(32));
+		setCipher(DATABASE_V2_AES_CIPHER);
+	}
+
 	public void setValue(int headerId, byte[] value) {
 		switch (headerId) {
 		case CIPHER:
@@ -371,30 +400,5 @@ public class KeePassHeader {
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 		buffer.putLong(value);
 		return buffer.array();
-	}
-
-	/**
-	 * Initializes the header with default values and creates new random values
-	 * for crypto keys.
-	 * <p>
-	 * Default values:
-	 * <ul>
-	 * <li>Compression: GZIP</li>
-	 * <li>CrsAlgorithm: Salsa20</li>
-	 * <li>TransformRounds: 8000
-	 * <li>
-	 * <li>Cipher: AES</li>
-	 * </ul>
-	 */
-	public void initialize(ByteGenerator byteGenerator) {
-		setCompression(CompressionAlgorithm.Gzip);
-		setCrsAlgorithm(CrsAlgorithm.Salsa20);
-		setTransformRounds(8000);
-		setMasterSeed(byteGenerator.getRandomBytes(32));
-		setTransformSeed(byteGenerator.getRandomBytes(32));
-		setEncryptionIV(byteGenerator.getRandomBytes(16));
-		setProtectedStreamKey(byteGenerator.getRandomBytes(32));
-		setStreamStartBytes(byteGenerator.getRandomBytes(32));
-		setCipher(DATABASE_V2_AES_CIPHER);
 	}
 }

@@ -423,10 +423,7 @@ public class KeePassDatabase {
 						"The provided keePassFile is not valid. A valid keePassFile must contain of meta and root group and the root group must at least contain one group.");
 			}
 
-			KeePassHeader header = new KeePassHeader();
-			RandomGenerator byteGenerator = new RandomGenerator();
-			header.initialize(byteGenerator);
-
+			KeePassHeader header = new KeePassHeader(new RandomGenerator());
 			byte[] passwordBytes = password.getBytes(UTF_8);
 			byte[] hashedPassword = Sha256.hash(passwordBytes);
 

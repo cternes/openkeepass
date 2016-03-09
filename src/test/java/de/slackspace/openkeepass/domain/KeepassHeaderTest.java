@@ -98,9 +98,7 @@ public class KeepassHeaderTest {
 
 	@Test
 	public void shouldInitializeCryptoValues() {
-		KeePassHeader header = new KeePassHeader();
-		RandomGenerator byteGenerator = new RandomGenerator();
-		header.initialize(byteGenerator);
+		KeePassHeader header = new KeePassHeader(new RandomGenerator());
 
 		Assert.assertEquals(32, header.getMasterSeed().length);
 		Assert.assertEquals(32, header.getTransformSeed().length);
