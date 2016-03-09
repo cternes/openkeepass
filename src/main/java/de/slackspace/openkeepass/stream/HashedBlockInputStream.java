@@ -2,10 +2,9 @@ package de.slackspace.openkeepass.stream;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+import de.slackspace.openkeepass.crypto.Sha256;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.StreamUtils;
 
@@ -66,58 +65,79 @@ public class HashedBlockInputStream extends InputStream {
 
 		bufferPos = 0;
 
-		long index = ByteUtils.readInt(baseStream);
-		if (index != bufferIndex) {
-			throw new IOException(MSG_INVALID_DATA_FORMAT);
-		}
+		readIndexFromStream();
 		bufferIndex++;
 
-		byte[] storedHash = new byte[32];
-		StreamUtils.read(baseStream, storedHash);
-		if (storedHash == null || storedHash.length != HASH_SIZE) {
-			throw new IOException(MSG_INVALID_DATA_FORMAT);
-		}
+		byte[] storedHash = readStoredHashFromStream();
 
-		int bufferSize = ByteUtils.readInt(baseStream);
-		if (bufferSize < 0) {
-			throw new IOException(MSG_INVALID_DATA_FORMAT);
-		}
+		int bufferSize = readBufferSizeFromStream();
 
 		if (bufferSize == 0) {
-			for (int hash = 0; hash < HASH_SIZE; hash++) {
-				if (storedHash[hash] != 0) {
-					throw new IOException(MSG_INVALID_DATA_FORMAT);
-				}
-			}
+			checkHashIsNotEmpty(storedHash);
 
 			atEnd = true;
 			buffer = new byte[0];
 			return false;
 		}
 
+		fillBufferFromStream(bufferSize);
+		computeAndCompareHash(storedHash);
+
+		return true;
+	}
+
+	private void fillBufferFromStream(int bufferSize) throws IOException {
 		buffer = new byte[bufferSize];
 		StreamUtils.read(baseStream, buffer);
 		if (buffer == null || buffer.length != bufferSize) {
 			throw new IOException(MSG_INVALID_DATA_FORMAT);
 		}
+	}
 
-		MessageDigest md = null;
-		try {
-			md = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException e) {
-			throw new IOException("SHA-256 not implemented here.", e);
+	private void checkHashIsNotEmpty(byte[] storedHash) throws IOException {
+		for (int hash = 0; hash < HASH_SIZE; hash++) {
+			if (storedHash[hash] != 0) {
+				throw new IOException(MSG_INVALID_DATA_FORMAT);
+			}
+		}
+	}
+
+	private int readBufferSizeFromStream() throws IOException {
+		int bufferSize = ByteUtils.readInt(baseStream);
+		if (bufferSize < 0) {
+			throw new IOException(MSG_INVALID_DATA_FORMAT);
 		}
 
-		byte[] computedHash = md.digest(buffer);
+		return bufferSize;
+	}
+
+	private void readIndexFromStream() throws IOException {
+		long index = ByteUtils.readInt(baseStream);
+		if (index != bufferIndex) {
+			throw new IOException(MSG_INVALID_DATA_FORMAT);
+		}
+	}
+
+	private void computeAndCompareHash(byte[] storedHash) throws IOException {
+		byte[] computedHash = Sha256.hash(buffer);
 		if (computedHash == null || computedHash.length != HASH_SIZE) {
 			throw new IOException("Hash wrong size");
 		}
 
 		if (!Arrays.equals(storedHash, computedHash)) {
-			throw new IOException("Hashes didn't match.");
+			throw new IOException("Hashes didn't match");
+		}
+	}
+
+	private byte[] readStoredHashFromStream() throws IOException {
+		byte[] storedHash = new byte[32];
+		StreamUtils.read(baseStream, storedHash);
+
+		if (storedHash == null || storedHash.length != HASH_SIZE) {
+			throw new IOException(MSG_INVALID_DATA_FORMAT);
 		}
 
-		return true;
+		return storedHash;
 	}
 
 	@Override
