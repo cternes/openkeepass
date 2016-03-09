@@ -2,8 +2,8 @@ package de.slackspace.openkeepass.stream;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
+import de.slackspace.openkeepass.crypto.Sha256;
 
 public class HashedBlockOutputStream extends OutputStream {
 
@@ -48,7 +48,7 @@ public class HashedBlockOutputStream extends OutputStream {
 	public void write(byte[] b, int offset, int count) throws IOException {
 		int bufferOffset = offset;
 		int bufferCount = count;
-		
+
 		while (bufferCount > 0) {
 			if (bufferPos == buffer.length) {
 				writeHashedBlock();
@@ -70,25 +70,11 @@ public class HashedBlockOutputStream extends OutputStream {
 		bufferIndex++;
 
 		if (bufferPos > 0) {
-			MessageDigest md = null;
-			try {
-				md = MessageDigest.getInstance("SHA-256");
-			} catch (NoSuchAlgorithmException e) {
-				throw new IOException("SHA-256 not implemented here.", e);
-			}
-
-			byte[] hash;
-			md.update(buffer, 0, bufferPos);
-			hash = md.digest();
-
+			byte[] hash = Sha256.hash(buffer, 0, bufferPos);
 			baseStream.write(hash);
 
 		} else {
-			// Write 32-bits of zeros
-			writeLong(0L);
-			writeLong(0L);
-			writeLong(0L);
-			writeLong(0L);
+			writeZeroBits();
 		}
 
 		writeInt(bufferPos);
@@ -98,7 +84,14 @@ public class HashedBlockOutputStream extends OutputStream {
 		}
 
 		bufferPos = 0;
+	}
 
+	private void writeZeroBits() throws IOException {
+		// Write 32-bits of zeros
+		writeLong(0L);
+		writeLong(0L);
+		writeLong(0L);
+		writeLong(0L);
 	}
 
 	@Override
