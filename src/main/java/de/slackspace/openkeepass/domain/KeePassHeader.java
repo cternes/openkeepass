@@ -9,8 +9,8 @@ import java.nio.ByteOrder;
 
 import de.slackspace.openkeepass.crypto.RandomGenerator;
 import de.slackspace.openkeepass.exception.KeePassHeaderUnreadableException;
-import de.slackspace.openkeepass.stream.SafeInputStream;
 import de.slackspace.openkeepass.util.ByteUtils;
+import de.slackspace.openkeepass.util.SafeInputStream;
 
 public class KeePassHeader {
 

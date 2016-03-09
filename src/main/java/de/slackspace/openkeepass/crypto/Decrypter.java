@@ -5,7 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import de.slackspace.openkeepass.stream.SafeInputStream;
+import de.slackspace.openkeepass.util.SafeInputStream;
 import de.slackspace.openkeepass.util.StreamUtils;
 
 public class Decrypter {
