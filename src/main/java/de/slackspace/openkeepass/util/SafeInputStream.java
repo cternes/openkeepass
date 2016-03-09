@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.stream;
+package de.slackspace.openkeepass.util;
 
 import java.io.IOException;
 import java.io.InputStream;
