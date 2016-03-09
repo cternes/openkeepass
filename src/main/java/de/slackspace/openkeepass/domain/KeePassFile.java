@@ -9,8 +9,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.slackspace.openkeepass.filter.Filter;
-import de.slackspace.openkeepass.filter.ListFilter;
+import de.slackspace.openkeepass.domain.filter.Filter;
+import de.slackspace.openkeepass.domain.filter.ListFilter;
 
 /**
  * A KeePassFile represents the structure of a KeePass database. This is the

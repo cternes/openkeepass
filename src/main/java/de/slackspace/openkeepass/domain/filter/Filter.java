@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.filter;
+package de.slackspace.openkeepass.domain.filter;
 
 public interface Filter<T> {
 
