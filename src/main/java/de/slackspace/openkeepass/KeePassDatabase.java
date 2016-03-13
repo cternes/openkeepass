@@ -1,6 +1,5 @@
 package de.slackspace.openkeepass;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,26 +8,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.zip.GZIPOutputStream;
 
 import de.slackspace.openkeepass.api.KeePassDatabaseReader;
+import de.slackspace.openkeepass.api.KeePassDatabaseWriter;
 import de.slackspace.openkeepass.api.KeyFileReader;
-import de.slackspace.openkeepass.crypto.CryptoInformation;
-import de.slackspace.openkeepass.crypto.Decrypter;
-import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
-import de.slackspace.openkeepass.crypto.RandomGenerator;
-import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.crypto.Sha256;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
-import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
-import de.slackspace.openkeepass.processor.EncryptionStrategy;
-import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
-import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.StreamUtils;
-import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 
 /**
  * A KeePassDatabase is the central API class to read and write a KeePass
@@ -345,73 +334,7 @@ public class KeePassDatabase {
 			throw new IllegalArgumentException("You must provide a stream to write to.");
 		}
 
-		try {
-			if (!validateKeePassFile(keePassFile)) {
-				throw new KeePassDatabaseUnwriteableException(
-						"The provided keePassFile is not valid. A valid keePassFile must contain of meta and root group and the root group must at least contain one group.");
-			}
-
-			KeePassHeader header = new KeePassHeader(new RandomGenerator());
-			byte[] passwordBytes = password.getBytes(UTF_8);
-			byte[] hashedPassword = Sha256.hash(passwordBytes);
-
-			// Marshall xml
-			ProtectedStringCrypto protectedStringCrypto = Salsa20.createInstance(header.getProtectedStreamKey());
-			new ProtectedValueProcessor().processProtectedValues(new EncryptionStrategy(protectedStringCrypto), keePassFile);
-			byte[] keePassFilePayload = new KeePassDatabaseXmlParser().toXml(keePassFile)
-					.toByteArray();
-
-			// Unzip
-			ByteArrayOutputStream streamToUnzip = new ByteArrayOutputStream();
-			GZIPOutputStream gzipOutputStream = new GZIPOutputStream(streamToUnzip);
-			gzipOutputStream.write(keePassFilePayload);
-			gzipOutputStream.close();
-
-			// Unhash
-			ByteArrayOutputStream streamToUnhashBlock = new ByteArrayOutputStream();
-			HashedBlockOutputStream hashBlockOutputStream = new HashedBlockOutputStream(streamToUnhashBlock);
-			hashBlockOutputStream.write(streamToUnzip.toByteArray());
-			hashBlockOutputStream.close();
-
-			// Write Header
-			ByteArrayOutputStream streamToEncrypt = new ByteArrayOutputStream();
-			streamToEncrypt.write(header.getBytes());
-			streamToEncrypt.write(header.getStreamStartBytes());
-
-			// Write Content
-			streamToEncrypt.write(streamToUnhashBlock.toByteArray());
-
-			// Encrypt
-			CryptoInformation cryptoInformation = new CryptoInformation(KeePassHeader.VERSION_SIGNATURE_LENGTH, header.getMasterSeed(),
-					header.getTransformSeed(), header.getEncryptionIV(), header.getTransformRounds(), header.getHeaderSize());
-			byte[] encryptedDatabase = new Decrypter().encryptDatabase(hashedPassword, cryptoInformation,
-					streamToEncrypt.toByteArray());
-
-			// Write database to stream
-			stream.write(encryptedDatabase);
-		} catch (IOException e) {
-			throw new KeePassDatabaseUnwriteableException("Could not write database file", e);
-		} finally {
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (IOException e) {
-					// Ignore
-				}
-			}
-		}
-	}
-
-	private static boolean validateKeePassFile(KeePassFile keePassFile) {
-		if (keePassFile == null || keePassFile.getMeta() == null) {
-			return false;
-		}
-
-		if (keePassFile.getRoot() == null || keePassFile.getRoot().getGroups().isEmpty()) {
-			return false;
-		}
-
-		return true;
+		new KeePassDatabaseWriter().writeKeePassFile(keePassFile, password, stream);
 	}
 
 }
