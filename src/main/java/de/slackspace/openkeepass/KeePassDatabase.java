@@ -1,6 +1,5 @@
 package de.slackspace.openkeepass;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,33 +9,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.bouncycastle.util.encoders.Base64;
 
+import de.slackspace.openkeepass.api.KeePassDatabaseReader;
 import de.slackspace.openkeepass.crypto.CryptoInformation;
 import de.slackspace.openkeepass.crypto.Decrypter;
 import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 import de.slackspace.openkeepass.crypto.RandomGenerator;
 import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.crypto.Sha256;
-import de.slackspace.openkeepass.domain.CompressionAlgorithm;
-import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.KeyFile;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
-import de.slackspace.openkeepass.processor.DecryptionStrategy;
 import de.slackspace.openkeepass.processor.EncryptionStrategy;
-import de.slackspace.openkeepass.processor.IconEnricher;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
-import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
 import de.slackspace.openkeepass.util.ByteUtils;
-import de.slackspace.openkeepass.util.SafeInputStream;
 import de.slackspace.openkeepass.util.StreamUtils;
 import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.xml.KeyFileXmlParser;
@@ -95,8 +87,6 @@ public class KeePassDatabase {
 	private KeePassHeader keepassHeader = new KeePassHeader();
 	private byte[] keepassFile;
 
-	protected Decrypter decrypter = new Decrypter();
-	protected KeePassDatabaseXmlParser keePassDatabaseXmlParser = new KeePassDatabaseXmlParser();
 	protected KeyFileXmlParser keyFileXmlParser = new KeyFileXmlParser();
 
 	private KeePassDatabase(InputStream inputStream) {
@@ -189,7 +179,7 @@ public class KeePassDatabase {
 			byte[] passwordBytes = password.getBytes(UTF_8);
 			byte[] hashedPassword = Sha256.hash(passwordBytes);
 
-			return decryptAndParseDatabase(hashedPassword);
+			return new KeePassDatabaseReader(keepassHeader).decryptAndParseDatabase(hashedPassword, keepassFile);
 		} catch (UnsupportedEncodingException e) {
 			throw new UnsupportedOperationException(MSG_UTF8_NOT_SUPPORTED, e);
 		}
@@ -257,7 +247,7 @@ public class KeePassDatabase {
 				protectedBuffer = Sha256.hash(protectedBuffer);
 			}
 
-			return decryptAndParseDatabase(ByteUtils.concat(hashedPassword, protectedBuffer));
+			return new KeePassDatabaseReader(keepassHeader).decryptAndParseDatabase(ByteUtils.concat(hashedPassword, protectedBuffer), keepassFile);
 		} catch (UnsupportedEncodingException e) {
 			throw new UnsupportedOperationException(MSG_UTF8_NOT_SUPPORTED, e);
 		}
@@ -309,55 +299,9 @@ public class KeePassDatabase {
 			KeyFile keyFile = keyFileXmlParser.fromXml(keyFileStream);
 			byte[] protectedBuffer = Base64.decode(keyFile.getKey().getData().getBytes(UTF_8));
 
-			return decryptAndParseDatabase(protectedBuffer);
+			return new KeePassDatabaseReader(keepassHeader).decryptAndParseDatabase(protectedBuffer, keepassFile);
 		} catch (UnsupportedEncodingException e) {
 			throw new UnsupportedOperationException(MSG_UTF8_NOT_SUPPORTED, e);
-		}
-	}
-
-	@SuppressWarnings("resource")
-	private KeePassFile decryptAndParseDatabase(byte[] key) {
-		try {
-			CryptoInformation cryptoInformation = new CryptoInformation(KeePassHeader.VERSION_SIGNATURE_LENGTH, keepassHeader.getMasterSeed(),
-					keepassHeader.getTransformSeed(), keepassHeader.getEncryptionIV(), keepassHeader.getTransformRounds(), keepassHeader.getHeaderSize());
-			byte[] aesDecryptedDbFile = decrypter.decryptDatabase(key, cryptoInformation, keepassFile);
-
-			byte[] startBytes = new byte[32];
-			SafeInputStream decryptedStream = new SafeInputStream(new ByteArrayInputStream(aesDecryptedDbFile));
-
-			// Metadata must be skipped here
-			decryptedStream.skipSafe(KeePassHeader.VERSION_SIGNATURE_LENGTH + keepassHeader.getHeaderSize());
-			decryptedStream.readSafe(startBytes);
-
-			// Compare startBytes
-			if (!Arrays.equals(keepassHeader.getStreamStartBytes(), startBytes)) {
-				throw new KeePassDatabaseUnreadableException(
-						"The keepass database file seems to be corrupt or cannot be decrypted.");
-			}
-
-			HashedBlockInputStream hashedBlockInputStream = new HashedBlockInputStream(decryptedStream);
-			byte[] hashedBlockBytes = StreamUtils.toByteArray(hashedBlockInputStream);
-
-			byte[] decompressed = hashedBlockBytes;
-
-			// Unzip if necessary
-			if (keepassHeader.getCompression().equals(CompressionAlgorithm.Gzip)) {
-				GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(hashedBlockBytes));
-				decompressed = StreamUtils.toByteArray(gzipInputStream);
-			}
-
-			ProtectedStringCrypto protectedStringCrypto;
-			if (keepassHeader.getCrsAlgorithm().equals(CrsAlgorithm.Salsa20)) {
-				protectedStringCrypto = Salsa20.createInstance(keepassHeader.getProtectedStreamKey());
-			} else {
-				throw new UnsupportedOperationException("Only Salsa20 is supported as CrsAlgorithm at the moment!");
-			}
-
-			KeePassFile unprocessedKeepassFile = keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed));
-			new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(protectedStringCrypto), unprocessedKeepassFile);
-			return new IconEnricher().enrichNodesWithIconData(unprocessedKeepassFile);
-		} catch (IOException e) {
-			throw new KeePassDatabaseUnreadableException("Could not open database file", e);
 		}
 	}
 
