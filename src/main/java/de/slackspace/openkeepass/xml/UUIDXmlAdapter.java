@@ -14,26 +14,26 @@ import de.slackspace.openkeepass.util.ByteUtils;
  */
 public class UUIDXmlAdapter extends XmlAdapter<byte[], UUID> {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
-	 */
-	@Override
-	public byte[] marshal(UUID value) throws Exception {
-		return ByteUtils.uuidToBytes(value);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.xml.bind.annotation.adapters.XmlAdapter#marshal(java.lang.Object)
+     */
+    @Override
+    public byte[] marshal(UUID value) throws Exception {
+        return ByteUtils.uuidToBytes(value);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
-	 */
-	@Override
-	public UUID unmarshal(byte[] value) throws Exception {
-		return ByteUtils.bytesToUUID(value);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * javax.xml.bind.annotation.adapters.XmlAdapter#unmarshal(java.lang.Object)
+     */
+    @Override
+    public UUID unmarshal(byte[] value) throws Exception {
+        return ByteUtils.bytesToUUID(value);
+    }
 
 }
