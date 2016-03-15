@@ -9,14 +9,14 @@ import de.slackspace.openkeepass.domain.KeePassFile;
 
 public class KeePassDatabaseXmlParser {
 
-	public KeePassFile fromXml(InputStream inputStream) {
-		return JAXB.unmarshal(inputStream, KeePassFile.class);
-	}
+    public KeePassFile fromXml(InputStream inputStream) {
+        return JAXB.unmarshal(inputStream, KeePassFile.class);
+    }
 
-	public ByteArrayOutputStream toXml(KeePassFile keePassFile) {
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		JAXB.marshal(keePassFile, outputStream);
+    public ByteArrayOutputStream toXml(KeePassFile keePassFile) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        JAXB.marshal(keePassFile, outputStream);
 
-		return outputStream;
-	}
+        return outputStream;
+    }
 }

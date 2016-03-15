@@ -8,7 +8,7 @@ import de.slackspace.openkeepass.domain.KeyFile;
 
 public class KeyFileXmlParser {
 
-	public KeyFile fromXml(InputStream inputStream) {
-		return JAXB.unmarshal(inputStream, KeyFile.class);
-	}
+    public KeyFile fromXml(InputStream inputStream) {
+        return JAXB.unmarshal(inputStream, KeyFile.class);
+    }
 }
