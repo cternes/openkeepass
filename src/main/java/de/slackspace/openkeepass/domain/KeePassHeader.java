@@ -33,8 +33,7 @@ public class KeePassHeader {
     private static final byte[] DATABASE_V2_FILE_VERSION = ByteUtils.hexStringToByteArray("00000300");
 
     // KeePass Magic Bytes for AES Cipher
-    private static final byte[] DATABASE_V2_AES_CIPHER = ByteUtils
-            .hexStringToByteArray("31C1F2E6BF714350BE5805216AFC5AFF");
+    private static final byte[] DATABASE_V2_AES_CIPHER = ByteUtils.hexStringToByteArray("31C1F2E6BF714350BE5805216AFC5AFF");
 
     // KeePass version signature length in bytes
     public static final int VERSION_SIGNATURE_LENGTH = 12;
@@ -86,8 +85,9 @@ public class KeePassHeader {
         case INNER_RANDOM_STREAM_ID:
             setInnerRandomStreamId(value);
             break;
-        default: // other field Ids are not necessary but do not harm the application
-                break;
+        default: // other field Ids are not necessary but do not harm the
+                 // application
+            break;
         }
     }
 
@@ -96,7 +96,7 @@ public class KeePassHeader {
 
         byte[] signature = new byte[VERSION_SIGNATURE_LENGTH];
         int readBytes = inputStream.read(signature);
-        if(readBytes == -1) {
+        if (readBytes == -1) {
             throw new UnsupportedOperationException("Could not read KeePass header. The provided file seems to be no KeePass database file!");
         }
 
@@ -108,10 +108,8 @@ public class KeePassHeader {
 
         if (signaturePart1 == DATABASE_V2_FILE_SIGNATURE_1_INT && signaturePart2 == DATABASE_V2_FILE_SIGNATURE_2_INT) {
             return;
-        } else if (signaturePart1 == OLD_DATABASE_V1_FILE_SIGNATURE_1_INT
-                && signaturePart2 == OLD_DATABASE_V1_FILE_SIGNATURE_2_INT) {
-            throw new UnsupportedOperationException(
-                    "The provided KeePass database file seems to be from KeePass 1.x which is not supported!");
+        } else if (signaturePart1 == OLD_DATABASE_V1_FILE_SIGNATURE_1_INT && signaturePart2 == OLD_DATABASE_V1_FILE_SIGNATURE_2_INT) {
+            throw new UnsupportedOperationException("The provided KeePass database file seems to be from KeePass 1.x which is not supported!");
         } else {
             throw new UnsupportedOperationException("The provided file seems to be no KeePass database file!");
         }
@@ -225,7 +223,8 @@ public class KeePassHeader {
             return getStreamStartBytes();
         case INNER_RANDOM_STREAM_ID:
             return getInnerRandomStreamId();
-        default: throw new UnsupportedOperationException("A header field with id '" + headerId + "' is unknown");
+        default:
+            throw new UnsupportedOperationException("A header field with id '" + headerId + "' is unknown");
         }
     }
 

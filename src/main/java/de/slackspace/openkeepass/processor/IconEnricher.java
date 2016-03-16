@@ -28,79 +28,79 @@ import de.slackspace.openkeepass.util.StreamUtils;
  */
 public class IconEnricher {
 
-	private static final String PNG = ".png";
-	private static final String ICONS = "/icons/";
+    private static final String PNG = ".png";
+    private static final String ICONS = "/icons/";
 
-	/**
-	 * Iterates through all nodes of the given KeePass file and replace the
-	 * nodes with enriched icon data nodes.
-	 *
-	 * @param keePassFile
-	 *            the KeePass file which should be iterated
-	 * @return an enriched KeePass file
-	 */
-	public KeePassFile enrichNodesWithIconData(KeePassFile keePassFile) {
-		CustomIcons iconLibrary = keePassFile.getMeta().getCustomIcons();
-		GroupZipper zipper = new GroupZipper(keePassFile);
-		Iterator<Group> iter = zipper.iterator();
+    /**
+     * Iterates through all nodes of the given KeePass file and replace the
+     * nodes with enriched icon data nodes.
+     *
+     * @param keePassFile
+     *            the KeePass file which should be iterated
+     * @return an enriched KeePass file
+     */
+    public KeePassFile enrichNodesWithIconData(KeePassFile keePassFile) {
+        CustomIcons iconLibrary = keePassFile.getMeta().getCustomIcons();
+        GroupZipper zipper = new GroupZipper(keePassFile);
+        Iterator<Group> iter = zipper.iterator();
 
-		while (iter.hasNext()) {
-			Group group = iter.next();
+        while (iter.hasNext()) {
+            Group group = iter.next();
 
-			byte[] iconData = getIconData(group.getCustomIconUuid(), group.getIconId(), iconLibrary);
-			Group groupWithIcon = new GroupBuilder(group).iconData(iconData).build();
-			zipper.replace(groupWithIcon);
+            byte[] iconData = getIconData(group.getCustomIconUuid(), group.getIconId(), iconLibrary);
+            Group groupWithIcon = new GroupBuilder(group).iconData(iconData).build();
+            zipper.replace(groupWithIcon);
 
-			enrichEntriesWithIcons(iconLibrary, group);
-		}
+            enrichEntriesWithIcons(iconLibrary, group);
+        }
 
-		return zipper.close();
-	}
+        return zipper.close();
+    }
 
-	private void enrichEntriesWithIcons(CustomIcons iconLibrary, Group group) {
-		List<Entry> removeList = new ArrayList<Entry>();
-		List<Entry> addList = new ArrayList<Entry>();
+    private void enrichEntriesWithIcons(CustomIcons iconLibrary, Group group) {
+        List<Entry> removeList = new ArrayList<Entry>();
+        List<Entry> addList = new ArrayList<Entry>();
 
-		List<Entry> entries = group.getEntries();
-		for (Entry entry : entries) {
-			byte[] entryIconData = getIconData(entry.getCustomIconUuid(), entry.getIconId(), iconLibrary);
-			Entry entryWithIcon = new EntryBuilder(entry).iconData(entryIconData).build();
+        List<Entry> entries = group.getEntries();
+        for (Entry entry : entries) {
+            byte[] entryIconData = getIconData(entry.getCustomIconUuid(), entry.getIconId(), iconLibrary);
+            Entry entryWithIcon = new EntryBuilder(entry).iconData(entryIconData).build();
 
-			removeList.add(entry);
-			addList.add(entryWithIcon);
-		}
+            removeList.add(entry);
+            addList.add(entryWithIcon);
+        }
 
-		group.getEntries().removeAll(removeList);
-		group.getEntries().addAll(addList);
-	}
+        group.getEntries().removeAll(removeList);
+        group.getEntries().addAll(addList);
+    }
 
-	private byte[] getIconData(UUID customIconUuid, int stockIconId, CustomIcons iconLibrary) {
-		byte[] iconData;
+    private byte[] getIconData(UUID customIconUuid, int stockIconId, CustomIcons iconLibrary) {
+        byte[] iconData;
 
-		if (customIconUuid != null) {
-			CustomIcon icon = iconLibrary.getIconByUuid(customIconUuid);
-			iconData = icon.getData();
-		} else {
-			iconData = getStockIconData(stockIconId);
-		}
+        if (customIconUuid != null) {
+            CustomIcon icon = iconLibrary.getIconByUuid(customIconUuid);
+            iconData = icon.getData();
+        } else {
+            iconData = getStockIconData(stockIconId);
+        }
 
-		return iconData;
-	}
+        return iconData;
+    }
 
-	private byte[] getStockIconData(int iconId) {
-		if (iconId < 0) {
-			return null;
-		}
+    private byte[] getStockIconData(int iconId) {
+        if (iconId < 0) {
+            return null;
+        }
 
-		InputStream inputStream = getClass().getResourceAsStream(ICONS + iconId + PNG);
-		if (inputStream == null) {
-			return null;
-		}
+        InputStream inputStream = getClass().getResourceAsStream(ICONS + iconId + PNG);
+        if (inputStream == null) {
+            return null;
+        }
 
-		try {
-			return StreamUtils.toByteArray(inputStream);
-		} catch (IOException e) {
-			throw new IconUnreadableException("Could not read icon data from resource '" + ICONS + iconId + PNG + "'", e);
-		}
-	}
+        try {
+            return StreamUtils.toByteArray(inputStream);
+        } catch (IOException e) {
+            throw new IconUnreadableException("Could not read icon data from resource '" + ICONS + iconId + PNG + "'", e);
+        }
+    }
 }

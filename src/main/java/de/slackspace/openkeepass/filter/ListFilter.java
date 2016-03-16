@@ -5,19 +5,20 @@ import java.util.List;
 
 public class ListFilter {
 
-	private ListFilter() {}
-	
-	public static <T> List<T> filter(List<T> items, Filter<T> filter) {
-		List<T> filteredList = new ArrayList<T>();
+    private ListFilter() {
+    }
 
-		for (T item : items) {
+    public static <T> List<T> filter(List<T> items, Filter<T> filter) {
+        List<T> filteredList = new ArrayList<T>();
 
-			if (filter.matches(item)) {
-				filteredList.add(item);
-			}
-		}
+        for (T item : items) {
 
-		return filteredList;
-	}
+            if (filter.matches(item)) {
+                filteredList.add(item);
+            }
+        }
+
+        return filteredList;
+    }
 
 }

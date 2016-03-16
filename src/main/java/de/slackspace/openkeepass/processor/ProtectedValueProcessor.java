@@ -52,7 +52,6 @@ public class ProtectedValueProcessor {
     }
 
     private static boolean isPropertyValueProtected(PropertyValue propertyValue) {
-        return propertyValue.getValue() != null && !propertyValue.getValue().isEmpty()
-                && propertyValue.isProtected();
+        return propertyValue.getValue() != null && !propertyValue.getValue().isEmpty() && propertyValue.isProtected();
     }
 }

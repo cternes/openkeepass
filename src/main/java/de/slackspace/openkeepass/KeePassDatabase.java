@@ -62,8 +62,8 @@ import de.slackspace.openkeepass.xml.KeyFileXmlParser;
  * ...
  * </pre>
  *
- * If the database could not be opened an exception of type <tt>KeePassDatabaseUnreadable</tt> will be
- * thrown.
+ * If the database could not be opened an exception of type
+ * <tt>KeePassDatabaseUnreadable</tt> will be thrown.
  * <p>
  * A typical write use-case should use the following idiom:
  *
@@ -137,8 +137,7 @@ public class KeePassDatabase {
             keePassDatabaseStream = new FileInputStream(keePassDatabaseFile);
             return getInstance(keePassDatabaseStream);
         } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(
-                    "The KeePass database file could not be found. You must provide a valid KeePass database file.", e);
+            throw new IllegalArgumentException("The KeePass database file could not be found. You must provide a valid KeePass database file.", e);
         } finally {
             if (keePassDatabaseStream != null) {
                 try {
@@ -218,8 +217,7 @@ public class KeePassDatabase {
         try {
             return openDatabase(password, new FileInputStream(keyFile));
         } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(
-                    "The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.", e);
+            throw new IllegalArgumentException("The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.", e);
         }
     }
 
@@ -281,8 +279,7 @@ public class KeePassDatabase {
         try {
             return openDatabase(new FileInputStream(keyFile));
         } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(
-                    "The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.", e);
+            throw new IllegalArgumentException("The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.", e);
         }
     }
 
@@ -322,13 +319,12 @@ public class KeePassDatabase {
             SafeInputStream decryptedStream = new SafeInputStream(new ByteArrayInputStream(aesDecryptedDbFile));
 
             // Metadata must be skipped here
-            decryptedStream.skipSafe((long)KeePassHeader.VERSION_SIGNATURE_LENGTH + keepassHeader.getHeaderSize());
+            decryptedStream.skipSafe((long) KeePassHeader.VERSION_SIGNATURE_LENGTH + keepassHeader.getHeaderSize());
             decryptedStream.readSafe(startBytes);
 
             // Compare startBytes
             if (!Arrays.equals(keepassHeader.getStreamStartBytes(), startBytes)) {
-                throw new KeePassDatabaseUnreadable(
-                        "The keepass database file seems to be corrupt or cannot be decrypted.");
+                throw new KeePassDatabaseUnreadable("The keepass database file seems to be corrupt or cannot be decrypted.");
             }
 
             HashedBlockInputStream hashedBlockInputStream = new HashedBlockInputStream(decryptedStream);
@@ -382,8 +378,7 @@ public class KeePassDatabase {
      */
     public static void write(KeePassFile keePassFile, String password, String keePassDatabaseFile) {
         if (keePassDatabaseFile == null || keePassDatabaseFile.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "You must provide a non-empty path where the database should be written to.");
+            throw new IllegalArgumentException("You must provide a non-empty path where the database should be written to.");
         }
 
         try {
@@ -428,8 +423,7 @@ public class KeePassDatabase {
             // Marshall xml
             ProtectedStringCrypto protectedStringCrypto = Salsa20.createInstance(header.getProtectedStreamKey());
             new ProtectedValueProcessor().processProtectedValues(new EncryptionStrategy(protectedStringCrypto), keePassFile);
-            byte[] keePassFilePayload = new KeePassDatabaseXmlParser().toXml(keePassFile)
-                    .toByteArray();
+            byte[] keePassFilePayload = new KeePassDatabaseXmlParser().toXml(keePassFile).toByteArray();
 
             // Unzip
             ByteArrayOutputStream streamToUnzip = new ByteArrayOutputStream();
@@ -452,8 +446,7 @@ public class KeePassDatabase {
             streamToEncrypt.write(streamToUnhashBlock.toByteArray());
 
             // Encrypt
-            byte[] encryptedDatabase = new Decrypter().encryptDatabase(hashedPassword, header,
-                    streamToEncrypt.toByteArray());
+            byte[] encryptedDatabase = new Decrypter().encryptDatabase(hashedPassword, header, streamToEncrypt.toByteArray());
 
             // Write database to stream
             stream.write(encryptedDatabase);

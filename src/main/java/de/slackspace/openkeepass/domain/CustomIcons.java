@@ -17,65 +17,65 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class CustomIcons {
 
-	@XmlElement(name = "Icon")
-	private List<CustomIcon> customIconList = new ArrayList<CustomIcon>();
+    @XmlElement(name = "Icon")
+    private List<CustomIcon> customIconList = new ArrayList<CustomIcon>();
 
-	CustomIcons() {
-	}
+    CustomIcons() {
+    }
 
-	public CustomIcons(CustomIconsBuilder customIconsBuilder) {
-		this.customIconList = customIconsBuilder.customIcons;
-	}
+    public CustomIcons(CustomIconsBuilder customIconsBuilder) {
+        this.customIconList = customIconsBuilder.customIcons;
+    }
 
-	/**
-	 * Returns all custom icons found inside the database.
-	 *
-	 * @return a list of custom icons
-	 */
-	public List<CustomIcon> getIcons() {
-		return customIconList;
-	}
+    /**
+     * Returns all custom icons found inside the database.
+     *
+     * @return a list of custom icons
+     */
+    public List<CustomIcon> getIcons() {
+        return customIconList;
+    }
 
-	/**
-	 * Retrieves a custom icon based on its uuid.
-	 *
-	 * @param uuid
-	 *            the uuid which should be searched
-	 * @return the custom icon if found, null otherwise
-	 */
-	public CustomIcon getIconByUuid(UUID uuid) {
-		for (CustomIcon customIcon : customIconList) {
-			if (customIcon.getUuid() != null && customIcon.getUuid().compareTo(uuid) == 0) {
-				return customIcon;
-			}
-		}
+    /**
+     * Retrieves a custom icon based on its uuid.
+     *
+     * @param uuid
+     *            the uuid which should be searched
+     * @return the custom icon if found, null otherwise
+     */
+    public CustomIcon getIconByUuid(UUID uuid) {
+        for (CustomIcon customIcon : customIconList) {
+            if (customIcon.getUuid() != null && customIcon.getUuid().compareTo(uuid) == 0) {
+                return customIcon;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public final int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((customIconList == null) ? 0 : customIconList.hashCode());
-		return result;
-	}
+    @Override
+    public final int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((customIconList == null) ? 0 : customIconList.hashCode());
+        return result;
+    }
 
-	@Override
-	public final boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof CustomIcons))
-			return false;
-		CustomIcons other = (CustomIcons) obj;
-		if (customIconList == null) {
-			if (other.customIconList != null)
-				return false;
-		} else if (!customIconList.equals(other.customIconList))
-			return false;
-		return true;
-	}
+    @Override
+    public final boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof CustomIcons))
+            return false;
+        CustomIcons other = (CustomIcons) obj;
+        if (customIconList == null) {
+            if (other.customIconList != null)
+                return false;
+        } else if (!customIconList.equals(other.customIconList))
+            return false;
+        return true;
+    }
 
 }

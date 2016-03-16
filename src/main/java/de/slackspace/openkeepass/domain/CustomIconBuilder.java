@@ -8,35 +8,35 @@ import java.util.UUID;
  */
 public class CustomIconBuilder {
 
-	UUID uuid;
+    UUID uuid;
 
-	byte[] data;
+    byte[] data;
 
-	public CustomIconBuilder() {
-		// default no-args constructor
-	}
+    public CustomIconBuilder() {
+        // default no-args constructor
+    }
 
-	public CustomIconBuilder(CustomIcon customIcon) {
-		this.uuid = customIcon.getUuid();
-		this.data = customIcon.getData();
-	}
+    public CustomIconBuilder(CustomIcon customIcon) {
+        this.uuid = customIcon.getUuid();
+        this.data = customIcon.getData();
+    }
 
-	public CustomIconBuilder uuid(UUID uuid) {
-		this.uuid = uuid;
-		return this;
-	}
+    public CustomIconBuilder uuid(UUID uuid) {
+        this.uuid = uuid;
+        return this;
+    }
 
-	public CustomIconBuilder data(byte[] data) {
-		this.data = data;
-		return this;
-	}
+    public CustomIconBuilder data(byte[] data) {
+        this.data = data;
+        return this;
+    }
 
-	/**
-	 * Builds a new custom icon with the values from the builder.
-	 *
-	 * @return a new CustomIcon object
-	 */
-	public CustomIcon build() {
-		return new CustomIcon(this);
-	}
+    /**
+     * Builds a new custom icon with the values from the builder.
+     *
+     * @return a new CustomIcon object
+     */
+    public CustomIcon build() {
+        return new CustomIcon(this);
+    }
 }

@@ -21,218 +21,217 @@ import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Entry implements KeePassFileElement {
 
-	private static final String USER_NAME = "UserName";
-	private static final String NOTES = "Notes";
-	private static final String URL = "URL";
-	private static final String PASSWORD = "Password";
-	private static final String TITLE = "Title";
-	private static final List<String> PROPERTY_KEYS = new ArrayList<String>();
+    private static final String USER_NAME = "UserName";
+    private static final String NOTES = "Notes";
+    private static final String URL = "URL";
+    private static final String PASSWORD = "Password";
+    private static final String TITLE = "Title";
+    private static final List<String> PROPERTY_KEYS = new ArrayList<String>();
 
-	static {
-		PROPERTY_KEYS.add(USER_NAME);
-		PROPERTY_KEYS.add(NOTES);
-		PROPERTY_KEYS.add(URL);
-		PROPERTY_KEYS.add(PASSWORD);
-		PROPERTY_KEYS.add(TITLE);
-	}
+    static {
+        PROPERTY_KEYS.add(USER_NAME);
+        PROPERTY_KEYS.add(NOTES);
+        PROPERTY_KEYS.add(URL);
+        PROPERTY_KEYS.add(PASSWORD);
+        PROPERTY_KEYS.add(TITLE);
+    }
 
-	@XmlElement(name = "UUID")
-	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
-	private UUID uuid;
+    @XmlElement(name = "UUID")
+    @XmlJavaTypeAdapter(UUIDXmlAdapter.class)
+    private UUID uuid;
 
-	@XmlElement(name = "IconID")
-	private int iconId = 0;
+    @XmlElement(name = "IconID")
+    private int iconId = 0;
 
-	private transient byte[] iconData;
+    private transient byte[] iconData;
 
-	@XmlElement(name = "CustomIconUUID")
-	@XmlJavaTypeAdapter(UUIDXmlAdapter.class)
-	private UUID customIconUUID;
+    @XmlElement(name = "CustomIconUUID")
+    @XmlJavaTypeAdapter(UUIDXmlAdapter.class)
+    private UUID customIconUUID;
 
-	@XmlElement(name = "String")
-	private List<Property> properties = new ArrayList<Property>();
+    @XmlElement(name = "String")
+    private List<Property> properties = new ArrayList<Property>();
 
-	@XmlElement(name = "History")
-	private History history;
+    @XmlElement(name = "History")
+    private History history;
 
-	Entry() {
-		this.uuid = UUID.randomUUID();
-	}
+    Entry() {
+        this.uuid = UUID.randomUUID();
+    }
 
-	public Entry(EntryBuilder builder) {
-		this.history = builder.history;
-		this.uuid = builder.uuid;
-		this.iconData = builder.iconData;
-		this.iconId = builder.iconId;
-		this.customIconUUID = builder.customIconUUID;
+    public Entry(EntryBuilder builder) {
+        this.history = builder.history;
+        this.uuid = builder.uuid;
+        this.iconData = builder.iconData;
+        this.iconId = builder.iconId;
+        this.customIconUUID = builder.customIconUUID;
 
-		setValue(false, NOTES, builder.notes);
-		setValue(true, PASSWORD, builder.password);
-		setValue(false, TITLE, builder.title);
-		setValue(false, USER_NAME, builder.username);
-		setValue(false, URL, builder.url);
+        setValue(false, NOTES, builder.notes);
+        setValue(true, PASSWORD, builder.password);
+        setValue(false, TITLE, builder.title);
+        setValue(false, USER_NAME, builder.username);
+        setValue(false, URL, builder.url);
 
-		this.properties.addAll(builder.customPropertyList);
-	}
+        this.properties.addAll(builder.customPropertyList);
+    }
 
-	public UUID getUuid() {
-		return uuid;
-	}
+    public UUID getUuid() {
+        return uuid;
+    }
 
-	/**
-	 * Returns the icon id of this group.
-	 *
-	 * @return the icon id of this group
-	 */
-	public int getIconId() {
-		return iconId;
-	}
+    /**
+     * Returns the icon id of this group.
+     *
+     * @return the icon id of this group
+     */
+    public int getIconId() {
+        return iconId;
+    }
 
-	/**
-	 * Retrieves the custom icon of this group.
-	 *
-	 * @return the uuid of the custom icon or null
-	 */
-	public UUID getCustomIconUuid() {
-		return customIconUUID;
-	}
+    /**
+     * Retrieves the custom icon of this group.
+     *
+     * @return the uuid of the custom icon or null
+     */
+    public UUID getCustomIconUuid() {
+        return customIconUUID;
+    }
 
-	/**
-	 * Returns the raw data of either the custom icon (if specified) or the
-	 * chosen stock icon.
-	 *
-	 * @return the raw icon data if available or null otherwise
-	 */
-	public byte[] getIconData() {
-		return iconData;
-	}
+    /**
+     * Returns the raw data of either the custom icon (if specified) or the
+     * chosen stock icon.
+     *
+     * @return the raw icon data if available or null otherwise
+     */
+    public byte[] getIconData() {
+        return iconData;
+    }
 
-	public List<Property> getProperties() {
-		return properties;
-	}
+    public List<Property> getProperties() {
+        return properties;
+    }
 
-	public List<Property> getCustomProperties() {
-		List<Property> customProperties = new ArrayList<Property>();
+    public List<Property> getCustomProperties() {
+        List<Property> customProperties = new ArrayList<Property>();
 
-		for (Property property : properties) {
-			if(!PROPERTY_KEYS.contains(property.getKey())) {
-				customProperties.add(property);
-			}
-		}
+        for (Property property : properties) {
+            if (!PROPERTY_KEYS.contains(property.getKey())) {
+                customProperties.add(property);
+            }
+        }
 
-		return customProperties;
-	}
+        return customProperties;
+    }
 
-	public String getTitle() {
-		return getValueFromProperty(TITLE);
-	}
+    public String getTitle() {
+        return getValueFromProperty(TITLE);
+    }
 
-	public String getPassword() {
-		return getValueFromProperty(PASSWORD);
-	}
+    public String getPassword() {
+        return getValueFromProperty(PASSWORD);
+    }
 
-	public String getUrl() {
-		return getValueFromProperty(URL);
-	}
+    public String getUrl() {
+        return getValueFromProperty(URL);
+    }
 
-	public String getNotes() {
-		return getValueFromProperty(NOTES);
-	}
+    public String getNotes() {
+        return getValueFromProperty(NOTES);
+    }
 
-	public String getUsername() {
-		return getValueFromProperty(USER_NAME);
-	}
+    public String getUsername() {
+        return getValueFromProperty(USER_NAME);
+    }
 
-	public boolean isTitleProtected() {
-		return getPropertyByName(TITLE).isProtected();
-	}
+    public boolean isTitleProtected() {
+        return getPropertyByName(TITLE).isProtected();
+    }
 
-	public boolean isPasswordProtected() {
-		return getPropertyByName(PASSWORD).isProtected();
-	}
+    public boolean isPasswordProtected() {
+        return getPropertyByName(PASSWORD).isProtected();
+    }
 
-	private void setValue(boolean isProtected, String propertyName, String propertyValue) {
-		Property property = getPropertyByName(propertyName);
-		if (property == null) {
-			property = new Property(propertyName, propertyValue, isProtected);
-			properties.add(property);
-		} else {
-			properties.remove(property);
-			properties.add(new Property(propertyName, propertyValue, isProtected));
-		}
-	}
+    private void setValue(boolean isProtected, String propertyName, String propertyValue) {
+        Property property = getPropertyByName(propertyName);
+        if (property == null) {
+            property = new Property(propertyName, propertyValue, isProtected);
+            properties.add(property);
+        } else {
+            properties.remove(property);
+            properties.add(new Property(propertyName, propertyValue, isProtected));
+        }
+    }
 
-	private String getValueFromProperty(String name) {
-		Property property = getPropertyByName(name);
-		if (property != null) {
-			return property.getValue();
-		}
+    private String getValueFromProperty(String name) {
+        Property property = getPropertyByName(name);
+        if (property != null) {
+            return property.getValue();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Retrieves a property by it's name (ignores case)
-	 *
-	 * @param name
-	 *            the name of the property to find
-	 * @return the property if found, null otherwise
-	 */
-	public Property getPropertyByName(String name) {
-		for (Property property : properties) {
-			if (property.getKey().equalsIgnoreCase(name)) {
-				return property;
-			}
-		}
+    /**
+     * Retrieves a property by it's name (ignores case)
+     *
+     * @param name
+     *            the name of the property to find
+     * @return the property if found, null otherwise
+     */
+    public Property getPropertyByName(String name) {
+        for (Property property : properties) {
+            if (property.getKey().equalsIgnoreCase(name)) {
+                return property;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public History getHistory() {
-		return history;
-	}
+    public History getHistory() {
+        return history;
+    }
 
-	@Override
-	public final int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((history == null) ? 0 : history.hashCode());
-		result = prime * result + ((properties == null) ? 0 : properties.hashCode());
-		result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
-		return result;
-	}
+    @Override
+    public final int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((history == null) ? 0 : history.hashCode());
+        result = prime * result + ((properties == null) ? 0 : properties.hashCode());
+        result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
+        return result;
+    }
 
-	@Override
-	public final boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof Entry))
-			return false;
-		Entry other = (Entry) obj;
-		if (history == null) {
-			if (other.history != null)
-				return false;
-		} else if (!history.equals(other.history))
-			return false;
-		if (properties == null) {
-			if (other.properties != null)
-				return false;
-		} else if (!properties.equals(other.properties))
-			return false;
-		if (uuid == null) {
-			if (other.uuid != null)
-				return false;
-		} else if (!uuid.equals(other.uuid))
-			return false;
-		return true;
-	}
+    @Override
+    public final boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Entry))
+            return false;
+        Entry other = (Entry) obj;
+        if (history == null) {
+            if (other.history != null)
+                return false;
+        } else if (!history.equals(other.history))
+            return false;
+        if (properties == null) {
+            if (other.properties != null)
+                return false;
+        } else if (!properties.equals(other.properties))
+            return false;
+        if (uuid == null) {
+            if (other.uuid != null)
+                return false;
+        } else if (!uuid.equals(other.uuid))
+            return false;
+        return true;
+    }
 
-	@Override
-	public String toString() {
-		return "Entry [uuid=" + uuid + ", getTitle()=" + getTitle() + ", getPassword()=" + getPassword()
-		+ ", getUsername()=" + getUsername() + "]";
-	}
+    @Override
+    public String toString() {
+        return "Entry [uuid=" + uuid + ", getTitle()=" + getTitle() + ", getPassword()=" + getPassword() + ", getUsername()=" + getUsername() + "]";
+    }
 
 }

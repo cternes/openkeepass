@@ -9,11 +9,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KeyFile {
 
-	@XmlElement(name = "Key")
-	private Key key;
+    @XmlElement(name = "Key")
+    private Key key;
 
-	public Key getKey() {
-		return key;
-	}
+    public Key getKey() {
+        return key;
+    }
 
 }

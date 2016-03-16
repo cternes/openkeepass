@@ -23,8 +23,7 @@ public class Decrypter {
         return processDatabaseEncryption(true, database, header, aesKey);
     }
 
-    private static byte[] processDatabaseEncryption(boolean encrypt, byte[] database, KeePassHeader header, byte[] aesKey)
-            throws IOException {
+    private static byte[] processDatabaseEncryption(boolean encrypt, byte[] database, KeePassHeader header, byte[] aesKey) throws IOException {
         byte[] metaData = new byte[KeePassHeader.VERSION_SIGNATURE_LENGTH + header.getHeaderSize()];
         SafeInputStream inputStream = new SafeInputStream(new BufferedInputStream(new ByteArrayInputStream(database)));
         inputStream.readSafe(metaData);
