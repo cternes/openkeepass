@@ -270,8 +270,21 @@ public class KeePassFile implements KeePassFileElement {
      * @param UUID
      *            the uuid which should be searched
      * @return the found entry or null
+     * @deprecated use {@link #getEntryByUuid} instead
      */
+    @Deprecated
     public Entry getEntryByUUID(final UUID UUID) {
+        return getEntryByUuid(UUID);
+    }
+
+    /**
+     * Retrieves an entry based on its uuid.
+     *
+     * @param uuid
+     *            the uuid which should be searched
+     * @return the found entry or null
+     */
+    public Entry getEntryByUuid(final UUID uuid) {
         List<Entry> allEntries = getEntries();
 
         List<Entry> entries = ListFilter.filter(allEntries, new Filter<Entry>() {
@@ -279,7 +292,7 @@ public class KeePassFile implements KeePassFileElement {
             @Override
             public boolean matches(Entry item) {
 
-                if (item.getUuid() != null && item.getUuid().compareTo(UUID) == 0) {
+                if (item.getUuid() != null && item.getUuid().compareTo(uuid) == 0) {
                     return true;
                 } else {
                     return false;
@@ -300,7 +313,9 @@ public class KeePassFile implements KeePassFileElement {
      * @param UUID
      *            the uuid which should be searched
      * @return the found group or null
+     * @deprecated use {@link #getGroupByUuid} instead
      */
+    @Deprecated
     public Group getGroupByUUID(final UUID UUID) {
         List<Group> allGroups = getGroups();
 
@@ -310,6 +325,36 @@ public class KeePassFile implements KeePassFileElement {
             public boolean matches(Group item) {
 
                 if (item.getUuid() != null && item.getUuid().compareTo(UUID) == 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+
+        if (groups.size() == 1) {
+            return groups.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Retrieves a group based on its UUID.
+     *
+     * @param uuid
+     *            the uuid which should be searched
+     * @return the found group or null
+     */
+    public Group getGroupByUuid(final UUID uuid) {
+        List<Group> allGroups = getGroups();
+
+        List<Group> groups = ListFilter.filter(allGroups, new Filter<Group>() {
+
+            @Override
+            public boolean matches(Group item) {
+
+                if (item.getUuid() != null && item.getUuid().compareTo(uuid) == 0) {
                     return true;
                 } else {
                     return false;
