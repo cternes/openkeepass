@@ -29,7 +29,7 @@ public class Salsa20 implements ProtectedStringCrypto {
         byte[] salsaKey = Sha256.hash(protectedStreamKey);
 
         try {
-            salsa20Engine = Cipher.getInstance(SALSA20_ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
+            salsa20Engine = Cipher.getInstance(SALSA20_ALGORITHM);
             salsa20Engine.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(salsaKey, SALSA20_ALGORITHM), new IvParameterSpec(Hex.decode(SALSA20IV)));
         } catch (Exception e) {
             throw new UnsupportedOperationException("Could not find provider '" + SALSA20_ALGORITHM + "'", e);
