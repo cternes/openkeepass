@@ -10,11 +10,9 @@ public class RandomGenerator {
 
     public RandomGenerator() {
         try {
-            random = SecureRandom.getInstance("SHA1PRNG", "SUN");
+            random = SecureRandom.getInstance("SHA1PRNG");
         } catch (NoSuchAlgorithmException e) {
             throw new UnsupportedOperationException("Algorithm 'SHA1PRNG' is unknown", e);
-        } catch (NoSuchProviderException e) {
-            throw new UnsupportedOperationException("Provider 'SUN' is unknown", e);
         }
     }
 
