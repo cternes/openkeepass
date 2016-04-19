@@ -12,8 +12,21 @@ public class KeyFile {
 	@XmlElement(name = "Key")
 	private Key key;
 
+	private boolean isXmlFile = true;
+
+	public KeyFile() {
+	}
+
+	public KeyFile(boolean isXmlFile) {
+		this.isXmlFile = isXmlFile;
+	}
+
 	public Key getKey() {
 		return key;
+	}
+
+	public boolean isXmlFile() {
+		return isXmlFile;
 	}
 
 }
