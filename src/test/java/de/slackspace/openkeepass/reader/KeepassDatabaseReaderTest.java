@@ -184,6 +184,17 @@ public class KeepassDatabaseReaderTest {
 		List<Entry> entries = database.getEntries();
 		Assert.assertEquals("1234567", entries.get(0).getPassword());
 	}
+	
+	@Test
+	public void whenKeePassFileIsSecuredWithBinaryKeyFileAndPasswordShouldOpenKeePassFile() throws FileNotFoundException {
+		FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithPasswordAndBinaryKeyfile.kdbx");
+		FileInputStream keyFile = new FileInputStream("target/test-classes/0.png");
+
+		KeePassFile database = KeePassDatabase.getInstance(keePassFile).openDatabase("1234", keyFile);
+
+		List<Entry> entries = database.getEntries();
+		Assert.assertEquals("qwerty", entries.get(0).getPassword());
+	}
 
 	@Test
 	public void whenKeePassFileIsSecuredWithKeyFileShouldOpenKeePassFileWithKeyFile() throws FileNotFoundException {
