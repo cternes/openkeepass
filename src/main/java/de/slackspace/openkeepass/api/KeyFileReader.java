@@ -20,35 +20,42 @@ public class KeyFileReader {
 	protected KeyFileXmlParser keyFileXmlParser = new KeyFileXmlParser();
 
 	public byte[] readKeyFile(InputStream keyFileStream) {
-		KeyFile keyFile = keyFileXmlParser.fromXml(keyFileStream);
-
+		byte[] keyFileContent = readKeyFileStream(keyFileStream);
+		KeyFile keyFile = keyFileXmlParser.fromXml(keyFileContent);
+		
 		if(!keyFile.isXmlFile()) {
-			return readBinaryKeyFile(keyFileStream);
+			return readBinaryKeyFile(keyFileContent);
 		}
-
+		
 		try {
 			byte[] protectedBuffer = Base64.decode(keyFile.getKey().getData().getBytes(UTF_8));
 			return hashKeyFileIfNecessary(protectedBuffer);
-		} catch (UnsupportedEncodingException e) {
+		}
+		catch (UnsupportedEncodingException e) {
 			throw new UnsupportedOperationException(MSG_UTF8_NOT_SUPPORTED, e);
 		}
 	}
 
-	private byte[] readBinaryKeyFile(InputStream keyFileStream) {
+	private byte[] readKeyFileStream(InputStream keyFileStream) {
 		try {
-			byte[] protectedBuffer;
-			byte[] keepassFile = StreamUtils.toByteArray(keyFileStream);
-
-			int length = keepassFile.length;
-			if (length == 64) {
-				protectedBuffer = Base64.decode(keepassFile);
-			}
-
-			protectedBuffer = hashKeyFileIfNecessary(keepassFile);
-			return protectedBuffer;
-		} catch (IOException e) {
-			throw new KeyFileUnreadableException("Could not read binary key file", e);
+			return StreamUtils.toByteArray(keyFileStream);
 		}
+		catch (IOException e) {
+			throw new KeyFileUnreadableException("Could not read key file", e);
+		}
+	}
+
+	private byte[] readBinaryKeyFile(byte[] keyFile) {
+		byte[] protectedBuffer;
+		
+		int length = keyFile.length;
+		if (length == 64) {
+			protectedBuffer = Base64.decode(keyFile);
+		}
+
+		protectedBuffer = hashKeyFileIfNecessary(keyFile);
+		
+		return protectedBuffer;
 	}
 
 	private byte[] hashKeyFileIfNecessary(byte[] protectedBuffer) {
