@@ -57,16 +57,14 @@ public class KeePassDatabaseWriter {
 
 	private byte[] hashPassword(String password) throws UnsupportedEncodingException {
 		byte[] passwordBytes = password.getBytes(UTF_8);
-		byte[] hashedPassword = Sha256.hash(passwordBytes);
-		return hashedPassword;
+		return Sha256.hash(passwordBytes);
 	}
 
 	private byte[] encryptStream(KeePassHeader header, byte[] hashedPassword, ByteArrayOutputStream streamToEncrypt) throws IOException {
 		CryptoInformation cryptoInformation = new CryptoInformation(KeePassHeader.VERSION_SIGNATURE_LENGTH, header.getMasterSeed(),
 				header.getTransformSeed(), header.getEncryptionIV(), header.getTransformRounds(), header.getHeaderSize());
-		byte[] encryptedDatabase = new Decrypter().encryptDatabase(hashedPassword, cryptoInformation,
-				streamToEncrypt.toByteArray());
-		return encryptedDatabase;
+		
+		return new Decrypter().encryptDatabase(hashedPassword, cryptoInformation, streamToEncrypt.toByteArray());
 	}
 
 	private ByteArrayOutputStream combineHeaderAndContent(KeePassHeader header, ByteArrayOutputStream content) throws IOException {
@@ -88,9 +86,8 @@ public class KeePassDatabaseWriter {
 	private byte[] marshallXml(KeePassFile keePassFile, KeePassHeader header) {
 		ProtectedStringCrypto protectedStringCrypto = Salsa20.createInstance(header.getProtectedStreamKey());
 		new ProtectedValueProcessor().processProtectedValues(new EncryptionStrategy(protectedStringCrypto), keePassFile);
-		byte[] keePassFilePayload = new KeePassDatabaseXmlParser().toXml(keePassFile)
-				.toByteArray();
-		return keePassFilePayload;
+		
+		return new KeePassDatabaseXmlParser().toXml(keePassFile).toByteArray();
 	}
 
 	private ByteArrayOutputStream compressStream(byte[] keePassFilePayload) throws IOException {

@@ -50,8 +50,7 @@ public class KeePassDatabaseReader {
 
 	private byte[] unHashBlockStream(SafeInputStream decryptedStream) throws IOException {
 		HashedBlockInputStream hashedBlockInputStream = new HashedBlockInputStream(decryptedStream);
-		byte[] hashedBlockBytes = StreamUtils.toByteArray(hashedBlockInputStream);
-		return hashedBlockBytes;
+		return StreamUtils.toByteArray(hashedBlockInputStream);
 	}
 
 	private KeePassFile parseDatabase(byte[] decompressed, ProtectedStringCrypto protectedStringCrypto) {
