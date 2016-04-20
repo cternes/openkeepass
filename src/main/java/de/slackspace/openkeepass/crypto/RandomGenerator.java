@@ -20,6 +20,7 @@ public class RandomGenerator implements ByteGenerator {
 		}
 	}
 
+	@Override
 	public byte[] getRandomBytes(int numBytes) {
 		byte[] randomBytes = new byte[numBytes];
 		random.nextBytes(randomBytes);

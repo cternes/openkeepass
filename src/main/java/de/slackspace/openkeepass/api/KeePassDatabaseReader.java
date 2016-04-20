@@ -104,7 +104,6 @@ public class KeePassDatabaseReader {
 	private byte[] decryptStream(byte[] key, byte[] keepassFile) throws IOException {
 		CryptoInformation cryptoInformation = new CryptoInformation(KeePassHeader.VERSION_SIGNATURE_LENGTH, keepassHeader.getMasterSeed(),
 				keepassHeader.getTransformSeed(), keepassHeader.getEncryptionIV(), keepassHeader.getTransformRounds(), keepassHeader.getHeaderSize());
-		byte[] aesDecryptedDbFile = decrypter.decryptDatabase(key, cryptoInformation, keepassFile);
-		return aesDecryptedDbFile;
+		return decrypter.decryptDatabase(key, cryptoInformation, keepassFile);
 	}
 }
