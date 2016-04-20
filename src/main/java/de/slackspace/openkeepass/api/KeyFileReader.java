@@ -50,7 +50,7 @@ public class KeyFileReader {
 
 	private byte[] hashKeyFileIfNecessary(byte[] protectedBuffer) {
 		if (protectedBuffer.length != 32) {
-			protectedBuffer = Sha256.hash(protectedBuffer);
+			return Sha256.hash(protectedBuffer);
 		}
 		
 		return protectedBuffer;
