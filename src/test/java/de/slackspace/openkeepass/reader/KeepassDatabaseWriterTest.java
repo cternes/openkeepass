@@ -28,10 +28,10 @@ import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.Meta;
 import de.slackspace.openkeepass.domain.MetaBuilder;
 import de.slackspace.openkeepass.domain.zipper.GroupZipper;
+import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.util.ByteUtils;
-import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 
 public class KeepassDatabaseWriterTest {
 

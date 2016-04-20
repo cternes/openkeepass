@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.api;
+package de.slackspace.openkeepass.parser;
 
 import org.bouncycastle.util.encoders.Base64;
 

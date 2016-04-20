@@ -8,8 +8,10 @@ import java.util.List;
 import de.slackspace.openkeepass.crypto.Sha256;
 import de.slackspace.openkeepass.domain.KeyFileBytes;
 import de.slackspace.openkeepass.exception.KeyFileUnreadableException;
+import de.slackspace.openkeepass.parser.KeyFileBinaryParser;
+import de.slackspace.openkeepass.parser.KeyFileParser;
+import de.slackspace.openkeepass.parser.KeyFileXmlParser;
 import de.slackspace.openkeepass.util.StreamUtils;
-import de.slackspace.openkeepass.xml.KeyFileXmlParser;
 
 public class KeyFileReader {
 

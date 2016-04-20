@@ -7,8 +7,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.KeyFile;
+import de.slackspace.openkeepass.parser.KeyFileXmlParser;
 import de.slackspace.openkeepass.util.StreamUtils;
-import de.slackspace.openkeepass.xml.KeyFileXmlParser;
 
 public class KeyFileXmlParserTest {
 

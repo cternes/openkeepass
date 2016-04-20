@@ -14,13 +14,13 @@ import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
+import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
 import de.slackspace.openkeepass.processor.IconEnricher;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.util.SafeInputStream;
 import de.slackspace.openkeepass.util.StreamUtils;
-import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 
 public class KeePassDatabaseReader {
 

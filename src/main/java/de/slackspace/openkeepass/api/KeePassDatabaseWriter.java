@@ -15,10 +15,10 @@ import de.slackspace.openkeepass.crypto.Sha256;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
+import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.processor.EncryptionStrategy;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
-import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 
 public class KeePassDatabaseWriter {
 

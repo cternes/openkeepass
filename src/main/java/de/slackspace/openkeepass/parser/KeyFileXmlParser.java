@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.xml;
+package de.slackspace.openkeepass.parser;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
@@ -8,7 +8,6 @@ import javax.xml.bind.JAXB;
 
 import org.bouncycastle.util.encoders.Base64;
 
-import de.slackspace.openkeepass.api.KeyFileParser;
 import de.slackspace.openkeepass.domain.KeyFile;
 import de.slackspace.openkeepass.domain.KeyFileBytes;
 
