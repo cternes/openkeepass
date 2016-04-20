@@ -15,6 +15,7 @@ public class KeyFile {
 	private boolean isXmlFile = true;
 
 	public KeyFile() {
+		// needed for JAXB serialization
 	}
 
 	public KeyFile(boolean isXmlFile) {
