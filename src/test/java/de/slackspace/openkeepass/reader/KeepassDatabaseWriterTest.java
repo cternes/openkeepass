@@ -28,10 +28,10 @@ import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.Meta;
 import de.slackspace.openkeepass.domain.MetaBuilder;
 import de.slackspace.openkeepass.domain.zipper.GroupZipper;
+import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.util.ByteUtils;
-import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 
 public class KeepassDatabaseWriterTest {
 
@@ -123,7 +123,7 @@ public class KeepassDatabaseWriterTest {
 		Group group = database.getGroupByName("test");
 		Group modifiedGroup = new GroupBuilder(group).name("test2").build();
 
-		GroupZipper zipper = new KeePassFileBuilder(database).getZipper().down().right().right().right().right().down();
+		GroupZipper zipper = new GroupZipper(database).down().right().right().right().right().down();
 		KeePassFile modifiedDatabase = zipper.replace(modifiedGroup).close();
 
 		String dbFilename = "target/test-classes/fullBlownDatabaseModified.kdbx";

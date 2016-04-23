@@ -8,6 +8,8 @@ import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.EntryBuilder;
+import de.slackspace.openkeepass.domain.filter.Filter;
+import de.slackspace.openkeepass.domain.filter.ListFilter;
 
 public class EntryFilterTest {
 

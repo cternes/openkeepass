@@ -20,10 +20,10 @@ import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.Times;
+import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.util.ByteUtils;
-import de.slackspace.openkeepass.xml.KeePassDatabaseXmlParser;
 
 public class KeePassDatabaseXmlParserTest {
 

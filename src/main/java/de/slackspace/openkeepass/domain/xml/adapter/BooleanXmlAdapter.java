@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.xml;
+package de.slackspace.openkeepass.domain.xml.adapter;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 

@@ -23,9 +23,9 @@ public class CustomIcons {
     CustomIcons() {
     }
 
-    public CustomIcons(CustomIconsBuilder customIconsBuilder) {
-        this.customIconList = customIconsBuilder.customIcons;
-    }
+	public CustomIcons(CustomIconsContract customIconsContract) {
+		this.customIconList = customIconsContract.getCustomIcons();
+	}
 
     /**
      * Returns all custom icons found inside the database.

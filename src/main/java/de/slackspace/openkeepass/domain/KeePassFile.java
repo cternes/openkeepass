@@ -9,8 +9,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import de.slackspace.openkeepass.filter.Filter;
-import de.slackspace.openkeepass.filter.ListFilter;
+import de.slackspace.openkeepass.domain.filter.Filter;
+import de.slackspace.openkeepass.domain.filter.ListFilter;
 
 /**
  * A KeePassFile represents the structure of a KeePass database. This is the
@@ -20,352 +20,307 @@ import de.slackspace.openkeepass.filter.ListFilter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class KeePassFile implements KeePassFileElement {
 
-    @XmlElement(name = "Meta")
-    private Meta meta;
+	@XmlElement(name = "Meta")
+	private Meta meta;
 
-    @XmlElement(name = "Root")
-    private Group root;
+	@XmlElement(name = "Root")
+	private Group root;
 
-    KeePassFile() {
-    }
+	KeePassFile() {
+	}
 
-    public KeePassFile(KeePassFileBuilder builder) {
-        this.meta = builder.meta;
-        this.root = builder.root;
-    }
+	public KeePassFile(KeePassFileContract keePassFileContract) {
+		this.meta = keePassFileContract.getMeta();
+		this.root = keePassFileContract.getRoot();
+	}
 
-    /**
-     * Retrieves the meta section of a KeePass database.
-     *
-     * @return the meta section of the database
-     * @see Meta
-     */
-    public Meta getMeta() {
-        return meta;
-    }
+	/**
+	 * Retrieves the meta section of a KeePass database.
+	 *
+	 * @return the meta section of the database
+	 * @see Meta
+	 */
+	public Meta getMeta() {
+		return meta;
+	}
 
-    /**
-     * Retrieves the root group of a KeePass database.
-     *
-     * @return the root group
-     * @see Group
-     */
-    public Group getRoot() {
-        return root;
-    }
+	/**
+	 * Retrieves the root group of a KeePass database.
+	 *
+	 * @return the root group
+	 * @see Group
+	 */
+	public Group getRoot() {
+		return root;
+	}
 
-    /**
-     * Retrieves all groups at the root level of a KeePass database.
-     *
-     * @return a list of root level groups
-     * @see Group
-     */
-    public List<Group> getTopGroups() {
-        if (root != null && root.getGroups() != null && root.getGroups().size() == 1) {
-            return root.getGroups().get(0).getGroups();
-        }
-        return new ArrayList<Group>();
-    }
+	/**
+	 * Retrieves all groups at the root level of a KeePass database.
+	 *
+	 * @return a list of root level groups
+	 * @see Group
+	 */
+	public List<Group> getTopGroups() {
+		if (root != null && root.getGroups() != null && root.getGroups().size() == 1) {
+			return root.getGroups().get(0).getGroups();
+		}
+		return new ArrayList<Group>();
+	}
 
-    /**
-     * Retrieves all entries at the root level of a KeePass database.
-     *
-     * @return a list of root level entries
-     * @see Entry
-     */
-    public List<Entry> getTopEntries() {
-        if (root != null && root.getGroups() != null && root.getGroups().size() == 1) {
-            return root.getGroups().get(0).getEntries();
-        }
-        return new ArrayList<Entry>();
-    }
+	/**
+	 * Retrieves all entries at the root level of a KeePass database.
+	 *
+	 * @return a list of root level entries
+	 * @see Entry
+	 */
+	public List<Entry> getTopEntries() {
+		if (root != null && root.getGroups() != null && root.getGroups().size() == 1) {
+			return root.getGroups().get(0).getEntries();
+		}
+		return new ArrayList<Entry>();
+	}
 
-    /**
-     * Retrieves a single entry with an exactly matching title.
-     * <p>
-     * If there are multiple entries with the same title, the first one found
-     * will be returned.
-     *
-     * @param title
-     *            the title which should be searched
-     * @return an entry with a matching title
-     * @see Entry
-     */
-    public Entry getEntryByTitle(String title) {
-        List<Entry> entries = getEntriesByTitle(title, true);
+	/**
+	 * Retrieves a single entry with an exactly matching title.
+	 * <p>
+	 * If there are multiple entries with the same title, the first one found
+	 * will be returned.
+	 *
+	 * @param title
+	 *            the title which should be searched
+	 * @return an entry with a matching title
+	 * @see Entry
+	 */
+	public Entry getEntryByTitle(String title) {
+		List<Entry> entries = getEntriesByTitle(title, true);
 
-        if (!entries.isEmpty()) {
-            return entries.get(0);
-        }
+		if (!entries.isEmpty()) {
+			return entries.get(0);
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * Retrieves a list of entries with matching titles.
-     * <p>
-     * If the <tt>matchExactly</tt> flag is true, only entries which have an
-     * exactly matching title will be returned, otherwise all entries which
-     * contain the given title will be returned.
-     *
-     * @param title
-     *            the title which should be searched
-     * @param matchExactly
-     *            if true only entries which have an exactly matching title will
-     *            be returned
-     * @return a list of entries with matching titles
-     * @see Entry
-     */
-    public List<Entry> getEntriesByTitle(final String title, final boolean matchExactly) {
-        List<Entry> allEntries = new ArrayList<Entry>();
+	/**
+	 * Retrieves a list of entries with matching titles.
+	 * <p>
+	 * If the <tt>matchExactly</tt> flag is true, only entries which have an
+	 * exactly matching title will be returned, otherwise all entries which
+	 * contain the given title will be returned.
+	 *
+	 * @param title
+	 *            the title which should be searched
+	 * @param matchExactly
+	 *            if true only entries which have an exactly matching title will
+	 *            be returned
+	 * @return a list of entries with matching titles
+	 * @see Entry
+	 */
+	public List<Entry> getEntriesByTitle(final String title, final boolean matchExactly) {
+		List<Entry> allEntries = new ArrayList<Entry>();
 
-        if (root != null) {
-            getEntries(root, allEntries);
-        }
+		if (root != null) {
+			getEntries(root, allEntries);
+		}
 
-        return ListFilter.filter(allEntries, new Filter<Entry>() {
+		return ListFilter.filter(allEntries, new Filter<Entry>() {
 
-            @Override
-            public boolean matches(Entry item) {
-                if (matchExactly) {
-                    if (item.getTitle() != null && item.getTitle().equalsIgnoreCase(title)) {
-                        return true;
-                    }
-                } else {
-                    if (item.getTitle() != null && item.getTitle().toLowerCase().contains(title.toLowerCase())) {
-                        return true;
-                    }
-                }
+			@Override
+			public boolean matches(Entry item) {
+				if (matchExactly) {
+					if (item.getTitle() != null && item.getTitle().equalsIgnoreCase(title)) {
+						return true;
+					}
+				} else {
+					if (item.getTitle() != null && item.getTitle().toLowerCase().contains(title.toLowerCase())) {
+						return true;
+					}
+				}
 
-                return false;
-            }
+				return false;
+			}
 
-        });
-    }
+		});
+	}
 
-    /**
-     * Retrieves a list of group with matching names.
-     * <p>
-     * If the <tt>matchExactly</tt> flag is true, only groups which have an
-     * exactly matching name will be returned, otherwise all groups which
-     * contain the given name will be returned.
-     *
-     * @param name
-     *            the name which should be searched
-     * @param matchExactly
-     *            if true only groups which have an exactly matching name will
-     *            be returned
-     * @return a list of entries with matching names
-     * @see Group
-     */
-    public List<Group> getGroupsByName(final String name, final boolean matchExactly) {
-        List<Group> allGroups = new ArrayList<Group>();
+	/**
+	 * Retrieves a list of group with matching names.
+	 * <p>
+	 * If the <tt>matchExactly</tt> flag is true, only groups which have an
+	 * exactly matching name will be returned, otherwise all groups which
+	 * contain the given name will be returned.
+	 *
+	 * @param name
+	 *            the name which should be searched
+	 * @param matchExactly
+	 *            if true only groups which have an exactly matching name will
+	 *            be returned
+	 * @return a list of entries with matching names
+	 * @see Group
+	 */
+	public List<Group> getGroupsByName(final String name, final boolean matchExactly) {
+		List<Group> allGroups = new ArrayList<Group>();
 
-        if (root != null) {
-            getGroups(root, allGroups);
-        }
+		if (root != null) {
+			getGroups(root, allGroups);
+		}
 
-        return ListFilter.filter(allGroups, new Filter<Group>() {
+		return ListFilter.filter(allGroups, new Filter<Group>() {
 
-            @Override
-            public boolean matches(Group item) {
-                if (matchExactly) {
-                    if (item.getName() != null && item.getName().equalsIgnoreCase(name)) {
-                        return true;
-                    }
-                } else {
-                    if (item.getName() != null && item.getName().toLowerCase().contains(name.toLowerCase())) {
-                        return true;
-                    }
-                }
+			@Override
+			public boolean matches(Group item) {
+				if (matchExactly) {
+					if (item.getName() != null && item.getName().equalsIgnoreCase(name)) {
+						return true;
+					}
+				} else {
+					if (item.getName() != null && item.getName().toLowerCase().contains(name.toLowerCase())) {
+						return true;
+					}
+				}
 
-                return false;
-            }
+				return false;
+			}
 
-        });
-    }
+		});
+	}
 
-    /**
-     * Retrieves a list of all entries in the KeePass database.
-     *
-     * @return a list of all entries
-     * @see Entry
-     */
-    public List<Entry> getEntries() {
-        List<Entry> allEntries = new ArrayList<Entry>();
+	/**
+	 * Retrieves a list of all entries in the KeePass database.
+	 *
+	 * @return a list of all entries
+	 * @see Entry
+	 */
+	public List<Entry> getEntries() {
+		List<Entry> allEntries = new ArrayList<Entry>();
 
-        if (root != null) {
-            getEntries(root, allEntries);
-        }
+		if (root != null) {
+			getEntries(root, allEntries);
+		}
 
-        return allEntries;
-    }
+		return allEntries;
+	}
 
-    /**
-     * Retrieves a list of all groups in the KeePass database.
-     *
-     * @return a list of all groups
-     * @see Group
-     */
-    public List<Group> getGroups() {
-        List<Group> allGroups = new ArrayList<Group>();
+	/**
+	 * Retrieves a list of all groups in the KeePass database.
+	 *
+	 * @return a list of all groups
+	 * @see Group
+	 */
+	public List<Group> getGroups() {
+		List<Group> allGroups = new ArrayList<Group>();
 
-        if (root != null) {
-            getGroups(root, allGroups);
-        }
+		if (root != null) {
+			getGroups(root, allGroups);
+		}
 
-        return allGroups;
-    }
+		return allGroups;
+	}
 
-    /**
-     * Retrieves a single group with an exactly matching name.
-     * <p>
-     * If there are multiple groups with the same name, the first one found will
-     * be returned.
-     *
-     * @param name
-     *            the name which should be searched
-     * @return a group with a matching name
-     * @see Group
-     */
-    public Group getGroupByName(String name) {
-        List<Group> groups = getGroupsByName(name, true);
+	/**
+	 * Retrieves a single group with an exactly matching name.
+	 * <p>
+	 * If there are multiple groups with the same name, the first one found will
+	 * be returned.
+	 *
+	 * @param name
+	 *            the name which should be searched
+	 * @return a group with a matching name
+	 * @see Group
+	 */
+	public Group getGroupByName(String name) {
+		List<Group> groups = getGroupsByName(name, true);
 
-        if (!groups.isEmpty()) {
-            return groups.get(0);
-        }
+		if (!groups.isEmpty()) {
+			return groups.get(0);
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    private static void getEntries(Group parentGroup, List<Entry> entries) {
-        List<Group> groups = parentGroup.getGroups();
-        entries.addAll(parentGroup.getEntries());
+	private void getEntries(Group parentGroup, List<Entry> entries) {
+		List<Group> groups = parentGroup.getGroups();
+		entries.addAll(parentGroup.getEntries());
 
-        if (!groups.isEmpty()) {
-            for (Group group : groups) {
-                getEntries(group, entries);
-            }
-        }
+		if (!groups.isEmpty()) {
+			for (Group group : groups) {
+				getEntries(group, entries);
+			}
+		}
 
-        return;
-    }
+		return;
+	}
 
-    private static void getGroups(Group parentGroup, List<Group> groups) {
-        List<Group> parentGroups = parentGroup.getGroups();
-        groups.addAll(parentGroups);
+	private void getGroups(Group parentGroup, List<Group> groups) {
+		List<Group> parentGroups = parentGroup.getGroups();
+		groups.addAll(parentGroups);
 
-        if (!parentGroups.isEmpty()) {
-            for (Group group : parentGroups) {
-                getGroups(group, groups);
-            }
-        }
+		if (!parentGroups.isEmpty()) {
+			for (Group group : parentGroups) {
+				getGroups(group, groups);
+			}
+		}
 
-        return;
-    }
+		return;
+	}
 
-    /**
-     * Retrieves an entry based on its UUID.
-     *
-     * @param UUID
-     *            the uuid which should be searched
-     * @return the found entry or null
-     * @deprecated use {@link #getEntryByUuid} instead
-     */
-    @Deprecated
-    public Entry getEntryByUUID(final UUID UUID) {
-        return getEntryByUuid(UUID);
-    }
+	/**
+	 * Retrieves an entry based on its UUID.
+	 *
+	 * @param UUID
+	 *            the uuid which should be searched
+	 * @return the found entry or null
+	 */
+	public Entry getEntryByUUID(final UUID UUID) {
+		List<Entry> allEntries = getEntries();
 
-    /**
-     * Retrieves an entry based on its uuid.
-     *
-     * @param uuid
-     *            the uuid which should be searched
-     * @return the found entry or null
-     */
-    public Entry getEntryByUuid(final UUID uuid) {
-        List<Entry> allEntries = getEntries();
+		List<Entry> entries = ListFilter.filter(allEntries, new Filter<Entry>() {
 
-        List<Entry> entries = ListFilter.filter(allEntries, new Filter<Entry>() {
+			@Override
+			public boolean matches(Entry item) {
 
-            @Override
-            public boolean matches(Entry item) {
+				if (item.getUuid() != null && item.getUuid().compareTo(UUID) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		});
 
-                if (item.getUuid() != null && item.getUuid().compareTo(uuid) == 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
+		if (entries.size() == 1) {
+			return entries.get(0);
+		} else {
+			return null;
+		}
+	}
 
-        if (entries.size() == 1) {
-            return entries.get(0);
-        } else {
-            return null;
-        }
-    }
+	/**
+	 * Retrieves a group based on its UUID.
+	 *
+	 * @param UUID
+	 *            the uuid which should be searched
+	 * @return the found group or null
+	 */
+	public Group getGroupByUUID(final UUID UUID) {
+		List<Group> allGroups = getGroups();
 
-    /**
-     * Retrieves a group based on its UUID.
-     *
-     * @param UUID
-     *            the uuid which should be searched
-     * @return the found group or null
-     * @deprecated use {@link #getGroupByUuid} instead
-     */
-    @Deprecated
-    public Group getGroupByUUID(final UUID UUID) {
-        List<Group> allGroups = getGroups();
+		List<Group> groups = ListFilter.filter(allGroups, new Filter<Group>() {
 
-        List<Group> groups = ListFilter.filter(allGroups, new Filter<Group>() {
+			@Override
+			public boolean matches(Group item) {
 
-            @Override
-            public boolean matches(Group item) {
+				if (item.getUuid() != null && item.getUuid().compareTo(UUID) == 0) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		});
 
-                if (item.getUuid() != null && item.getUuid().compareTo(UUID) == 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
-
-        if (groups.size() == 1) {
-            return groups.get(0);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Retrieves a group based on its UUID.
-     *
-     * @param uuid
-     *            the uuid which should be searched
-     * @return the found group or null
-     */
-    public Group getGroupByUuid(final UUID uuid) {
-        List<Group> allGroups = getGroups();
-
-        List<Group> groups = ListFilter.filter(allGroups, new Filter<Group>() {
-
-            @Override
-            public boolean matches(Group item) {
-
-                if (item.getUuid() != null && item.getUuid().compareTo(uuid) == 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
-
-        if (groups.size() == 1) {
-            return groups.get(0);
-        } else {
-            return null;
-        }
-    }
+		if (groups.size() == 1) {
+			return groups.get(0);
+		} else {
+			return null;
+		}
+	}
 }

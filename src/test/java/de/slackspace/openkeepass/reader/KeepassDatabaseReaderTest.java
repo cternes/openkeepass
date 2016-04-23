@@ -9,12 +9,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import de.slackspace.openkeepass.domain.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.KeePassDatabase;
-import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadable;
+import de.slackspace.openkeepass.domain.CompressionAlgorithm;
+import de.slackspace.openkeepass.domain.CrsAlgorithm;
+import de.slackspace.openkeepass.domain.Entry;
+import de.slackspace.openkeepass.domain.Group;
+import de.slackspace.openkeepass.domain.KeePassFile;
+import de.slackspace.openkeepass.domain.KeePassHeader;
+import de.slackspace.openkeepass.domain.Property;
+import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.util.ByteUtils;
 
 public class KeepassDatabaseReaderTest {
@@ -169,6 +175,28 @@ public class KeepassDatabaseReaderTest {
 	}
 
 	@Test
+	public void whenKeePassFileIsSecuredWithBinaryKeyFileShouldOpenKeePassFileWithKeyFile() throws FileNotFoundException {
+		FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithBinaryKeyfile.kdbx");
+		FileInputStream keyFile = new FileInputStream("target/test-classes/0.png");
+
+		KeePassFile database = KeePassDatabase.getInstance(keePassFile).openDatabase(keyFile);
+
+		List<Entry> entries = database.getEntries();
+		Assert.assertEquals("1234567", entries.get(0).getPassword());
+	}
+	
+	@Test
+	public void whenKeePassFileIsSecuredWithBinaryKeyFileAndPasswordShouldOpenKeePassFile() throws FileNotFoundException {
+		FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithPasswordAndBinaryKeyfile.kdbx");
+		FileInputStream keyFile = new FileInputStream("target/test-classes/0.png");
+
+		KeePassFile database = KeePassDatabase.getInstance(keePassFile).openDatabase("1234", keyFile);
+
+		List<Entry> entries = database.getEntries();
+		Assert.assertEquals("qwerty", entries.get(0).getPassword());
+	}
+
+	@Test
 	public void whenKeePassFileIsSecuredWithKeyFileShouldOpenKeePassFileWithKeyFile() throws FileNotFoundException {
 		FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithKeyfile.kdbx");
 		FileInputStream keyFile = new FileInputStream("target/test-classes/DatabaseWithKeyfile.key");
@@ -191,7 +219,7 @@ public class KeepassDatabaseReaderTest {
 		Assert.assertEquals("V6uoqOm7esGRqm20VvMz", entries.get(0).getPassword());
 	}
 
-	@Test(expected = KeePassDatabaseUnreadable.class)
+	@Test(expected = KeePassDatabaseUnreadableException.class)
 	public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldNotOpenKeePassFileWithPassword()
 			throws FileNotFoundException {
 		FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithPasswordAndKeyfile.kdbx");
@@ -199,7 +227,7 @@ public class KeepassDatabaseReaderTest {
 		KeePassDatabase.getInstance(keePassFile).openDatabase("test123");
 	}
 
-	@Test(expected = KeePassDatabaseUnreadable.class)
+	@Test(expected = KeePassDatabaseUnreadableException.class)
 	public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldNotOpenKeePassFileWithKeyFile()
 			throws FileNotFoundException {
 		FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithPasswordAndKeyfile.kdbx");

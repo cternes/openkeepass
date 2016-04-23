@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import de.slackspace.openkeepass.xml.UUIDXmlAdapter;
+import de.slackspace.openkeepass.domain.xml.adapter.UUIDXmlAdapter;
 
 /**
  * Represents a custom icon in the KeePass database.
@@ -29,10 +29,10 @@ public class CustomIcon {
     CustomIcon() {
     }
 
-    public CustomIcon(CustomIconBuilder customIconBuilder) {
-        this.uuid = customIconBuilder.uuid;
-        this.data = customIconBuilder.data;
-    }
+	public CustomIcon(CustomIconContract customIconContract) {
+		this.uuid = customIconContract.getUuid();
+		this.data = customIconContract.getData();
+	}
 
     /**
      * Returns the uuid of this custom icon.

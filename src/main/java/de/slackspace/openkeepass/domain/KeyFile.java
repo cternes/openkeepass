@@ -12,8 +12,22 @@ public class KeyFile {
     @XmlElement(name = "Key")
     private Key key;
 
-    public Key getKey() {
-        return key;
-    }
+	private boolean isXmlFile = true;
+
+	public KeyFile() {
+		// needed for JAXB serialization
+	}
+
+	public KeyFile(boolean isXmlFile) {
+		this.isXmlFile = isXmlFile;
+	}
+
+	public Key getKey() {
+		return key;
+	}
+
+	public boolean isXmlFile() {
+		return isXmlFile;
+	}
 
 }

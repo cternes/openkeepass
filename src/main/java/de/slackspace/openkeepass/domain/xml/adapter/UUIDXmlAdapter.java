@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.xml;
+package de.slackspace.openkeepass.domain.xml.adapter;
 
 import java.util.UUID;
 
