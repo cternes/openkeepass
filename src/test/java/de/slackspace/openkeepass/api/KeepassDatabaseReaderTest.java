@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.reader;
+package de.slackspace.openkeepass.api;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

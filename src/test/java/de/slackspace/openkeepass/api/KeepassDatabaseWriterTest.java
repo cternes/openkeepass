@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.reader;
+package de.slackspace.openkeepass.api;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
