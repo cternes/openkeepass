@@ -1,4 +1,4 @@
-package de.slackspace.openkeepass.filter;
+package de.slackspace.openkeepass.domain.filter;
 
 import java.util.ArrayList;
 import java.util.List;

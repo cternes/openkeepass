@@ -1,7 +1,6 @@
 package de.slackspace.openkeepass.crypto;
 
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 
 import de.slackspace.openkeepass.domain.ByteGenerator;
@@ -18,10 +17,10 @@ public class RandomGenerator implements ByteGenerator {
         }
     }
 
-	@Override
-	public byte[] getRandomBytes(int numBytes) {
-		byte[] randomBytes = new byte[numBytes];
-		random.nextBytes(randomBytes);
+    @Override
+    public byte[] getRandomBytes(int numBytes) {
+        byte[] randomBytes = new byte[numBytes];
+        random.nextBytes(randomBytes);
 
         return randomBytes;
     }
