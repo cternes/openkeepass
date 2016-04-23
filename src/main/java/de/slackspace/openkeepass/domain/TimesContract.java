@@ -4,17 +4,17 @@ import java.util.Calendar;
 
 public interface TimesContract {
 
-	Calendar getLastModificationTime();
+    Calendar getLastModificationTime();
 
-	Calendar getCreationTime();
+    Calendar getCreationTime();
 
-	Calendar getLastAccessTime();
+    Calendar getLastAccessTime();
 
-	Calendar getExpiryTime();
+    Calendar getExpiryTime();
 
-	boolean getExpires();
+    boolean getExpires();
 
-	int getUsageCount();
+    int getUsageCount();
 
-	Calendar getLocationChanged();
+    Calendar getLocationChanged();
 }

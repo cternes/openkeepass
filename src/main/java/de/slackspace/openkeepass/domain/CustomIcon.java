@@ -29,10 +29,10 @@ public class CustomIcon {
     CustomIcon() {
     }
 
-	public CustomIcon(CustomIconContract customIconContract) {
-		this.uuid = customIconContract.getUuid();
-		this.data = customIconContract.getData();
-	}
+    public CustomIcon(CustomIconContract customIconContract) {
+        this.uuid = customIconContract.getUuid();
+        this.data = customIconContract.getData();
+    }
 
     /**
      * Returns the uuid of this custom icon.

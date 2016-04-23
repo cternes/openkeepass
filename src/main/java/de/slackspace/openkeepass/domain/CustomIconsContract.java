@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface CustomIconsContract {
 
-	List<CustomIcon> getCustomIcons();
+    List<CustomIcon> getCustomIcons();
 }

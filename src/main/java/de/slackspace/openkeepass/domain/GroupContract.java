@@ -5,21 +5,21 @@ import java.util.UUID;
 
 public interface GroupContract {
 
-	UUID getUuid();
+    UUID getUuid();
 
-	String getName();
+    String getName();
 
-	int getIconId();
+    int getIconId();
 
-	Times getTimes();
+    Times getTimes();
 
-	boolean isExpanded();
+    boolean isExpanded();
 
-	byte[] getIconData();
+    byte[] getIconData();
 
-	UUID getCustomIconUuid();
+    UUID getCustomIconUuid();
 
-	List<Entry> getEntries();
+    List<Entry> getEntries();
 
-	List<Group> getGroups();
+    List<Group> getGroups();
 }

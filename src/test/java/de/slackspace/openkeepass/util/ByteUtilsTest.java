@@ -10,24 +10,24 @@ import org.junit.Test;
 
 public class ByteUtilsTest {
 
-	@Test
-	public void shouldConvertUUIDToBytesAndBackAgain() {
-		UUID uuid = UUID.randomUUID();
+    @Test
+    public void shouldConvertUUIDToBytesAndBackAgain() {
+        UUID uuid = UUID.randomUUID();
 
-		byte[] bytes = ByteUtils.uuidToBytes(uuid);
-		UUID uuid2 = ByteUtils.bytesToUUID(bytes);
+        byte[] bytes = ByteUtils.uuidToBytes(uuid);
+        UUID uuid2 = ByteUtils.bytesToUUID(bytes);
 
-		assertEquals(uuid, uuid2);
-	}
-	
-	@Test
-	public void shouldReadInt() throws IOException {
-		int i = 200;
-		byte[] bytes = new byte[] {(byte) i};
-		ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-		
-		int readInt = ByteUtils.readInt(inputStream);
-		
-		assertEquals(200, readInt);
-	}
+        assertEquals(uuid, uuid2);
+    }
+
+    @Test
+    public void shouldReadInt() throws IOException {
+        int i = 200;
+        byte[] bytes = new byte[] { (byte) i };
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+
+        int readInt = ByteUtils.readInt(inputStream);
+
+        assertEquals(200, readInt);
+    }
 }

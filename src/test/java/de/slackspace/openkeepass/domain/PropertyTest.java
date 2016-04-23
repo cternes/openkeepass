@@ -7,8 +7,8 @@ import nl.jqno.equalsverifier.Warning;
 
 public class PropertyTest {
 
-	@Test
-	public void equalsContract() {
-		EqualsVerifier.forClass(Property.class).suppress(Warning.NONFINAL_FIELDS).verify();
-	}
+    @Test
+    public void equalsContract() {
+        EqualsVerifier.forClass(Property.class).suppress(Warning.NONFINAL_FIELDS).verify();
+    }
 }

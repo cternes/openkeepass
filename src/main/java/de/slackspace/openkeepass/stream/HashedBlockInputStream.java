@@ -10,158 +10,158 @@ import de.slackspace.openkeepass.util.StreamUtils;
 
 public class HashedBlockInputStream extends InputStream {
 
-	private static final String MSG_INVALID_DATA_FORMAT = "Invalid data format";
+    private static final String MSG_INVALID_DATA_FORMAT = "Invalid data format";
 
-	private static final int HASH_SIZE = 32;
+    private static final int HASH_SIZE = 32;
 
-	private InputStream baseStream;
-	private int bufferPos = 0;
-	private byte[] buffer = new byte[0];
-	private long bufferIndex = 0;
-	private boolean atEnd = false;
+    private InputStream baseStream;
+    private int bufferPos = 0;
+    private byte[] buffer = new byte[0];
+    private long bufferIndex = 0;
+    private boolean atEnd = false;
 
-	public HashedBlockInputStream(InputStream is) {
-		baseStream = is;
-	}
+    public HashedBlockInputStream(InputStream is) {
+        baseStream = is;
+    }
 
-	@Override
-	public int read(byte[] b) throws IOException {
-		return read(b, 0, b.length);
-	}
+    @Override
+    public int read(byte[] b) throws IOException {
+        return read(b, 0, b.length);
+    }
 
-	@Override
-	public int read(byte[] b, int offset, int length) throws IOException {
-		if (atEnd) {
-			return -1;
-		}
+    @Override
+    public int read(byte[] b, int offset, int length) throws IOException {
+        if (atEnd) {
+            return -1;
+        }
 
-		int remaining = length;
-		int bufferOffset = offset;
+        int remaining = length;
+        int bufferOffset = offset;
 
-		while (remaining > 0) {
-			// Get more from the source into the buffer
-			if (bufferPos == buffer.length && !readHashedBlock()) {
-				return length - remaining;
-			}
+        while (remaining > 0) {
+            // Get more from the source into the buffer
+            if (bufferPos == buffer.length && !readHashedBlock()) {
+                return length - remaining;
+            }
 
-			// Copy from buffer out
-			int copyLen = Math.min(buffer.length - bufferPos, remaining);
+            // Copy from buffer out
+            int copyLen = Math.min(buffer.length - bufferPos, remaining);
 
-			System.arraycopy(buffer, bufferPos, b, bufferOffset, copyLen);
+            System.arraycopy(buffer, bufferPos, b, bufferOffset, copyLen);
 
-			bufferOffset += copyLen;
-			bufferPos += copyLen;
+            bufferOffset += copyLen;
+            bufferPos += copyLen;
 
-			remaining -= copyLen;
-		}
+            remaining -= copyLen;
+        }
 
-		return length;
-	}
+        return length;
+    }
 
-	private boolean readHashedBlock() throws IOException {
-		if (atEnd) {
-			return false;
-		}
+    private boolean readHashedBlock() throws IOException {
+        if (atEnd) {
+            return false;
+        }
 
-		bufferPos = 0;
+        bufferPos = 0;
 
-		readIndexFromStream();
-		bufferIndex++;
+        readIndexFromStream();
+        bufferIndex++;
 
-		byte[] storedHash = readStoredHashFromStream();
+        byte[] storedHash = readStoredHashFromStream();
 
-		int bufferSize = readBufferSizeFromStream();
+        int bufferSize = readBufferSizeFromStream();
 
-		if (bufferSize == 0) {
-			checkHashIsNotEmpty(storedHash);
+        if (bufferSize == 0) {
+            checkHashIsNotEmpty(storedHash);
 
-			atEnd = true;
-			buffer = new byte[0];
-			return false;
-		}
+            atEnd = true;
+            buffer = new byte[0];
+            return false;
+        }
 
-		fillBufferFromStream(bufferSize);
-		computeAndCompareHash(storedHash);
+        fillBufferFromStream(bufferSize);
+        computeAndCompareHash(storedHash);
 
-		return true;
-	}
+        return true;
+    }
 
-	private void fillBufferFromStream(int bufferSize) throws IOException {
-		buffer = new byte[bufferSize];
-		StreamUtils.read(baseStream, buffer);
-		if (buffer == null || buffer.length != bufferSize) {
-			throw new IOException(MSG_INVALID_DATA_FORMAT);
-		}
-	}
+    private void fillBufferFromStream(int bufferSize) throws IOException {
+        buffer = new byte[bufferSize];
+        StreamUtils.read(baseStream, buffer);
+        if (buffer == null || buffer.length != bufferSize) {
+            throw new IOException(MSG_INVALID_DATA_FORMAT);
+        }
+    }
 
-	private void checkHashIsNotEmpty(byte[] storedHash) throws IOException {
-		for (int hash = 0; hash < HASH_SIZE; hash++) {
-			if (storedHash[hash] != 0) {
-				throw new IOException(MSG_INVALID_DATA_FORMAT);
-			}
-		}
-	}
+    private void checkHashIsNotEmpty(byte[] storedHash) throws IOException {
+        for (int hash = 0; hash < HASH_SIZE; hash++) {
+            if (storedHash[hash] != 0) {
+                throw new IOException(MSG_INVALID_DATA_FORMAT);
+            }
+        }
+    }
 
-	private int readBufferSizeFromStream() throws IOException {
-		int bufferSize = ByteUtils.readInt(baseStream);
-		if (bufferSize < 0) {
-			throw new IOException(MSG_INVALID_DATA_FORMAT);
-		}
+    private int readBufferSizeFromStream() throws IOException {
+        int bufferSize = ByteUtils.readInt(baseStream);
+        if (bufferSize < 0) {
+            throw new IOException(MSG_INVALID_DATA_FORMAT);
+        }
 
-		return bufferSize;
-	}
+        return bufferSize;
+    }
 
-	private void readIndexFromStream() throws IOException {
-		long index = ByteUtils.readInt(baseStream);
-		if (index != bufferIndex) {
-			throw new IOException(MSG_INVALID_DATA_FORMAT);
-		}
-	}
+    private void readIndexFromStream() throws IOException {
+        long index = ByteUtils.readInt(baseStream);
+        if (index != bufferIndex) {
+            throw new IOException(MSG_INVALID_DATA_FORMAT);
+        }
+    }
 
-	private void computeAndCompareHash(byte[] storedHash) throws IOException {
-		byte[] computedHash = Sha256.hash(buffer);
-		if (computedHash == null || computedHash.length != HASH_SIZE) {
-			throw new IOException("Hash wrong size");
-		}
+    private void computeAndCompareHash(byte[] storedHash) throws IOException {
+        byte[] computedHash = Sha256.hash(buffer);
+        if (computedHash == null || computedHash.length != HASH_SIZE) {
+            throw new IOException("Hash wrong size");
+        }
 
-		if (!Arrays.equals(storedHash, computedHash)) {
-			throw new IOException("Hashes didn't match");
-		}
-	}
+        if (!Arrays.equals(storedHash, computedHash)) {
+            throw new IOException("Hashes didn't match");
+        }
+    }
 
-	private byte[] readStoredHashFromStream() throws IOException {
-		byte[] storedHash = new byte[32];
-		StreamUtils.read(baseStream, storedHash);
+    private byte[] readStoredHashFromStream() throws IOException {
+        byte[] storedHash = new byte[32];
+        StreamUtils.read(baseStream, storedHash);
 
-		if (storedHash == null || storedHash.length != HASH_SIZE) {
-			throw new IOException(MSG_INVALID_DATA_FORMAT);
-		}
+        if (storedHash == null || storedHash.length != HASH_SIZE) {
+            throw new IOException(MSG_INVALID_DATA_FORMAT);
+        }
 
-		return storedHash;
-	}
+        return storedHash;
+    }
 
-	@Override
-	public long skip(long n) throws IOException {
-		return 0;
-	}
+    @Override
+    public long skip(long n) throws IOException {
+        return 0;
+    }
 
-	@Override
-	public int read() throws IOException {
-		if (atEnd)
-			return -1;
+    @Override
+    public int read() throws IOException {
+        if (atEnd)
+            return -1;
 
-		if (bufferPos == buffer.length && !readHashedBlock()) {
-			return -1;
-		}
+        if (bufferPos == buffer.length && !readHashedBlock()) {
+            return -1;
+        }
 
-		int output = buffer[bufferPos];
-		bufferPos++;
+        int output = buffer[bufferPos];
+        bufferPos++;
 
-		return output;
-	}
+        return output;
+    }
 
-	@Override
-	public void close() throws IOException {
-		baseStream.close();
-	}
+    @Override
+    public void close() throws IOException {
+        baseStream.close();
+    }
 }

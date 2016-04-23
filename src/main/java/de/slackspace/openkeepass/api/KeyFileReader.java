@@ -15,46 +15,45 @@ import de.slackspace.openkeepass.util.StreamUtils;
 
 public class KeyFileReader {
 
-	protected List<KeyFileParser> keyFileParsers = new ArrayList<KeyFileParser>();
+    protected List<KeyFileParser> keyFileParsers = new ArrayList<KeyFileParser>();
 
-	public KeyFileReader() {
-		keyFileParsers.add(new KeyFileXmlParser());
-		keyFileParsers.add(new KeyFileBinaryParser());
-	}
-	
-	public byte[] readKeyFile(InputStream keyFileStream) {
-		byte[] keyFileContent = toByteArray(keyFileStream);
-		
-		byte[] protectedBuffer = parseKeyFile(keyFileContent);
-		return hashKeyFileIfNecessary(protectedBuffer);
-	}
+    public KeyFileReader() {
+        keyFileParsers.add(new KeyFileXmlParser());
+        keyFileParsers.add(new KeyFileBinaryParser());
+    }
 
-	private byte[] parseKeyFile(byte[] keyFileContent) {
-		for (KeyFileParser parser : keyFileParsers) {
-			KeyFileBytes keyFileBytes = parser.readKeyFile(keyFileContent);
-		
-			if(keyFileBytes.isReadable()) {
-				return keyFileBytes.getBytes();
-			}
-		}
+    public byte[] readKeyFile(InputStream keyFileStream) {
+        byte[] keyFileContent = toByteArray(keyFileStream);
 
-		throw new KeyFileUnreadableException("Could not parse key file because no parser was able to parse the file");
-	}
+        byte[] protectedBuffer = parseKeyFile(keyFileContent);
+        return hashKeyFileIfNecessary(protectedBuffer);
+    }
 
-	private byte[] toByteArray(InputStream keyFileStream) {
-		try {
-			return StreamUtils.toByteArray(keyFileStream);
-		}
-		catch (IOException e) {
-			throw new KeyFileUnreadableException("Could not read key file", e);
-		}
-	}
+    private byte[] parseKeyFile(byte[] keyFileContent) {
+        for (KeyFileParser parser : keyFileParsers) {
+            KeyFileBytes keyFileBytes = parser.readKeyFile(keyFileContent);
 
-	private byte[] hashKeyFileIfNecessary(byte[] protectedBuffer) {
-		if (protectedBuffer.length != 32) {
-			return Sha256.hash(protectedBuffer);
-		}
-		
-		return protectedBuffer;
-	}
+            if (keyFileBytes.isReadable()) {
+                return keyFileBytes.getBytes();
+            }
+        }
+
+        throw new KeyFileUnreadableException("Could not parse key file because no parser was able to parse the file");
+    }
+
+    private byte[] toByteArray(InputStream keyFileStream) {
+        try {
+            return StreamUtils.toByteArray(keyFileStream);
+        } catch (IOException e) {
+            throw new KeyFileUnreadableException("Could not read key file", e);
+        }
+    }
+
+    private byte[] hashKeyFileIfNecessary(byte[] protectedBuffer) {
+        if (protectedBuffer.length != 32) {
+            return Sha256.hash(protectedBuffer);
+        }
+
+        return protectedBuffer;
+    }
 }

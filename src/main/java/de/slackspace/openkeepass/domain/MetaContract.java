@@ -5,27 +5,27 @@ import java.util.UUID;
 
 public interface MetaContract {
 
-	String getGenerator();
+    String getGenerator();
 
-	String getDatabaseName();
+    String getDatabaseName();
 
-	String getDatabaseDescription();
+    String getDatabaseDescription();
 
-	Calendar getDatabaseNameChanged();
+    Calendar getDatabaseNameChanged();
 
-	Calendar getDatabaseDescriptionChanged();
+    Calendar getDatabaseDescriptionChanged();
 
-	int getMaintenanceHistoryDays();
+    int getMaintenanceHistoryDays();
 
-	UUID getRecycleBinUuid();
+    UUID getRecycleBinUuid();
 
-	Calendar getRecycleBinChanged();
+    Calendar getRecycleBinChanged();
 
-	boolean getRecycleBinEnabled();
+    boolean getRecycleBinEnabled();
 
-	long getHistoryMaxItems();
+    long getHistoryMaxItems();
 
-	long getHistoryMaxSize();
+    long getHistoryMaxSize();
 
-	CustomIcons getCustomIcons();
+    CustomIcons getCustomIcons();
 }

@@ -14,43 +14,43 @@ import de.slackspace.openkeepass.domain.CustomIconsBuilder;
 
 public class CustomIconsBuilderTest {
 
-	@Test
-	public void shouldBuildCustomIcons() {
-		CustomIcon customIconOne = createIcon(UUID.randomUUID());
-		CustomIcon customIconTwo = createIcon(UUID.randomUUID());
+    @Test
+    public void shouldBuildCustomIcons() {
+        CustomIcon customIconOne = createIcon(UUID.randomUUID());
+        CustomIcon customIconTwo = createIcon(UUID.randomUUID());
 
-		CustomIcons customIcons = new CustomIconsBuilder().addIcon(customIconOne).addIcon(customIconTwo).build();
+        CustomIcons customIcons = new CustomIconsBuilder().addIcon(customIconOne).addIcon(customIconTwo).build();
 
-		Assert.assertEquals(2, customIcons.getIcons().size());
-	}
+        Assert.assertEquals(2, customIcons.getIcons().size());
+    }
 
-	@Test
-	public void shouldFindIconByUuid() {
-		UUID idOne = UUID.randomUUID();
-		UUID idTwo = UUID.randomUUID();
-		CustomIcon customIconOne = createIcon(idOne);
-		CustomIcon customIconTwo = createIcon(idTwo);
+    @Test
+    public void shouldFindIconByUuid() {
+        UUID idOne = UUID.randomUUID();
+        UUID idTwo = UUID.randomUUID();
+        CustomIcon customIconOne = createIcon(idOne);
+        CustomIcon customIconTwo = createIcon(idTwo);
 
-		CustomIcons customIcons = new CustomIconsBuilder().addIcon(customIconOne).addIcon(customIconTwo).build();
+        CustomIcons customIcons = new CustomIconsBuilder().addIcon(customIconOne).addIcon(customIconTwo).build();
 
-		Assert.assertEquals(idOne, customIcons.getIconByUuid(idOne).getUuid());
-		Assert.assertEquals(idTwo, customIcons.getIconByUuid(idTwo).getUuid());
-	}
+        Assert.assertEquals(idOne, customIcons.getIconByUuid(idOne).getUuid());
+        Assert.assertEquals(idTwo, customIcons.getIconByUuid(idTwo).getUuid());
+    }
 
-	@Test
-	public void shouldBuildCustomIconsFromExisting() {
-		List<CustomIcon> iconList = new ArrayList<CustomIcon>();
-		iconList.add(createIcon(UUID.randomUUID()));
+    @Test
+    public void shouldBuildCustomIconsFromExisting() {
+        List<CustomIcon> iconList = new ArrayList<CustomIcon>();
+        iconList.add(createIcon(UUID.randomUUID()));
 
-		CustomIcons customIcons = new CustomIconsBuilder().customIcons(iconList).build();
-		Assert.assertEquals(1, customIcons.getIcons().size());
+        CustomIcons customIcons = new CustomIconsBuilder().customIcons(iconList).build();
+        Assert.assertEquals(1, customIcons.getIcons().size());
 
-		CustomIcons customIconsClone = new CustomIconsBuilder(customIcons).build();
-		Assert.assertEquals(1, customIconsClone.getIcons().size());
-	}
+        CustomIcons customIconsClone = new CustomIconsBuilder(customIcons).build();
+        Assert.assertEquals(1, customIconsClone.getIcons().size());
+    }
 
-	private CustomIcon createIcon(UUID id) {
-		CustomIcon customIconOne = new CustomIconBuilder().uuid(id).build();
-		return customIconOne;
-	}
+    private CustomIcon createIcon(UUID id) {
+        CustomIcon customIconOne = new CustomIconBuilder().uuid(id).build();
+        return customIconOne;
+    }
 }

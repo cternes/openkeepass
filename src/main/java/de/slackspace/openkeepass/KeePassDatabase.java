@@ -113,8 +113,7 @@ public class KeePassDatabase {
             keePassDatabaseStream = new FileInputStream(keePassDatabaseFile);
             return getInstance(keePassDatabaseStream);
         } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(
-                    "The KeePass database file could not be found. You must provide a valid KeePass database file.", e);
+            throw new IllegalArgumentException("The KeePass database file could not be found. You must provide a valid KeePass database file.", e);
         } finally {
             if (keePassDatabaseStream != null) {
                 try {
@@ -194,8 +193,7 @@ public class KeePassDatabase {
         try {
             return openDatabase(password, new FileInputStream(keyFile));
         } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(
-                    "The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.", e);
+            throw new IllegalArgumentException("The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.", e);
         }
     }
 
@@ -252,8 +250,7 @@ public class KeePassDatabase {
         try {
             return openDatabase(new FileInputStream(keyFile));
         } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(
-                    "The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.", e);
+            throw new IllegalArgumentException("The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.", e);
         }
     }
 
@@ -303,8 +300,7 @@ public class KeePassDatabase {
      */
     public static void write(KeePassFile keePassFile, String password, String keePassDatabaseFile) {
         if (keePassDatabaseFile == null || keePassDatabaseFile.isEmpty()) {
-            throw new IllegalArgumentException(
-                    "You must provide a non-empty path where the database should be written to.");
+            throw new IllegalArgumentException("You must provide a non-empty path where the database should be written to.");
         }
 
         try {

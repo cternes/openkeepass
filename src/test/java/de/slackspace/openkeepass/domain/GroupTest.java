@@ -7,8 +7,8 @@ import nl.jqno.equalsverifier.Warning;
 
 public class GroupTest {
 
-	@Test
-	public void equalsContract() {
-		EqualsVerifier.forClass(Group.class).suppress(Warning.NONFINAL_FIELDS).verify();
-	}
+    @Test
+    public void equalsContract() {
+        EqualsVerifier.forClass(Group.class).suppress(Warning.NONFINAL_FIELDS).verify();
+    }
 }

@@ -7,8 +7,8 @@ import nl.jqno.equalsverifier.Warning;
 
 public class HistoryTest {
 
-	@Test
-	public void equalsContract() {
-		EqualsVerifier.forClass(History.class).suppress(Warning.NONFINAL_FIELDS).verify();
-	}
+    @Test
+    public void equalsContract() {
+        EqualsVerifier.forClass(History.class).suppress(Warning.NONFINAL_FIELDS).verify();
+    }
 }

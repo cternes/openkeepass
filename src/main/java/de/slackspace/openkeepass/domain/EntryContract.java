@@ -5,25 +5,25 @@ import java.util.UUID;
 
 public interface EntryContract {
 
-	UUID getUuid();
+    UUID getUuid();
 
-	byte[] getIconData();
+    byte[] getIconData();
 
-	int getIconId();
+    int getIconId();
 
-	UUID getCustomIconUUID();
+    UUID getCustomIconUUID();
 
-	String getTitle();
+    String getTitle();
 
-	String getUsername();
+    String getUsername();
 
-	String getPassword();
+    String getPassword();
 
-	String getNotes();
+    String getNotes();
 
-	String getUrl();
+    String getUrl();
 
-	List<Property> getCustomPropertyList();
+    List<Property> getCustomPropertyList();
 
-	History getHistory();
+    History getHistory();
 }

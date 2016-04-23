@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public interface CustomIconContract {
 
-	UUID getUuid();
+    UUID getUuid();
 
-	byte[] getData();
+    byte[] getData();
 }

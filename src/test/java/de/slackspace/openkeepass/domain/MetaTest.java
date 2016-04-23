@@ -7,9 +7,9 @@ import nl.jqno.equalsverifier.Warning;
 
 public class MetaTest {
 
-	@Test
-	public void equalsContract() {
-		EqualsVerifier.forClass(Meta.class).suppress(Warning.NONFINAL_FIELDS).verify();
-	}
+    @Test
+    public void equalsContract() {
+        EqualsVerifier.forClass(Meta.class).suppress(Warning.NONFINAL_FIELDS).verify();
+    }
 
 }
