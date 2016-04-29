@@ -1,8 +1,13 @@
 package de.slackspace.openkeepass.api;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.xml.bind.DatatypeConverter;
@@ -183,4 +188,38 @@ public class KeepassDatabaseWriterTest {
         Assert.assertEquals(iconUuid, readDb.getEntryByTitle("1").getCustomIconUuid());
         Assert.assertEquals(base64Icon, DatatypeConverter.printBase64Binary(readDb.getEntryByTitle("1").getIconData()));
     }
+
+    @Test
+    public void shouldEnsureThatEntriesAreNotModifiedDuringWriting() {
+        // open DB
+        final KeePassFile keePassFile = KeePassDatabase.getInstance("target/test-classes/testDatabase.kdbx").openDatabase("abcdefg");
+        Group generalGroup = keePassFile.getGroupByName("General");
+
+        // add entry
+        Entry entry = new EntryBuilder(UUID.randomUUID()).title("title").password("password").build();
+        new GroupBuilder(generalGroup).addEntry(entry).build();
+
+        // compare password in current DB
+        Assert.assertEquals(entry.getPassword(), generalGroup.getEntryByTitle("title").getPassword());
+
+        // get origin passwords
+        List<String> originPasswords = new ArrayList<String>();
+        List<Entry> entries = keePassFile.getEntries();
+        for (Entry e : entries) {
+            originPasswords.add(e.getPassword());
+        }
+
+        // write to new DB
+        KeePassDatabase.write(keePassFile, "abcdefg", "target/test-classes/testDatabase_new.kdbx");
+
+        // get final passwords
+        List<String> finalPasswords = new ArrayList<String>();
+        for (Entry e : entries) {
+            finalPasswords.add(e.getPassword());
+        }
+
+        // compare original passwords with final ones
+        assertThat(originPasswords, is(finalPasswords));
+    }
+
 }
