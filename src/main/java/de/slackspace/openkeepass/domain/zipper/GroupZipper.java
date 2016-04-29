@@ -1,9 +1,14 @@
 package de.slackspace.openkeepass.domain.zipper;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 
+import de.slackspace.openkeepass.domain.Entry;
+import de.slackspace.openkeepass.domain.EntryBuilder;
 import de.slackspace.openkeepass.domain.Group;
+import de.slackspace.openkeepass.domain.GroupBuilder;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassFileBuilder;
 import de.slackspace.openkeepass.domain.Meta;
@@ -224,6 +229,50 @@ public class GroupZipper {
         Group rootNode = getRoot();
 
         return new KeePassFileBuilder(meta).addTopGroups(rootNode).build();
+    }
+
+    /**
+     * Creates a cloned {@link KeePassFile} from the current tree structure.
+     *
+     * @return a cloned KeePass file
+     */
+    public KeePassFile cloneKeePassFile() {
+        Iterator<Group> iter = iterator();
+
+        while(iter.hasNext()) {
+            Group group = iter.next();
+
+            Group clonedGroup = cloneGroup(group);
+            replace(clonedGroup);
+        }
+
+        return close();
+    }
+
+    private Group cloneGroup(Group group) {
+        GroupBuilder groupBuilder = new GroupBuilder(group);
+        cloneEntriesInGroup(group, groupBuilder);
+        Group clonedGroup = groupBuilder.build();
+
+        return clonedGroup;
+    }
+
+    private void cloneEntriesInGroup(Group group, GroupBuilder groupBuilder) {
+        List<Entry> removeList = new ArrayList<Entry>();
+        List<Entry> addList = new ArrayList<Entry>();
+        List<Entry> entries = group.getEntries();
+        for (Entry entry : entries) {
+            cloneEntry(entry, removeList, addList);
+        }
+
+        groupBuilder.removeEntries(removeList);
+        groupBuilder.addEntries(addList);
+    }
+
+    private void cloneEntry(Entry entry, List<Entry> removeList, List<Entry> addList) {
+        Entry clonedEntry = new EntryBuilder(entry).build();
+        removeList.add(entry);
+        addList.add(clonedEntry);
     }
 
     /**

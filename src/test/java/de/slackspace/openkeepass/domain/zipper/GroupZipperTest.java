@@ -1,4 +1,7 @@
-package de.slackspace.openkeepass.domain;
+package de.slackspace.openkeepass.domain.zipper;
+
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,7 +12,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import de.slackspace.openkeepass.domain.zipper.GroupZipper;
+import de.slackspace.openkeepass.domain.Entry;
+import de.slackspace.openkeepass.domain.EntryBuilder;
+import de.slackspace.openkeepass.domain.Group;
+import de.slackspace.openkeepass.domain.GroupBuilder;
+import de.slackspace.openkeepass.domain.KeePassFile;
+import de.slackspace.openkeepass.domain.KeePassFileBuilder;
 
 public class GroupZipperTest {
 
@@ -123,21 +131,21 @@ public class GroupZipperTest {
         Group rootA = new GroupBuilder("A")
                 .addGroup(
                         new GroupBuilder("B")
+                        .addGroup(
+                                new GroupBuilder("C")
                                 .addGroup(
-                                        new GroupBuilder("C")
-                                                .addGroup(
-                                                        new GroupBuilder("D")
-                                                                .build())
-                                                .addGroup(new GroupBuilder("E").build()).build())
-                                .addGroup(new GroupBuilder("F").build())
-                                .addGroup(
-                                        new GroupBuilder("G")
-                                                .addGroup(new GroupBuilder("H").addGroup(new GroupBuilder("I").addGroup(new GroupBuilder("J").build()).build())
-                                                        .addGroup(
-                                                                new GroupBuilder("K").build())
-                                                        .build())
-                                                .addGroup(new GroupBuilder("L").build()).build())
-                                .build())
+                                        new GroupBuilder("D")
+                                        .build())
+                                .addGroup(new GroupBuilder("E").build()).build())
+                        .addGroup(new GroupBuilder("F").build())
+                        .addGroup(
+                                new GroupBuilder("G")
+                                .addGroup(new GroupBuilder("H").addGroup(new GroupBuilder("I").addGroup(new GroupBuilder("J").build()).build())
+                                        .addGroup(
+                                                new GroupBuilder("K").build())
+                                        .build())
+                                .addGroup(new GroupBuilder("L").build()).build())
+                        .build())
                 .addGroup(new GroupBuilder("M").build())
                 .addGroup(new GroupBuilder("N")
                         .addGroup(new GroupBuilder("O").addGroup(new GroupBuilder("P").addGroup(new GroupBuilder("Q").build()).build()).build())
@@ -155,6 +163,34 @@ public class GroupZipperTest {
         }
 
         Assert.assertEquals("ABCDEFGHIJKLMNOPQRST", sb.toString());
+    }
+
+    @Test
+    public void shouldCreateCloneFromTreeStructure() {
+        KeePassFile keePassFile = createTreeStructure();
+        KeePassFile clonedKeePassFile = new GroupZipper(keePassFile).cloneKeePassFile();
+
+        compareKeePassFiles(keePassFile, clonedKeePassFile);
+    }
+
+    @Test
+    public void shouldCreateCloneFromFlatStructure() {
+        KeePassFile keePassFile = createFlatGroupStructure();
+        KeePassFile clonedKeePassFile = new GroupZipper(keePassFile).cloneKeePassFile();
+
+        compareKeePassFiles(keePassFile, clonedKeePassFile);
+    }
+
+    private void compareKeePassFiles(KeePassFile keePassFile, KeePassFile clonedKeePassFile) {
+        List<Group> originGroups = keePassFile.getGroups();
+        List<Group> clonedGroups = clonedKeePassFile.getGroups();
+
+        Assert.assertThat(originGroups, is(equalTo(clonedGroups)));
+
+        List<Entry> originEntries = keePassFile.getEntries();
+        List<Entry> clonedEntries = clonedKeePassFile.getEntries();
+
+        Assert.assertThat(originEntries, is(equalTo(clonedEntries)));
     }
 
     private KeePassFile createFlatGroupStructure() {
