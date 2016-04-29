@@ -84,6 +84,11 @@ public class GroupBuilder implements GroupContract {
         return this;
     }
 
+    public GroupBuilder addEntries(List<Entry> entryList) {
+        entries.addAll(entryList);
+        return this;
+    }
+
     public GroupBuilder addGroup(Group group) {
         groups.add(group);
         return this;
@@ -96,6 +101,11 @@ public class GroupBuilder implements GroupContract {
 
     public GroupBuilder removeEntry(Entry entry) {
         entries.remove(entry);
+        return this;
+    }
+
+    public GroupBuilder removeEntries(List<Entry> entryList) {
+        entries.removeAll(entryList);
         return this;
     }
 
