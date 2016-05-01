@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,11 +33,14 @@ import de.slackspace.openkeepass.domain.KeePassFileBuilder;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.Meta;
 import de.slackspace.openkeepass.domain.MetaBuilder;
+import de.slackspace.openkeepass.domain.Times;
+import de.slackspace.openkeepass.domain.TimesBuilder;
 import de.slackspace.openkeepass.domain.zipper.GroupZipper;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.util.ByteUtils;
+import de.slackspace.openkeepass.util.CalendarHandler;
 
 public class KeepassDatabaseWriterTest {
 
@@ -71,7 +75,9 @@ public class KeepassDatabaseWriterTest {
 
     @Test
     public void shouldCreateNewDatabaseFile() throws FileNotFoundException {
-        Entry entryOne = new EntryBuilder("First entry").username("Carl").password("Carls secret").build();
+        Calendar creationDate = CalendarHandler.createCalendar(2016, 5, 1);
+        Times times = new TimesBuilder().usageCount(5).creationTime(creationDate).build();
+        Entry entryOne = new EntryBuilder("First entry").username("Carl").password("Carls secret").times(times).build();
 
         KeePassFile keePassFile = new KeePassFileBuilder("testDB").addTopEntries(entryOne).build();
 
@@ -83,6 +89,8 @@ public class KeepassDatabaseWriterTest {
         Entry entryByTitle = database.getEntryByTitle("First entry");
 
         Assert.assertEquals(entryOne.getTitle(), entryByTitle.getTitle());
+        Assert.assertEquals(5, entryOne.getTimes().getUsageCount());
+        Assert.assertEquals(creationDate, entryOne.getTimes().getCreationTime());
     }
 
     @Test
