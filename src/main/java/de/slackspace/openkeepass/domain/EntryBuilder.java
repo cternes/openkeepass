@@ -32,6 +32,8 @@ public class EntryBuilder implements EntryContract {
 
     private UUID customIconUUID;
 
+    private Times times;
+
     private List<Property> customPropertyList = new ArrayList<Property>();
 
     /**
@@ -136,6 +138,11 @@ public class EntryBuilder implements EntryContract {
         return this;
     }
 
+    public EntryBuilder times(Times times) {
+        this.times = times;
+        return this;
+    }
+
     /**
      * Builds a new entry with the values from the builder.
      *
@@ -217,4 +224,10 @@ public class EntryBuilder implements EntryContract {
     public History getHistory() {
         return history;
     }
+
+    @Override
+    public Times getTimes() {
+        return times;
+    }
+
 }
