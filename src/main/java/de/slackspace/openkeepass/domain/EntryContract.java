@@ -26,4 +26,6 @@ public interface EntryContract {
     List<Property> getCustomPropertyList();
 
     History getHistory();
+
+    Times getTimes();
 }
