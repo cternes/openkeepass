@@ -1,5 +1,6 @@
 package de.slackspace.openkeepass.domain.builder;
 
+import java.util.Calendar;
 import java.util.UUID;
 
 import org.junit.Assert;
@@ -8,6 +9,9 @@ import org.junit.Test;
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.EntryBuilder;
 import de.slackspace.openkeepass.domain.History;
+import de.slackspace.openkeepass.domain.Times;
+import de.slackspace.openkeepass.domain.TimesBuilder;
+import de.slackspace.openkeepass.util.CalendarHandler;
 
 public class EntryBuilderTest {
 
@@ -54,6 +58,18 @@ public class EntryBuilderTest {
         Entry historicEntry = history.getHistoricEntries().get(0);
         Assert.assertEquals("title should be historytest", "historytest", historicEntry.getTitle());
         Assert.assertNull("username of the history should be null", historicEntry.getUsername());
+    }
+
+    @Test
+    public void shouldBuildEntryWithTimes() {
+        Calendar creationDate = CalendarHandler.createCalendar(2016, 2, 5);
+
+        Times times = new TimesBuilder().expires(true).usageCount(3).creationTime(creationDate).build();
+        Entry entry = new EntryBuilder("timesTest").times(times).build();
+
+        Assert.assertTrue(entry.getTimes().expires());
+        Assert.assertEquals(3, entry.getTimes().getUsageCount());
+        Assert.assertEquals(creationDate, entry.getTimes().getCreationTime());
     }
 
     @Test(expected = IllegalArgumentException.class)
