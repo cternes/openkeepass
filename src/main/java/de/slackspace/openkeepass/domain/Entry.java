@@ -207,6 +207,7 @@ public class Entry implements KeePassFileElement {
         result = prime * result + ((history == null) ? 0 : history.hashCode());
         result = prime * result + ((properties == null) ? 0 : properties.hashCode());
         result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
+		result = prime * result + ((times == null) ? 0 : times.hashCode());
         return result;
     }
 
@@ -228,6 +229,11 @@ public class Entry implements KeePassFileElement {
             if (other.properties != null)
                 return false;
         } else if (!properties.equals(other.properties))
+            return false;
+        if (times == null) {
+            if (other.times != null)
+                return false;
+        } else if (!times.equals(other.times))
             return false;
         if (uuid == null) {
             if (other.uuid != null)

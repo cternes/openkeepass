@@ -86,6 +86,7 @@ public class EntryBuilder implements EntryContract {
         this.iconData = entry.getIconData();
         this.customIconUUID = entry.getCustomIconUuid();
         this.customPropertyList.addAll(entry.getCustomProperties());
+        this.times = entry.getTimes();
     }
 
     public EntryBuilder title(String title) {
