@@ -16,7 +16,7 @@ import de.slackspace.openkeepass.domain.xml.adapter.BooleanXmlAdapter;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Times {
+public class Times implements Cloneable{
 
     @XmlElement(name = "LastModificationTime")
     private Calendar lastModificationTime;
@@ -145,4 +145,28 @@ public class Times {
         return "Times [lastModificationTime=" + lastModificationTime + ", creationTime=" + creationTime + "]";
     }
 
+    
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Times ret = new Times();
+		if(this.lastModificationTime!=null){
+			ret.lastModificationTime = (Calendar)this.lastModificationTime.clone();
+		}
+		if(this.creationTime!=null){
+			ret.creationTime = (Calendar)this.creationTime.clone();
+		}
+		if(this.lastAccessTime!=null){
+			ret.lastAccessTime = (Calendar)this.lastAccessTime.clone();
+		}
+		if(this.expiryTime!=null){
+			ret.expiryTime = (Calendar)this.expiryTime.clone();
+		}
+		ret.expires = this.expires;
+		ret.usageCount = this.usageCount;
+		
+		if(this.locationChanged!=null){
+			ret.locationChanged = (Calendar)this.locationChanged.clone();
+		}
+		return ret;
+	}    
 }
