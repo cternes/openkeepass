@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Property implements KeePassFileElement {
+public class Property implements KeePassFileElement, Cloneable{
 
     @XmlElement(name = "Key")
     private String key;
@@ -78,6 +78,11 @@ public class Property implements KeePassFileElement {
         } else if (!propertyValue.equals(other.propertyValue))
             return false;
         return true;
+    }
+    
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+    	return new Property(this.getKey(), this.getValue(), this.isProtected());
     }
 
 }
