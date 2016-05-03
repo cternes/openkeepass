@@ -1,6 +1,7 @@
 package de.slackspace.openkeepass.domain;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ import de.slackspace.openkeepass.domain.xml.adapter.UUIDXmlAdapter;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Group implements KeePassFileElement {
+public class Group implements KeePassFileElement, Cloneable {
 
     @XmlElement(name = "UUID")
     @XmlJavaTypeAdapter(UUIDXmlAdapter.class)
@@ -235,4 +236,25 @@ public class Group implements KeePassFileElement {
         return true;
     }
 
+    protected Object clone() throws CloneNotSupportedException {
+    	Group group = new Group();
+    	group.uuid = this.uuid;
+    	group.name = this.name;
+    	group.iconId = this.iconId;
+    	if(this.iconData!=null){
+        	group.iconData = Arrays.copyOf(this.iconData, this.iconData.length);
+    	}
+    	group.customIconUUID = this.customIconUUID;
+    	if(group.times!=null){
+        	group.times = (Times) this.times.clone();
+    	}
+    	group.isExpanded = this.isExpanded;
+    	for(Group g:this.getGroups()){
+    		group.groups.add((Group)g.clone());
+    	}
+    	for(Entry e:this.getEntries()){
+    		group.entries.add((Entry)e.clone());
+    	}
+    	return group;
+    }
 }
