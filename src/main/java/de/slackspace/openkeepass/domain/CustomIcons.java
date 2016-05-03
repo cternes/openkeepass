@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CustomIcons {
+public class CustomIcons implements Cloneable{
 
     @XmlElement(name = "Icon")
     private List<CustomIcon> customIconList = new ArrayList<CustomIcon>();
@@ -78,4 +78,13 @@ public class CustomIcons {
         return true;
     }
 
+    
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+    	CustomIcons ret = new CustomIcons();
+    	for( CustomIcon customIcon:this.customIconList){
+    		ret.customIconList.add((CustomIcon)customIcon.clone());
+    	}
+    	return ret;
+    }
 }
