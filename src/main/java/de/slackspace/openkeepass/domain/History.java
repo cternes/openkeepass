@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class History {
+public class History implements Cloneable{
 
     @XmlElement(name = "Entry")
     private List<Entry> entries = new ArrayList<Entry>();
@@ -42,6 +42,15 @@ public class History {
         } else if (!entries.equals(other.entries))
             return false;
         return true;
+    }
+    
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+    	History ret = new History();
+    	for(Entry entry:entries){
+	    	ret.entries.add((Entry) entry.clone());
+		}
+    	return ret;
     }
 
 }
