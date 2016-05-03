@@ -19,7 +19,7 @@ import de.slackspace.openkeepass.domain.xml.adapter.UUIDXmlAdapter;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Meta {
+public class Meta implements Cloneable{
 
     @XmlElement(name = "Generator")
     private String generator;
@@ -211,4 +211,35 @@ public class Meta {
     public String toString() {
         return "Meta [generator=" + generator + ", databaseName=" + databaseName + ", databaseDescription=" + databaseDescription + "]";
     }
+
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+    	
+    	Meta ret = new Meta();
+    	ret.generator = this.generator;
+    	ret.databaseName = this.databaseName;
+    	ret.databaseDescription = this.databaseDescription;
+    	if(this.databaseNameChanged!=null){
+        	ret.databaseNameChanged = (Calendar)this.databaseNameChanged.clone();
+    	}
+    	if(this.databaseDescriptionChanged!=null){
+        	ret.databaseDescriptionChanged = (Calendar)this.databaseDescriptionChanged.clone();
+    	}
+    	ret.maintenanceHistoryDays = this.maintenanceHistoryDays;
+    	ret.recycleBinUuid = this.recycleBinUuid;
+    	
+    	if(this.recycleBinChanged!=null){
+        	ret.recycleBinChanged = (Calendar)this.recycleBinChanged.clone();
+    	}
+    	ret.recycleBinEnabled = this.recycleBinEnabled;
+    	ret.historyMaxItems = this.historyMaxItems;
+    	ret.historyMaxSize = this.historyMaxSize;
+    	if(this.customIcons != null){
+        	ret.customIcons = (CustomIcons) this.customIcons.clone();
+    	}
+    	return ret;
+    }
+
+
 }
