@@ -266,7 +266,7 @@ public class Entry implements KeePassFileElement, Cloneable {
     	if(this.history!=null){
         	ret.history = (History) this.history.clone();
     	}
-    	if(ret.times!=null){
+    	if(this.times!=null){
         	ret.times = (Times) this.times.clone();
     	}
     	return ret;
