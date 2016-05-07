@@ -18,7 +18,7 @@ import de.slackspace.openkeepass.domain.filter.ListFilter;
  */
 @XmlRootElement(name = "KeePassFile")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class KeePassFile implements KeePassFileElement {
+public class KeePassFile implements KeePassFileElement, Cloneable {
 
     @XmlElement(name = "Meta")
     private Meta meta;
@@ -322,5 +322,19 @@ public class KeePassFile implements KeePassFileElement {
         } else {
             return null;
         }
+    }
+    
+    
+    
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+    	KeePassFile ret = new KeePassFile();
+    	if(this.meta!=null){
+        	ret.meta = (Meta) this.meta.clone();
+    	}
+    	if(this.root!=null){
+        	ret.root = (Group) this.root.clone();
+    	}
+    	return ret;
     }
 }

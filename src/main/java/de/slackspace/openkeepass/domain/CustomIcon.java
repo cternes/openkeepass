@@ -17,7 +17,7 @@ import de.slackspace.openkeepass.domain.xml.adapter.UUIDXmlAdapter;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CustomIcon {
+public class CustomIcon implements Cloneable{
 
     @XmlElement(name = "UUID")
     @XmlJavaTypeAdapter(UUIDXmlAdapter.class)
@@ -80,4 +80,13 @@ public class CustomIcon {
         return true;
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+    	CustomIcon ret = new CustomIcon();
+    	ret.uuid = this.uuid;
+    	if(this.data!=null){
+        	ret.data = Arrays.copyOf(this.data, this.data.length);
+    	}
+    	return ret;
+    }
 }
