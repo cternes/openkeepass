@@ -237,24 +237,24 @@ public class Group implements KeePassFileElement, Cloneable {
     }
 
     protected Object clone() throws CloneNotSupportedException {
-    	Group group = new Group();
-    	group.uuid = this.uuid;
-    	group.name = this.name;
-    	group.iconId = this.iconId;
+    	Group ret = new Group();
+    	ret.uuid = this.uuid;
+    	ret.name = this.name;
+    	ret.iconId = this.iconId;
     	if(this.iconData!=null){
-        	group.iconData = Arrays.copyOf(this.iconData, this.iconData.length);
+        	ret.iconData = Arrays.copyOf(this.iconData, this.iconData.length);
     	}
-    	group.customIconUUID = this.customIconUUID;
-    	if(group.times!=null){
-        	group.times = (Times) this.times.clone();
+    	ret.customIconUUID = this.customIconUUID;
+    	if(this.times!=null){
+        	ret.times = (Times) this.times.clone();
     	}
-    	group.isExpanded = this.isExpanded;
-    	for(Group g:this.getGroups()){
-    		group.groups.add((Group)g.clone());
+    	ret.isExpanded = this.isExpanded;
+    	for(final Group g:this.getGroups()){
+    		ret.groups.add((Group)g.clone());
     	}
-    	for(Entry e:this.getEntries()){
-    		group.entries.add((Entry)e.clone());
+    	for(final Entry e:this.getEntries()){
+    		ret.entries.add((Entry)e.clone());
     	}
-    	return group;
+    	return ret;
     }
 }
