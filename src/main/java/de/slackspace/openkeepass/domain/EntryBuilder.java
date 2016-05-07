@@ -144,6 +144,11 @@ public class EntryBuilder implements EntryContract {
         return this;
     }
 
+    public EntryBuilder clearHistory() {
+        this.history = new History();
+        return this;
+    }
+
     /**
      * Builds a new entry with the values from the builder.
      *
@@ -167,7 +172,8 @@ public class EntryBuilder implements EntryContract {
             history = new History();
         }
 
-        history.getHistoricEntries().add(originalEntry);
+        Entry entryWithoutHistory = new EntryBuilder(originalEntry).history(new History()).build();
+        history.getHistoricEntries().add(entryWithoutHistory);
         return build();
     }
 

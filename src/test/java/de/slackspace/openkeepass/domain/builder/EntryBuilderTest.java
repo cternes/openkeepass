@@ -87,4 +87,15 @@ public class EntryBuilderTest {
         Entry entryCopyNotEqual = new EntryBuilder(entry).notes("another note").build();
         Assert.assertNotEquals(entry, entryCopyNotEqual);
     }
+
+    @Test
+    public void shouldClearHistoryOfOriginalEntryOnBuildWithHistory() {
+        Entry entry = new EntryBuilder("v1").build();
+        Entry entryTwo = new EntryBuilder(entry).title("v2").buildWithHistory();
+        Entry entryThree = new EntryBuilder(entryTwo).title("v3").buildWithHistory();
+
+        for (Entry historicEntry : entryThree.getHistory().getHistoricEntries()) {
+            Assert.assertEquals(0, historicEntry.getHistory().getHistoricEntries().size());
+        }
+    }
 }
