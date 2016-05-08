@@ -10,6 +10,7 @@ import de.slackspace.openkeepass.util.StreamUtils;
 
 public class HashedBlockInputStream extends InputStream {
 
+    private static final int EOF = -1;
     private static final String MSG_INVALID_DATA_FORMAT = "Invalid data format";
 
     private static final int HASH_SIZE = 32;
@@ -32,7 +33,7 @@ public class HashedBlockInputStream extends InputStream {
     @Override
     public int read(byte[] b, int offset, int length) throws IOException {
         if (atEnd) {
-            return -1;
+            return EOF;
         }
 
         int remaining = length;
@@ -88,8 +89,9 @@ public class HashedBlockInputStream extends InputStream {
 
     private void fillBufferFromStream(int bufferSize) throws IOException {
         buffer = new byte[bufferSize];
-        StreamUtils.read(baseStream, buffer);
-        if (buffer == null || buffer.length != bufferSize) {
+        int readBytes = StreamUtils.read(baseStream, buffer);
+
+        if (readBytes == EOF) {
             throw new IOException(MSG_INVALID_DATA_FORMAT);
         }
     }
@@ -131,9 +133,9 @@ public class HashedBlockInputStream extends InputStream {
 
     private byte[] readStoredHashFromStream() throws IOException {
         byte[] storedHash = new byte[32];
-        StreamUtils.read(baseStream, storedHash);
+        int readBytes = StreamUtils.read(baseStream, storedHash);
 
-        if (storedHash == null || storedHash.length != HASH_SIZE) {
+        if (readBytes == EOF) {
             throw new IOException(MSG_INVALID_DATA_FORMAT);
         }
 
@@ -148,10 +150,10 @@ public class HashedBlockInputStream extends InputStream {
     @Override
     public int read() throws IOException {
         if (atEnd)
-            return -1;
+            return EOF;
 
         if (bufferPos == buffer.length && !readHashedBlock()) {
-            return -1;
+            return EOF;
         }
 
         int output = buffer[bufferPos];
