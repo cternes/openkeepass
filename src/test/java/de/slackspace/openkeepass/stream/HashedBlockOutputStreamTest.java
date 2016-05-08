@@ -48,11 +48,9 @@ public class HashedBlockOutputStreamTest {
 
             decoded.write(buf, 0, read);
         }
+        hashedBlockInputStream.close();
 
         byte[] out = decoded.toByteArray();
-
         assertArrayEquals(orig, out);
-
-        hashedBlockInputStream.close();
     }
 }
