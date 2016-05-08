@@ -14,6 +14,10 @@ public class StreamUtils {
     }
 
     public static int read(InputStream input, byte[] buffer) throws IOException {
+        if(input == null || buffer == null) {
+            return -1;
+        }
+
         int remaining = buffer.length;
         while (remaining > 0) {
             int location = buffer.length - remaining;
