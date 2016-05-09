@@ -101,6 +101,12 @@ public class IconEnricher {
             return StreamUtils.toByteArray(inputStream);
         } catch (IOException e) {
             throw new IconUnreadableException("Could not read icon data from resource '" + ICONS + iconId + PNG + "'", e);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                // Ignore
+            }
         }
     }
 }
