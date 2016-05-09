@@ -190,10 +190,21 @@ public class KeePassDatabase {
             throw new IllegalArgumentException("You must provide a valid KeePass keyfile.");
         }
 
+        InputStream inputStream = null;
+
         try {
-            return openDatabase(password, new FileInputStream(keyFile));
+            inputStream = new FileInputStream(keyFile);
+            return openDatabase(password, inputStream);
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException("The KeePass keyfile could not be found. You must provide a valid KeePass keyfile.", e);
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    // Ignore
+                }
+            }
         }
     }
 
