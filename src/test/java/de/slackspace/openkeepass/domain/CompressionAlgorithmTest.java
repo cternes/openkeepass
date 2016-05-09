@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 
-public class CompressionAlgorithmTests {
+public class CompressionAlgorithmTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();

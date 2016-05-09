@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 
-public class CrsAlgorithmTests {
+public class CrsAlgorithmTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
