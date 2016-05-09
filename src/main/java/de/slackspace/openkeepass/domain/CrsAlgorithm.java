@@ -13,7 +13,7 @@ public enum CrsAlgorithm {
         case 2:
             return Salsa20;
         default:
-            throw new IllegalArgumentException(String.format("Value %i is not a valid CrsAlgorithm", value));
+            throw new IllegalArgumentException(String.format("Value %d is not a valid CrsAlgorithm", value));
         }
     }
 
