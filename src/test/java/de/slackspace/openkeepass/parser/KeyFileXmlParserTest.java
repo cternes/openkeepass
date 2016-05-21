@@ -7,14 +7,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.KeyFile;
-import de.slackspace.openkeepass.parser.KeyFileXmlParser;
+import de.slackspace.openkeepass.util.ResourceUtils;
 import de.slackspace.openkeepass.util.StreamUtils;
 
 public class KeyFileXmlParserTest {
 
     @Test
     public void whenInputIsKeyFileShouldParseFileAndReturnCorrectData() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(this.getClass().getClassLoader().getResource("DatabaseWithKeyfile.key").getPath());
+        FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("DatabaseWithKeyfile.key"));
         byte[] keyFileContent = StreamUtils.toByteArray(fileInputStream);
 
         KeyFile keyFile = new KeyFileXmlParser().fromXml(keyFileContent);

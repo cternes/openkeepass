@@ -22,10 +22,10 @@ import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.Times;
-import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.util.ByteUtils;
+import de.slackspace.openkeepass.util.ResourceUtils;
 
 public class KeePassDatabaseXmlParserTest {
 
@@ -138,7 +138,7 @@ public class KeePassDatabaseXmlParserTest {
     }
 
     private KeePassFile parseKeePassXml() throws FileNotFoundException {
-        FileInputStream fileInputStream = new FileInputStream(this.getClass().getClassLoader().getResource("testDatabase_decrypted.xml").getPath());
+        FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("testDatabase_decrypted.xml"));
         KeePassFile keePassFile = new KeePassDatabaseXmlParser().fromXml(fileInputStream);
 
         new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), keePassFile);
@@ -149,7 +149,7 @@ public class KeePassDatabaseXmlParserTest {
     @Test
     public void whenWritingKeePassFileShouldBeAbleToReadItAgain() throws IOException {
         // Read decrypted and write again
-        FileInputStream fileInputStream = new FileInputStream(this.getClass().getClassLoader().getResource("testDatabase_decrypted.xml").getPath());
+        FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("testDatabase_decrypted.xml"));
         KeePassDatabaseXmlParser parser = new KeePassDatabaseXmlParser();
         KeePassFile keePassFile = parser.fromXml(fileInputStream);
 

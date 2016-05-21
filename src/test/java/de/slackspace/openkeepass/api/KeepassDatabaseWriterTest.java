@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +43,7 @@ import de.slackspace.openkeepass.processor.DecryptionStrategy;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.CalendarHandler;
+import de.slackspace.openkeepass.util.ResourceUtils;
 
 public class KeepassDatabaseWriterTest {
 
@@ -54,7 +54,7 @@ public class KeepassDatabaseWriterTest {
 
     @Test
     public void whenWritingDatabaseFileShouldBeAbleToReadItAlso() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream(this.getClass().getClassLoader().getResource("testDatabase_decrypted.xml").getPath());
+        FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("testDatabase_decrypted.xml"));
         KeePassFile keePassFile = new KeePassDatabaseXmlParser().fromXml(fileInputStream);
         new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), keePassFile);
 
@@ -133,7 +133,7 @@ public class KeepassDatabaseWriterTest {
     @Test
     public void shouldModifiyGroupInKeePassFile() throws IOException {
         String password = "123456";
-        KeePassDatabase keePassDb = KeePassDatabase.getInstance(this.getClass().getClassLoader().getResource("fullBlownDatabase.kdbx").getPath());
+        KeePassDatabase keePassDb = KeePassDatabase.getInstance(ResourceUtils.getResource("fullBlownDatabase.kdbx"));
         KeePassFile database = keePassDb.openDatabase(password);
 
         Group group = database.getGroupByName("test");
@@ -153,7 +153,7 @@ public class KeepassDatabaseWriterTest {
     @Test
     public void shouldModifyMetadataAndRenameGeneralNodeThenWriteAndReadDatabase() throws IOException {
         String password = "abcdefg";
-        String originalDbFile = this.getClass().getClassLoader().getResource("testDatabase.kdbx").getPath();
+        String originalDbFile = ResourceUtils.getResource("testDatabase.kdbx");
         String modifiedDbFile = tempFolder.newFile("modifiedtestDatabase2.kdbx").getPath();
 
         KeePassFile database = KeePassDatabase.getInstance(originalDbFile).openDatabase(password);
@@ -208,7 +208,7 @@ public class KeepassDatabaseWriterTest {
     @Test
     public void shouldEnsureThatEntriesAreNotModifiedDuringWriting() throws IOException {
         // open DB
-        final KeePassFile keePassFile = KeePassDatabase.getInstance(this.getClass().getClassLoader().getResource("testDatabase.kdbx").getPath()).openDatabase("abcdefg");
+        final KeePassFile keePassFile = KeePassDatabase.getInstance(ResourceUtils.getResource("testDatabase.kdbx")).openDatabase("abcdefg");
         Group generalGroup = keePassFile.getGroupByName("General");
 
         // add entry
