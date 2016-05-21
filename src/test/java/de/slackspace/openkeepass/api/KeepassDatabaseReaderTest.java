@@ -27,7 +27,7 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenGettingEntriesByTitleShouldReturnMatchingEntries() throws FileNotFoundException {
-        FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
+        FileInputStream file = new FileInputStream(this.getClass().getClassLoader().getResource("testDatabase.kdbx").getPath());
 
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
         KeePassFile database = reader.openDatabase("abcdefg");
@@ -38,7 +38,7 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenGettingModifiedEntriesByTitleShouldReturnMatchingEntries() throws FileNotFoundException {
-        FileInputStream file = new FileInputStream("target/test-classes/testDatabaseModified.kdbx");
+        FileInputStream file = new FileInputStream(this.getClass().getClassLoader().getResource("testDatabaseModified.kdbx").getPath());
 
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
         KeePassFile database = reader.openDatabase("abcdefg");
@@ -49,7 +49,7 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenGettingEntriesByTitleButNothingMatchesShouldReturnNull() throws FileNotFoundException {
-        FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
+        FileInputStream file = new FileInputStream(this.getClass().getClassLoader().getResource("testDatabase.kdbx").getPath());
 
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
         KeePassFile database = reader.openDatabase("abcdefg");
@@ -60,7 +60,7 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenKeePassFileIsV2ShouldReadHeader() throws IOException {
-        FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
+        FileInputStream file = new FileInputStream(this.getClass().getClassLoader().getResource("testDatabase.kdbx").getPath());
 
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
         KeePassHeader header = reader.getHeader();
@@ -84,7 +84,7 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenPasswordIsValidShouldOpenKeepassFile() throws FileNotFoundException {
-        FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
+        FileInputStream file = new FileInputStream(this.getClass().getClassLoader().getResource("testDatabase.kdbx").getPath());
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
 
         KeePassFile database = reader.openDatabase("abcdefg");
@@ -111,7 +111,7 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void testIfPasswordsCanBeDecrypted() throws FileNotFoundException {
-        FileInputStream file = new FileInputStream("target/test-classes/fullBlownDatabase.kdbx");
+        FileInputStream file = new FileInputStream(this.getClass().getClassLoader().getResource("fullBlownDatabase.kdbx").getPath());
 
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
         KeePassFile database = reader.openDatabase("123456");
@@ -127,7 +127,7 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenEntryHasCustomPropertiesShouldReadCustomProperties() throws FileNotFoundException {
-        FileInputStream file = new FileInputStream("target/test-classes/fullBlownDatabase.kdbx");
+        FileInputStream file = new FileInputStream(this.getClass().getClassLoader().getResource("fullBlownDatabase.kdbx").getPath());
 
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
         KeePassFile database = reader.openDatabase("123456");
@@ -143,7 +143,7 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenPasswordOfEntryIsEmptyShouldReturnEmptyValue() throws FileNotFoundException {
-        FileInputStream file = new FileInputStream("target/test-classes/DatabaseWithEmptyPassword.kdbx");
+        FileInputStream file = new FileInputStream(this.getClass().getClassLoader().getResource("DatabaseWithEmptyPassword.kdbx").getPath());
 
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
         KeePassFile database = reader.openDatabase("1234");
@@ -163,8 +163,8 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenKeePassFileIsSecuredWithBinaryKeyFileShouldOpenKeePassFileWithKeyFile() throws FileNotFoundException {
-        FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithBinaryKeyfile.kdbx");
-        FileInputStream keyFile = new FileInputStream("target/test-classes/0.png");
+        FileInputStream keePassFile = new FileInputStream(this.getClass().getClassLoader().getResource("DatabaseWithBinaryKeyfile.kdbx").getPath());
+        FileInputStream keyFile = new FileInputStream(this.getClass().getClassLoader().getResource("0.png").getPath());
 
         KeePassFile database = KeePassDatabase.getInstance(keePassFile).openDatabase(keyFile);
 
@@ -174,8 +174,8 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenKeePassFileIsSecuredWithBinaryKeyFileAndPasswordShouldOpenKeePassFile() throws FileNotFoundException {
-        FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithPasswordAndBinaryKeyfile.kdbx");
-        FileInputStream keyFile = new FileInputStream("target/test-classes/0.png");
+        FileInputStream keePassFile = new FileInputStream(this.getClass().getClassLoader().getResource("DatabaseWithPasswordAndBinaryKeyfile.kdbx").getPath());
+        FileInputStream keyFile = new FileInputStream(this.getClass().getClassLoader().getResource("0.png").getPath());
 
         KeePassFile database = KeePassDatabase.getInstance(keePassFile).openDatabase("1234", keyFile);
 
@@ -185,8 +185,8 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenKeePassFileIsSecuredWithKeyFileShouldOpenKeePassFileWithKeyFile() throws FileNotFoundException {
-        FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithKeyfile.kdbx");
-        FileInputStream keyFile = new FileInputStream("target/test-classes/DatabaseWithKeyfile.key");
+        FileInputStream keePassFile = new FileInputStream(this.getClass().getClassLoader().getResource("DatabaseWithKeyfile.kdbx").getPath());
+        FileInputStream keyFile = new FileInputStream(this.getClass().getClassLoader().getResource("DatabaseWithKeyfile.key").getPath());
 
         KeePassFile database = KeePassDatabase.getInstance(keePassFile).openDatabase(keyFile);
 
@@ -196,8 +196,8 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldOpenKeePassFileWithPasswordAndKeyFile() throws FileNotFoundException {
-        FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithPasswordAndKeyfile.kdbx");
-        FileInputStream keyFile = new FileInputStream("target/test-classes/DatabaseWithPasswordAndKeyfile.key");
+        FileInputStream keePassFile = new FileInputStream(this.getClass().getClassLoader().getResource("DatabaseWithPasswordAndKeyfile.kdbx").getPath());
+        FileInputStream keyFile = new FileInputStream(this.getClass().getClassLoader().getResource("DatabaseWithPasswordAndKeyfile.key").getPath());
 
         KeePassFile database = KeePassDatabase.getInstance(keePassFile).openDatabase("test123", keyFile);
 
@@ -207,36 +207,36 @@ public class KeepassDatabaseReaderTest {
 
     @Test(expected = KeePassDatabaseUnreadableException.class)
     public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldNotOpenKeePassFileWithPassword() throws FileNotFoundException {
-        FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithPasswordAndKeyfile.kdbx");
+        FileInputStream keePassFile = new FileInputStream(this.getClass().getClassLoader().getResource("DatabaseWithPasswordAndKeyfile.kdbx").getPath());
 
         KeePassDatabase.getInstance(keePassFile).openDatabase("test123");
     }
 
     @Test(expected = KeePassDatabaseUnreadableException.class)
     public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldNotOpenKeePassFileWithKeyFile() throws FileNotFoundException {
-        FileInputStream keePassFile = new FileInputStream("target/test-classes/DatabaseWithPasswordAndKeyfile.kdbx");
-        FileInputStream keyFile = new FileInputStream("target/test-classes/DatabaseWithPasswordAndKeyfile.key");
+        FileInputStream keePassFile = new FileInputStream(this.getClass().getClassLoader().getResource("DatabaseWithPasswordAndKeyfile.kdbx").getPath());
+        FileInputStream keyFile = new FileInputStream(this.getClass().getClassLoader().getResource("DatabaseWithPasswordAndKeyfile.key").getPath());
 
         KeePassDatabase.getInstance(keePassFile).openDatabase(keyFile);
     }
 
     @Test
-    public void whenGettingInstanceByStringShouldOpenDatabase() {
-        KeePassFile database = KeePassDatabase.getInstance("target/test-classes/fullBlownDatabase.kdbx").openDatabase("123456");
+    public void whenGettingInstanceByStringShouldOpenDatabase() throws FileNotFoundException {
+        KeePassFile database = KeePassDatabase.getInstance(this.getClass().getClassLoader().getResource("fullBlownDatabase.kdbx").getPath()).openDatabase("123456");
         List<Entry> entries = database.getEntries();
         Assert.assertEquals("2f29047129b9e4c48f05d09907e52b9b", entries.get(0).getPassword());
     }
 
     @Test
     public void whenGettingInstanceByFileShouldOpenDatabase() {
-        KeePassFile database = KeePassDatabase.getInstance(new File("target/test-classes/fullBlownDatabase.kdbx")).openDatabase("123456");
+        KeePassFile database = KeePassDatabase.getInstance(new File(this.getClass().getClassLoader().getResource("fullBlownDatabase.kdbx").getPath())).openDatabase("123456");
         List<Entry> entries = database.getEntries();
         Assert.assertEquals("2f29047129b9e4c48f05d09907e52b9b", entries.get(0).getPassword());
     }
 
     @Test
     public void whenGettingEntriesFromKeeFoxShouldDecryptEntries() throws FileNotFoundException {
-        FileInputStream file = new FileInputStream("target/test-classes/KeeFoxDatabase.kdbx");
+        FileInputStream file = new FileInputStream(this.getClass().getClassLoader().getResource("KeeFoxDatabase.kdbx").getPath());
 
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
         KeePassFile database = reader.openDatabase("abcd1234");
@@ -252,7 +252,7 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenGettingEntryByUUIDShouldReturnFoundEntry() throws FileNotFoundException {
-        FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
+        FileInputStream file = new FileInputStream(this.getClass().getClassLoader().getResource("testDatabase.kdbx").getPath());
 
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
         KeePassFile database = reader.openDatabase("abcdefg");
@@ -263,7 +263,7 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenGettingGroupByUUIDShouldReturnFoundGroup() throws FileNotFoundException {
-        FileInputStream file = new FileInputStream("target/test-classes/testDatabase.kdbx");
+        FileInputStream file = new FileInputStream(this.getClass().getClassLoader().getResource("testDatabase.kdbx").getPath());
 
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
         KeePassFile database = reader.openDatabase("abcdefg");

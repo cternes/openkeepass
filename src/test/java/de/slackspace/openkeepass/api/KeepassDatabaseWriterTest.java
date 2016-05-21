@@ -48,7 +48,7 @@ public class KeepassDatabaseWriterTest {
 
     @Test
     public void whenWritingDatabaseFileShouldBeAbleToReadItAlso() throws FileNotFoundException {
-        FileInputStream fileInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted.xml");
+        FileInputStream fileInputStream = new FileInputStream(this.getClass().getClassLoader().getResource("testDatabase_decrypted.xml").getPath());
         KeePassFile keePassFile = new KeePassDatabaseXmlParser().fromXml(fileInputStream);
         new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), keePassFile);
 
@@ -125,7 +125,7 @@ public class KeepassDatabaseWriterTest {
     @Test
     public void shouldModifiyGroupInKeePassFile() throws FileNotFoundException {
         String password = "123456";
-        KeePassDatabase keePassDb = KeePassDatabase.getInstance("target/test-classes/fullBlownDatabase.kdbx");
+        KeePassDatabase keePassDb = KeePassDatabase.getInstance(this.getClass().getClassLoader().getResource("fullBlownDatabase.kdbx").getPath());
         KeePassFile database = keePassDb.openDatabase(password);
 
         Group group = database.getGroupByName("test");
@@ -145,7 +145,7 @@ public class KeepassDatabaseWriterTest {
     @Test
     public void shouldModifyMetadataAndRenameGeneralNodeThenWriteAndReadDatabase() throws FileNotFoundException {
         String password = "abcdefg";
-        String originalDbFile = "target/test-classes/testDatabase.kdbx";
+        String originalDbFile = this.getClass().getClassLoader().getResource("testDatabase.kdbx").getPath();
         String modifiedDbFile = "target/test-classes/modifiedtestDatabase2.kdbx";
 
         KeePassFile database = KeePassDatabase.getInstance(originalDbFile).openDatabase(password);
@@ -198,9 +198,9 @@ public class KeepassDatabaseWriterTest {
     }
 
     @Test
-    public void shouldEnsureThatEntriesAreNotModifiedDuringWriting() {
+    public void shouldEnsureThatEntriesAreNotModifiedDuringWriting() throws FileNotFoundException {
         // open DB
-        final KeePassFile keePassFile = KeePassDatabase.getInstance("target/test-classes/testDatabase.kdbx").openDatabase("abcdefg");
+        final KeePassFile keePassFile = KeePassDatabase.getInstance(this.getClass().getClassLoader().getResource("testDatabase.kdbx").getPath()).openDatabase("abcdefg");
         Group generalGroup = keePassFile.getGroupByName("General");
 
         // add entry

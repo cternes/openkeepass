@@ -14,7 +14,7 @@ public class KeyFileXmlParserTest {
 
     @Test
     public void whenInputIsKeyFileShouldParseFileAndReturnCorrectData() throws IOException {
-        FileInputStream fileInputStream = new FileInputStream("target/test-classes/DatabaseWithKeyfile.key");
+        FileInputStream fileInputStream = new FileInputStream(this.getClass().getClassLoader().getResource("DatabaseWithKeyfile.key").getPath());
         byte[] keyFileContent = StreamUtils.toByteArray(fileInputStream);
 
         KeyFile keyFile = new KeyFileXmlParser().fromXml(keyFileContent);
