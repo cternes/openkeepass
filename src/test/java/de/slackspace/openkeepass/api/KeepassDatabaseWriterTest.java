@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -14,7 +15,9 @@ import java.util.UUID;
 import javax.xml.bind.DatatypeConverter;
 
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import de.slackspace.openkeepass.KeePassDatabase;
 import de.slackspace.openkeepass.crypto.Salsa20;
@@ -46,16 +49,21 @@ public class KeepassDatabaseWriterTest {
 
     private byte[] protectedStreamKey = ByteUtils.hexStringToByteArray("ec77a2169769734c5d26e5341401f8d7b11052058f8455d314879075d0b7e257");
 
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
+
     @Test
-    public void whenWritingDatabaseFileShouldBeAbleToReadItAlso() throws FileNotFoundException {
+    public void whenWritingDatabaseFileShouldBeAbleToReadItAlso() throws IOException {
         FileInputStream fileInputStream = new FileInputStream(this.getClass().getClassLoader().getResource("testDatabase_decrypted.xml").getPath());
         KeePassFile keePassFile = new KeePassDatabaseXmlParser().fromXml(fileInputStream);
         new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), keePassFile);
 
-        FileOutputStream file = new FileOutputStream("target/test-classes/writeDatabase.kdbx");
+        String writeDatabase = tempFolder.newFile("writeDatabase.kdbx").getPath();
+
+        FileOutputStream file = new FileOutputStream(writeDatabase);
         KeePassDatabase.write(keePassFile, "abcdefg", file);
 
-        KeePassDatabase database = KeePassDatabase.getInstance("target/test-classes/writeDatabase.kdbx");
+        KeePassDatabase database = KeePassDatabase.getInstance(writeDatabase);
         KeePassHeader header = database.getHeader();
 
         Assert.assertEquals(CompressionAlgorithm.Gzip, header.getCompression());
@@ -74,14 +82,14 @@ public class KeepassDatabaseWriterTest {
     }
 
     @Test
-    public void shouldCreateNewDatabaseFile() throws FileNotFoundException {
+    public void shouldCreateNewDatabaseFile() throws IOException {
         Calendar creationDate = CalendarHandler.createCalendar(2016, 5, 1);
         Times times = new TimesBuilder().usageCount(5).creationTime(creationDate).build();
         Entry entryOne = new EntryBuilder("First entry").username("Carl").password("Carls secret").times(times).build();
 
         KeePassFile keePassFile = new KeePassFileBuilder("testDB").addTopEntries(entryOne).build();
 
-        String dbFilename = "target/test-classes/writeNewDatabase.kdbx";
+        String dbFilename = tempFolder.newFile("writeNewDatabase.kdbx").getPath();
         KeePassDatabase.write(keePassFile, "abc", new FileOutputStream(dbFilename));
 
         KeePassDatabase keePassDb = KeePassDatabase.getInstance(dbFilename);
@@ -94,7 +102,7 @@ public class KeepassDatabaseWriterTest {
     }
 
     @Test
-    public void shouldBuildKeePassFileWithTreeStructure() throws FileNotFoundException {
+    public void shouldBuildKeePassFileWithTreeStructure() throws IOException {
         /*
          * Should create the following structure:
          *
@@ -109,7 +117,7 @@ public class KeepassDatabaseWriterTest {
 
         KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB").addTopGroups(root).build();
 
-        String dbFilename = "target/test-classes/writeTreeDB.kdbx";
+        String dbFilename = tempFolder.newFile("writeTreeDB.kdbx").getPath();
         KeePassDatabase.write(keePassFile, "abc", new FileOutputStream(dbFilename));
 
         KeePassDatabase keePassDb = KeePassDatabase.getInstance(dbFilename);
@@ -123,7 +131,7 @@ public class KeepassDatabaseWriterTest {
     }
 
     @Test
-    public void shouldModifiyGroupInKeePassFile() throws FileNotFoundException {
+    public void shouldModifiyGroupInKeePassFile() throws IOException {
         String password = "123456";
         KeePassDatabase keePassDb = KeePassDatabase.getInstance(this.getClass().getClassLoader().getResource("fullBlownDatabase.kdbx").getPath());
         KeePassFile database = keePassDb.openDatabase(password);
@@ -134,7 +142,7 @@ public class KeepassDatabaseWriterTest {
         GroupZipper zipper = new GroupZipper(database).down().right().right().right().right().down();
         KeePassFile modifiedDatabase = zipper.replace(modifiedGroup).close();
 
-        String dbFilename = "target/test-classes/fullBlownDatabaseModified.kdbx";
+        String dbFilename = tempFolder.newFile("fullBlownDatabaseModified.kdbx").getPath();
         KeePassDatabase.write(modifiedDatabase, password, new FileOutputStream(dbFilename));
         KeePassFile databaseReadFromHdd = KeePassDatabase.getInstance(dbFilename).openDatabase(password);
 
@@ -143,10 +151,10 @@ public class KeepassDatabaseWriterTest {
     }
 
     @Test
-    public void shouldModifyMetadataAndRenameGeneralNodeThenWriteAndReadDatabase() throws FileNotFoundException {
+    public void shouldModifyMetadataAndRenameGeneralNodeThenWriteAndReadDatabase() throws IOException {
         String password = "abcdefg";
         String originalDbFile = this.getClass().getClassLoader().getResource("testDatabase.kdbx").getPath();
-        String modifiedDbFile = "target/test-classes/modifiedtestDatabase2.kdbx";
+        String modifiedDbFile = tempFolder.newFile("modifiedtestDatabase2.kdbx").getPath();
 
         KeePassFile database = KeePassDatabase.getInstance(originalDbFile).openDatabase(password);
 
@@ -168,7 +176,7 @@ public class KeepassDatabaseWriterTest {
     }
 
     @Test
-    public void shouldWriteDatabaseWithCustomIcon() throws FileNotFoundException {
+    public void shouldWriteDatabaseWithCustomIcon() throws IOException {
         String base64Icon = "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAB+FBMVEUAAAA/mUPidDHiLi5Cn0XkNTPmeUrkdUg/m0Q0pEfcpSbwaVdKskg+lUP4zA/iLi3msSHkOjVAmETdJSjtYFE/lkPnRj3sWUs8kkLeqCVIq0fxvhXqUkbVmSjwa1n1yBLepyX1xxP0xRXqUkboST9KukpHpUbuvRrzrhF/ljbwaljuZFM4jELaoSdLtElJrUj1xxP6zwzfqSU4i0HYnydMtUlIqUfywxb60AxZqEXaoifgMCXptR9MtklHpEY2iUHWnSjvvRr70QujkC+pUC/90glMuEnlOjVMt0j70QriLS1LtEnnRj3qUUXfIidOjsxAhcZFo0bjNDH0xxNLr0dIrUdmntVTkMoyfL8jcLBRuErhJyrgKyb4zA/5zg3tYFBBmUTmQTnhMinruBzvvhnxwxZ/st+Ktt5zp9hqota2vtK6y9FemNBblc9HiMiTtMbFtsM6gcPV2r6dwroseLrMrbQrdLGdyKoobKbo3Zh+ynrgVllZulTsXE3rV0pIqUf42UVUo0JyjEHoS0HmsiHRGR/lmRz/1hjqnxjvpRWfwtOhusaz0LRGf7FEfbDVmqHXlJeW0pbXq5bec3fX0nTnzmuJuWvhoFFhm0FtrziBsjaAaDCYWC+uSi6jQS3FsSfLJiTirCOkuCG1KiG+wSC+GBvgyhTszQ64Z77KAAAARXRSTlMAIQRDLyUgCwsE6ebm5ubg2dLR0byXl4FDQzU1NDEuLSUgC+vr6urq6ubb29vb2tra2tG8vLu7u7uXl5eXgYGBgYGBLiUALabIAAABsElEQVQoz12S9VPjQBxHt8VaOA6HE+AOzv1wd7pJk5I2adpCC7RUcHd3d3fXf5PvLkxheD++z+yb7GSRlwD/+Hj/APQCZWxM5M+goF+RMbHK594v+tPoiN1uHxkt+xzt9+R9wnRTZZQpXQ0T5uP1IQxToyOAZiQu5HEpjeA4SWIoksRxNiGC1tRZJ4LNxgHgnU5nJZBDvuDdl8lzQRBsQ+s9PZt7s7Pz8wsL39/DkIfZ4xlB2Gqsq62ta9oxVlVrNZpihFRpGO9fzQw1ms0NDWZz07iGkJmIFH8xxkc3a/WWlubmFkv9AB2SEpDvKxbjidN2faseaNV3zoHXvv7wMODJdkOHAegweAfFPx4G67KluxzottCU9n8CUqXzcIQdXOytAHqXxomvykhEKN9EFutG22p//0rbNvHVxiJywa8yS2KDfV1dfbu31H8jF1RHiTKtWYeHxUvq3bn0pyjCRaiRU6aDO+gb3aEfEeVNsDgm8zzLy9egPa7Qt8TSJdwhjplk06HH43ZNJ3s91KKCHQ5x4sw1fRGYDZ0n1L4FKb9/BP5JLYxToheoFCVxz57PPS8UhhEpLBVeAAAAAElFTkSuQmCC";
 
         UUID iconUuid = UUID.randomUUID();
@@ -185,7 +193,7 @@ public class KeepassDatabaseWriterTest {
         KeePassFile keePassFile = new KeePassFileBuilder(meta).addTopGroups(groupA).build();
 
         // write
-        String dbFilename = "target/test-classes/databaseWithCustomIcon.kdbx";
+        String dbFilename = tempFolder.newFile("databaseWithCustomIcon.kdbx").getPath();
         KeePassDatabase.write(keePassFile, "abcdefg", dbFilename);
 
         // read and assert
@@ -198,7 +206,7 @@ public class KeepassDatabaseWriterTest {
     }
 
     @Test
-    public void shouldEnsureThatEntriesAreNotModifiedDuringWriting() throws FileNotFoundException {
+    public void shouldEnsureThatEntriesAreNotModifiedDuringWriting() throws IOException {
         // open DB
         final KeePassFile keePassFile = KeePassDatabase.getInstance(this.getClass().getClassLoader().getResource("testDatabase.kdbx").getPath()).openDatabase("abcdefg");
         Group generalGroup = keePassFile.getGroupByName("General");
@@ -218,7 +226,7 @@ public class KeepassDatabaseWriterTest {
         }
 
         // write to new DB
-        KeePassDatabase.write(keePassFile, "abcdefg", "target/test-classes/testDatabase_new.kdbx");
+        KeePassDatabase.write(keePassFile, "abcdefg", tempFolder.newFile("testDatabase_new.kdbx").getPath());
 
         // get final passwords
         List<String> finalPasswords = new ArrayList<String>();

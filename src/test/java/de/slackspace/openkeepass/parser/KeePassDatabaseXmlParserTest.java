@@ -13,7 +13,9 @@ import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.domain.Entry;
@@ -29,6 +31,9 @@ public class KeePassDatabaseXmlParserTest {
 
     private byte[] protectedStreamKey = ByteUtils.hexStringToByteArray("ec77a2169769734c5d26e5341401f8d7b11052058f8455d314879075d0b7e257");
     private static SimpleDateFormat dateFormatter;
+
+    @Rule
+    public TemporaryFolder tempFolder = new TemporaryFolder();
 
     @BeforeClass
     public static void init() {
@@ -148,12 +153,14 @@ public class KeePassDatabaseXmlParserTest {
         KeePassDatabaseXmlParser parser = new KeePassDatabaseXmlParser();
         KeePassFile keePassFile = parser.fromXml(fileInputStream);
 
+        String testDatabase_decrypted2 = tempFolder.newFile("testDatabase_decrypted2.xml").getPath();
+
         ByteArrayOutputStream outputStream = parser.toXml(keePassFile);
-        OutputStream fileOutputStream = new FileOutputStream("target/test-classes/testDatabase_decrypted2.xml");
+        OutputStream fileOutputStream = new FileOutputStream(testDatabase_decrypted2);
         outputStream.writeTo(fileOutputStream);
 
         // Read written file
-        FileInputStream writtenInputStream = new FileInputStream("target/test-classes/testDatabase_decrypted2.xml");
+        FileInputStream writtenInputStream = new FileInputStream(testDatabase_decrypted2);
         KeePassFile writtenKeePassFile = parser.fromXml(writtenInputStream);
         new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), writtenKeePassFile);
 
