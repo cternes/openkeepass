@@ -273,4 +273,13 @@ public class KeepassDatabaseReaderTest {
         Assert.assertEquals("General", group.getName());
     }
 
+    @Test
+    public void whenGettingEntriesShouldReturnAllEntries() throws FileNotFoundException {
+        FileInputStream file = new FileInputStream(ResourceUtils.getResource("DatabaseWithComplexTree.kdbx"));
+
+        KeePassFile db = KeePassDatabase.getInstance(file).openDatabase("MasterPassword");
+
+        Assert.assertEquals(122, db.getEntries().size());
+    }
+
 }
