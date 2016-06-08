@@ -12,7 +12,10 @@ import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 import de.slackspace.openkeepass.crypto.RandomGenerator;
 import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.crypto.Sha256;
+import de.slackspace.openkeepass.domain.Group;
+import de.slackspace.openkeepass.domain.GroupBuilder;
 import de.slackspace.openkeepass.domain.KeePassFile;
+import de.slackspace.openkeepass.domain.KeePassFileBuilder;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.zipper.GroupZipper;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
@@ -85,12 +88,17 @@ public class KeePassDatabaseWriter {
     }
 
     private byte[] marshallXml(KeePassFile keePassFile, KeePassHeader header) {
-        KeePassFile clonedKeePassFile = new GroupZipper(keePassFile).cloneKeePassFile();
-
+//        KeePassFile clonedKeePassFile = new GroupZipper(keePassFile).cloneKeePassFile();
+        KeePassFile clonedKeePassFile;
+		try {
+			clonedKeePassFile = (KeePassFile)keePassFile.clone();
+		} catch (CloneNotSupportedException e) {
+			throw new IllegalStateException(e);
+		}
         ProtectedStringCrypto protectedStringCrypto = Salsa20.createInstance(header.getProtectedStreamKey());
         new ProtectedValueProcessor().processProtectedValues(new EncryptionStrategy(protectedStringCrypto), clonedKeePassFile);
 
-        return new KeePassDatabaseXmlParser().toXml(keePassFile).toByteArray();
+        return new KeePassDatabaseXmlParser().toXml(clonedKeePassFile).toByteArray();
     }
 
     private ByteArrayOutputStream compressStream(byte[] keePassFilePayload) throws IOException {
@@ -112,4 +120,9 @@ public class KeePassDatabaseWriter {
 
         return true;
     }
+    
+    
+    
+    
+
 }
