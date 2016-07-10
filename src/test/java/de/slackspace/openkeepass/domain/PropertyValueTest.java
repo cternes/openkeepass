@@ -9,6 +9,7 @@ import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.transform.RegistryMatcher;
 
 import de.slackspace.openkeepass.domain.xml.adapter.BooleanSimpleXmlAdapter;
+import de.slackspace.openkeepass.util.XmlStringCleaner;
 
 public class PropertyValueTest {
 
@@ -23,22 +24,10 @@ public class PropertyValueTest {
         Serializer serializer = new Persister(matcher);
         serializer.write(propertyValue, bos);
         
-        String xml = cleanXmlString(new String(bos.toByteArray()));
+        String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
         Assert.assertEquals("<propertyValue Protected='False'>TestValue</propertyValue>", xml);
         
         System.out.println(xml);
     }
     
-    private String cleanXmlString(String xml) {
-        String xmlRemovedLineBreaks = removeLineBreaks(xml);
-        return replaceQuotationMarks(xmlRemovedLineBreaks);
-    }
-    
-    private String removeLineBreaks(String xml) {
-        return xml.replaceAll("\n", "");
-    }
-    
-    private String replaceQuotationMarks(String xml) {
-        return xml.replaceAll("\"", "'");
-    }
 }
