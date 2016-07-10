@@ -30,6 +30,7 @@
 		<bouncycastle.version>1.54</bouncycastle.version>
 		<junit.version>4.12</junit.version>
 		<equalsverifier.version>1.7.7</equalsverifier.version>
+        <simplexml.version>2.7.1</simplexml.version>
 	</properties>
 
 	<scm>
@@ -45,6 +46,11 @@
 			<artifactId>bcprov-jdk15on</artifactId>
 			<version>${bouncycastle.version}</version>
 		</dependency>
+        <dependency>
+            <groupId>org.simpleframework</groupId>
+            <artifactId>simple-xml</artifactId>
+            <version>${simplexml.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
