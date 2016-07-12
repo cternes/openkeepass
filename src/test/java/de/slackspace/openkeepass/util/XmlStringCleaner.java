@@ -3,8 +3,7 @@ package de.slackspace.openkeepass.util;
 public final class XmlStringCleaner {
 
     public static String cleanXmlString(String xml) {
-        String xmlRemovedLineBreaks = removeLineBreaks(xml);
-        return replaceQuotationMarks(xmlRemovedLineBreaks);
+        return replaceQuotationMarks(removeWhitespace(removeLineBreaks(xml)));
     }
     
     private static String removeLineBreaks(String xml) {
@@ -13,5 +12,9 @@ public final class XmlStringCleaner {
     
     private static String replaceQuotationMarks(String xml) {
         return xml.replaceAll("\"", "'");
+    }
+
+    private static String removeWhitespace(String xml) {
+        return xml.replaceAll(">\\s*<", "><");
     }
 }
