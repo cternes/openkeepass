@@ -1,43 +1,37 @@
 package de.slackspace.openkeepass.domain;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import de.slackspace.openkeepass.domain.xml.adapter.BooleanXmlAdapter;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
 /**
  * Represents statistical information of an {@link Entry}.
  *
  */
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(strict = false)
 public class Times {
 
-    @XmlElement(name = "LastModificationTime")
+    @Element(name = "LastModificationTime", type = GregorianCalendar.class)
     private Calendar lastModificationTime;
 
-    @XmlElement(name = "CreationTime")
+    @Element(name = "CreationTime", type = GregorianCalendar.class)
     private Calendar creationTime;
 
-    @XmlElement(name = "LastAccessTime")
+    @Element(name = "LastAccessTime", type = GregorianCalendar.class)
     private Calendar lastAccessTime;
 
-    @XmlElement(name = "ExpiryTime")
+    @Element(name = "ExpiryTime", type = GregorianCalendar.class)
     private Calendar expiryTime;
 
-    @XmlElement(name = "Expires")
-    @XmlJavaTypeAdapter(BooleanXmlAdapter.class)
+    @Element(name = "Expires")
     private Boolean expires;
 
-    @XmlElement(name = "UsageCount")
+    @Element(name = "UsageCount")
     private int usageCount;
 
-    @XmlElement(name = "LocationChanged")
+    @Element(name = "LocationChanged", type = GregorianCalendar.class)
     private Calendar locationChanged;
 
     Times() {
