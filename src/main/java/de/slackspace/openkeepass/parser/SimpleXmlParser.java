@@ -2,12 +2,14 @@ package de.slackspace.openkeepass.parser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.GregorianCalendar;
 
 import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 import org.simpleframework.xml.transform.RegistryMatcher;
 
 import de.slackspace.openkeepass.domain.xml.adapter.BooleanSimpleXmlAdapter;
+import de.slackspace.openkeepass.domain.xml.adapter.CalendarSimpleXmlAdapter;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
 
 public class SimpleXmlParser implements XmlParser {
@@ -21,6 +23,7 @@ public class SimpleXmlParser implements XmlParser {
         try {
             RegistryMatcher matcher = new RegistryMatcher();
             matcher.bind(Boolean.class, BooleanSimpleXmlAdapter.class);
+            matcher.bind(GregorianCalendar.class, CalendarSimpleXmlAdapter.class);
             
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             Serializer serializer = new Persister(matcher);

@@ -24,6 +24,7 @@ public class CalendarHandler {
     public static Calendar createCalendar(int year, int month, int day) {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         cal.set(year, month - 1, day, 0, 0, 0);
+        cal.set(Calendar.MILLISECOND, 0);
 
         return cal;
     }
