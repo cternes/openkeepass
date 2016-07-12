@@ -5,9 +5,8 @@ import org.simpleframework.xml.transform.Transform;
 public class BooleanSimpleXmlAdapter implements Transform<Boolean> {
 
     @Override
-    public Boolean read(String arg0) throws Exception {
-        // TODO Auto-generated method stub
-        return null;
+    public Boolean read(String value) throws Exception {
+        return "true".equalsIgnoreCase(value);
     }
 
     @Override
