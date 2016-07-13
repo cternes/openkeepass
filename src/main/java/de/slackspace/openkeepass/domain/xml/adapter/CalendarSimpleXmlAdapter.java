@@ -8,7 +8,7 @@ import org.simpleframework.xml.transform.Transform;
 
 public class CalendarSimpleXmlAdapter implements Transform<GregorianCalendar> {
 
-    private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     
     @Override
     public GregorianCalendar read(String value) throws Exception {

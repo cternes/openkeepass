@@ -10,7 +10,7 @@ import org.simpleframework.xml.Root;
  * Represents a custom icon in the KeePass database.
  *
  */
-@Root(strict = false)
+@Root(strict = false, name = "Icon")
 public class CustomIcon {
 
     @Element(name = "UUID")

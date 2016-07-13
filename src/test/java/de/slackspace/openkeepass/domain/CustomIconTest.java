@@ -29,6 +29,6 @@ public class CustomIconTest {
         ByteArrayOutputStream bos = new SimpleXmlParser().toXml(customIcon);
         
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
-        Assert.assertEquals("<customIcon><UUID>h9T0QaXsTOCMqYKlB50o7w==</UUID><Data>AAAAAAAAAAAAAA==</Data></customIcon>", xml);
+        Assert.assertEquals("<Icon><UUID>h9T0QaXsTOCMqYKlB50o7w==</UUID><Data>AAAAAAAAAAAAAA==</Data></Icon>", xml);
     }
 }
