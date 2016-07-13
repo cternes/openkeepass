@@ -27,6 +27,10 @@ public class GroupBuilder implements GroupContract {
     public GroupBuilder() {
         this.uuid = UUID.randomUUID();
     }
+    
+    public GroupBuilder(UUID uuid) {
+        this.uuid = uuid;
+    }
 
     public GroupBuilder(String name) {
         this();

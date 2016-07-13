@@ -13,7 +13,7 @@ import org.simpleframework.xml.Root;
  * title, username and a password.
  *
  */
-@Root(strict = false)
+@Root(strict = false, name = "Entry")
 public class Entry implements KeePassFileElement {
 
     private static final String USER_NAME = "UserName";

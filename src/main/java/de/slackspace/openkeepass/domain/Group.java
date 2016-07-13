@@ -4,14 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import de.slackspace.openkeepass.domain.xml.adapter.BooleanXmlAdapter;
-import de.slackspace.openkeepass.domain.xml.adapter.UUIDXmlAdapter;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
 /**
  * A Group represents a structure that consists of entries and subgroups.
@@ -19,37 +14,33 @@ import de.slackspace.openkeepass.domain.xml.adapter.UUIDXmlAdapter;
  * @see Entry
  *
  */
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(strict = false, name = "Group")
 public class Group implements KeePassFileElement {
 
-    @XmlElement(name = "UUID")
-    @XmlJavaTypeAdapter(UUIDXmlAdapter.class)
+    @Element(name = "UUID")
     private UUID uuid;
 
-    @XmlElement(name = "Name")
+    @Element(name = "Name")
     private String name;
 
-    @XmlElement(name = "IconID")
+    @Element(name = "IconID")
     private int iconId = 49;
 
     private transient byte[] iconData;
 
-    @XmlElement(name = "CustomIconUUID")
-    @XmlJavaTypeAdapter(UUIDXmlAdapter.class)
+    @Element(name = "CustomIconUUID", required = false)
     private UUID customIconUUID;
 
-    @XmlElement(name = "Times")
+    @Element(name = "Times", required = false)
     private Times times;
 
-    @XmlElement(name = "IsExpanded")
-    @XmlJavaTypeAdapter(BooleanXmlAdapter.class)
+    @Element(name = "IsExpanded")
     private Boolean isExpanded;
 
-    @XmlElement(name = "Entry")
+    @ElementList(name = "Entry", inline = true, required = false)
     private List<Entry> entries = new ArrayList<Entry>();
 
-    @XmlElement(name = "Group")
+    @ElementList(name = "Group", inline = true, required = false)
     private List<Group> groups = new ArrayList<Group>();
 
     Group() {
