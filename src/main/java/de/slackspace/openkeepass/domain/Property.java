@@ -8,7 +8,7 @@ import org.simpleframework.xml.Root;
  * or password of an Entry are represented with this class.
  *
  */
-@Root(strict = false)
+@Root(strict = false, name = "String")
 public class Property implements KeePassFileElement {
 
     @Element(name = "Key")

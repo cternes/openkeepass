@@ -4,21 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import de.slackspace.openkeepass.domain.xml.adapter.UUIDXmlAdapter;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
 /**
  * Represents an entry in the KeePass database. It typically consists of a
  * title, username and a password.
  *
  */
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(strict = false)
 public class Entry implements KeePassFileElement {
 
     private static final String USER_NAME = "UserName";
@@ -36,26 +31,24 @@ public class Entry implements KeePassFileElement {
         PROPERTY_KEYS.add(TITLE);
     }
 
-    @XmlElement(name = "UUID")
-    @XmlJavaTypeAdapter(UUIDXmlAdapter.class)
+    @Element(name = "UUID")
     private UUID uuid;
 
-    @XmlElement(name = "IconID")
+    @Element(name = "IconID")
     private int iconId = 0;
 
     private transient byte[] iconData;
 
-    @XmlElement(name = "CustomIconUUID")
-    @XmlJavaTypeAdapter(UUIDXmlAdapter.class)
+    @Element(name = "CustomIconUUID")
     private UUID customIconUUID;
 
-    @XmlElement(name = "String")
+    @ElementList(name = "String", inline = true)
     private List<Property> properties = new ArrayList<Property>();
 
-    @XmlElement(name = "History")
+    @Element(name = "History", required = false)
     private History history;
 
-    @XmlElement(name = "Times")
+    @Element(name = "Times", required = false)
     private Times times;
 
     Entry() {

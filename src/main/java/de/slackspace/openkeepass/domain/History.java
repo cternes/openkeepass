@@ -3,16 +3,13 @@ package de.slackspace.openkeepass.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(strict = false)
 public class History {
 
-    @XmlElement(name = "Entry")
+    @ElementList(name = "Entry", inline = true)
     private List<Entry> entries = new ArrayList<Entry>();
 
     public List<Entry> getHistoricEntries() {

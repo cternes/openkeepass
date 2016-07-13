@@ -23,6 +23,6 @@ public class PropertyTest {
         ByteArrayOutputStream bos = new SimpleXmlParser().toXml(property);
         
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
-        Assert.assertEquals("<property><Key>SomeKey</Key><Value Protected='False'>SomeValue</Value></property>", xml);
+        Assert.assertEquals("<String><Key>SomeKey</Key><Value Protected='False'>SomeValue</Value></String>", xml);
     }
 }
