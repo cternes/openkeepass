@@ -8,16 +8,17 @@ import org.junit.Test;
 import de.slackspace.openkeepass.parser.SimpleXmlParser;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 
-public class KeyTest {
+public class KeyFileTest {
 
     @Test
     public void shouldMarshallObjectToXml() throws Exception {
         Key key = new Key();
         key.setData("someData");
-
-        ByteArrayOutputStream bos = new SimpleXmlParser().toXml(key);
+        KeyFile keyFile = new KeyFile(true, key);
+      
+        ByteArrayOutputStream bos = new SimpleXmlParser().toXml(keyFile);
 
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
-        Assert.assertEquals("<Key><Data>someData</Data></Key>", xml);
+        Assert.assertEquals("<keyFile><Key><Data>someData</Data></Key></keyFile>", xml);
     }
 }

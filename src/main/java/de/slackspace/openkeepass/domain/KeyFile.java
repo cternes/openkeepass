@@ -1,15 +1,12 @@
 package de.slackspace.openkeepass.domain;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(strict = false)
 public class KeyFile {
 
-    @XmlElement(name = "Key")
+    @Element(name = "Key")
     private Key key;
 
     private boolean isXmlFile = true;
@@ -20,6 +17,11 @@ public class KeyFile {
 
     public KeyFile(boolean isXmlFile) {
         this.isXmlFile = isXmlFile;
+    }
+    
+    public KeyFile(boolean isXmlFile, Key key) {
+        this.isXmlFile = isXmlFile;
+        this.key = key;
     }
 
     public Key getKey() {
