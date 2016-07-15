@@ -33,6 +33,6 @@ public class TimesTest {
         ByteArrayOutputStream bos = new SimpleXmlParser().toXml(times);
         
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
-        Assert.assertEquals("<times><LastModificationTime>2016-01-18T00:00:00.000Z</LastModificationTime><CreationTime>2016-01-15T00:00:00.000Z</CreationTime><LastAccessTime>2016-01-17T00:00:00.000Z</LastAccessTime><ExpiryTime>2016-01-16T00:00:00.000Z</ExpiryTime><Expires>True</Expires><UsageCount>23</UsageCount><LocationChanged>2016-01-19T00:00:00.000Z</LocationChanged></times>", xml);
+        Assert.assertEquals("<times><LastModificationTime>2016-01-18T00:00:00</LastModificationTime><CreationTime>2016-01-15T00:00:00</CreationTime><LastAccessTime>2016-01-17T00:00:00</LastAccessTime><ExpiryTime>2016-01-16T00:00:00</ExpiryTime><Expires>True</Expires><UsageCount>23</UsageCount><LocationChanged>2016-01-19T00:00:00</LocationChanged></times>", xml);
     }
 }
