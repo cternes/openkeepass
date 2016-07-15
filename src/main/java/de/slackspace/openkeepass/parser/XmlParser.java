@@ -5,7 +5,7 @@ import java.io.InputStream;
 
 public interface XmlParser {
 
-    public Object fromXml(InputStream inputStream, Class<?> clazz);
+    public <T> T fromXml(InputStream inputStream, Class<T> clazz);
 
     public ByteArrayOutputStream toXml(Object objectToSerialize);
 }

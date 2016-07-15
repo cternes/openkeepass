@@ -14,13 +14,19 @@ import de.slackspace.openkeepass.domain.xml.adapter.ByteSimpleXmlAdapter;
 import de.slackspace.openkeepass.domain.xml.adapter.CalendarSimpleXmlAdapter;
 import de.slackspace.openkeepass.domain.xml.adapter.TreeStrategyWithoutArrayLength;
 import de.slackspace.openkeepass.domain.xml.adapter.UUIDSimpleXmlAdapter;
+import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
 
 public class SimpleXmlParser implements XmlParser {
 
-    public Object fromXml(InputStream inputStream, Class<?> clazz) {
-        // TODO Auto-generated method stub
-        return null;
+    public <T> T fromXml(InputStream inputStream, Class<T> clazz) {
+        try {
+            Serializer serializer = createSerializer();
+            return serializer.read(clazz, inputStream);
+        }
+        catch (Exception e) {
+            throw new KeePassDatabaseUnreadableException("Could not deserialize object to xml", e);
+        }
     }
 
     public ByteArrayOutputStream toXml(Object objectToSerialize) {
@@ -42,4 +48,15 @@ public class SimpleXmlParser implements XmlParser {
         }
     }
 
+    private Serializer createSerializer() {
+        RegistryMatcher matcher = new RegistryMatcher();
+        matcher.bind(Boolean.class, BooleanSimpleXmlAdapter.class);
+        matcher.bind(GregorianCalendar.class, CalendarSimpleXmlAdapter.class);
+        matcher.bind(UUID.class, UUIDSimpleXmlAdapter.class);
+        matcher.bind(byte[].class, ByteSimpleXmlAdapter.class);
+        
+        TreeStrategyWithoutArrayLength strategy = new TreeStrategyWithoutArrayLength();
+        Serializer serializer = new Persister(strategy, matcher);
+        return serializer;
+    }
 }

@@ -17,7 +17,8 @@ public class KeyFileXmlParserTest {
         FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("DatabaseWithKeyfile.key"));
         byte[] keyFileContent = StreamUtils.toByteArray(fileInputStream);
 
-        KeyFile keyFile = new KeyFileXmlParser().fromXml(keyFileContent);
+        SimpleXmlParser parser = new SimpleXmlParser();
+        KeyFile keyFile = new KeyFileXmlParser(parser).fromXml(keyFileContent);
 
         Assert.assertEquals("RP+rYNZL4lrGtDMBPzOuctlh3NAutSG5KGsT38C+qPQ=", keyFile.getKey().getData());
     }
