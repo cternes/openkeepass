@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
 import de.slackspace.openkeepass.domain.filter.Filter;
 import de.slackspace.openkeepass.domain.filter.ListFilter;
@@ -16,14 +14,13 @@ import de.slackspace.openkeepass.domain.filter.ListFilter;
  * A KeePassFile represents the structure of a KeePass database. This is the
  * central entry point to read data from the KeePass database.
  */
-@XmlRootElement(name = "KeePassFile")
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(strict = false, name = "KeePassFile")
 public class KeePassFile implements KeePassFileElement {
 
-    @XmlElement(name = "Meta")
+    @Element(name = "Meta")
     private Meta meta;
 
-    @XmlElement(name = "Root")
+    @Element(name = "Root")
     private Group root;
 
     KeePassFile() {

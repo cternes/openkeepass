@@ -20,7 +20,7 @@ public class Group implements KeePassFileElement {
     @Element(name = "UUID")
     private UUID uuid;
 
-    @Element(name = "Name")
+    @Element(name = "Name", required = false)
     private String name;
 
     @Element(name = "IconID")
