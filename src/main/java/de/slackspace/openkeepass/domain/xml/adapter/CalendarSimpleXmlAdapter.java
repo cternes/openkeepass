@@ -1,6 +1,7 @@
 package de.slackspace.openkeepass.domain.xml.adapter;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -12,7 +13,15 @@ public class CalendarSimpleXmlAdapter implements Transform<GregorianCalendar> {
     
     @Override
     public GregorianCalendar read(String value) throws Exception {
-        return null;
+        if(value == null) {
+            return null;
+        }
+        
+        dateFormatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+        
+        Calendar result = Calendar.getInstance();
+        result.setTime(dateFormatter.parse(value));
+        return (GregorianCalendar) result;
     }
 
     @Override
