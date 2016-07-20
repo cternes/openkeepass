@@ -15,6 +15,7 @@ import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
+import de.slackspace.openkeepass.parser.SimpleXmlParser;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
 import de.slackspace.openkeepass.processor.IconEnricher;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
@@ -25,7 +26,7 @@ import de.slackspace.openkeepass.util.StreamUtils;
 public class KeePassDatabaseReader {
 
     protected Decrypter decrypter = new Decrypter();
-    protected KeePassDatabaseXmlParser keePassDatabaseXmlParser = new KeePassDatabaseXmlParser();
+    protected KeePassDatabaseXmlParser keePassDatabaseXmlParser = new KeePassDatabaseXmlParser(new SimpleXmlParser());
 
     private KeePassHeader keepassHeader;
 

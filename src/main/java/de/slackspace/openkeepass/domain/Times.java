@@ -13,25 +13,25 @@ import org.simpleframework.xml.Root;
 @Root(strict = false)
 public class Times {
 
-    @Element(name = "LastModificationTime", type = GregorianCalendar.class)
+    @Element(name = "LastModificationTime", type = GregorianCalendar.class, required = false)
     private Calendar lastModificationTime;
 
-    @Element(name = "CreationTime", type = GregorianCalendar.class)
+    @Element(name = "CreationTime", type = GregorianCalendar.class, required = false)
     private Calendar creationTime;
 
-    @Element(name = "LastAccessTime", type = GregorianCalendar.class)
+    @Element(name = "LastAccessTime", type = GregorianCalendar.class, required = false)
     private Calendar lastAccessTime;
 
-    @Element(name = "ExpiryTime", type = GregorianCalendar.class)
+    @Element(name = "ExpiryTime", type = GregorianCalendar.class, required = false)
     private Calendar expiryTime;
 
-    @Element(name = "Expires")
+    @Element(name = "Expires", required = false)
     private Boolean expires;
 
-    @Element(name = "UsageCount")
+    @Element(name = "UsageCount", required = false)
     private int usageCount;
 
-    @Element(name = "LocationChanged", type = GregorianCalendar.class)
+    @Element(name = "LocationChanged", type = GregorianCalendar.class, required = false)
     private Calendar locationChanged;
 
     Times() {

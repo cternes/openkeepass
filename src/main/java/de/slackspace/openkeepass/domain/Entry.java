@@ -39,7 +39,7 @@ public class Entry implements KeePassFileElement {
 
     private transient byte[] iconData;
 
-    @Element(name = "CustomIconUUID")
+    @Element(name = "CustomIconUUID", required = false)
     private UUID customIconUUID;
 
     @ElementList(name = "String", inline = true)

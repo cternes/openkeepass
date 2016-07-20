@@ -15,37 +15,37 @@ import org.simpleframework.xml.Root;
 @Root(strict = false)
 public class Meta {
 
-    @Element(name = "Generator")
+    @Element(name = "Generator", required = false)
     private String generator;
 
-    @Element(name = "DatabaseName")
+    @Element(name = "DatabaseName", required = false)
     private String databaseName;
 
-    @Element(name = "DatabaseDescription")
+    @Element(name = "DatabaseDescription", required = false)
     private String databaseDescription;
 
-    @Element(name = "DatabaseNameChanged", type = GregorianCalendar.class)
+    @Element(name = "DatabaseNameChanged", type = GregorianCalendar.class, required = false)
     private Calendar databaseNameChanged;
 
-    @Element(name = "DatabaseDescriptionChanged", type = GregorianCalendar.class)
+    @Element(name = "DatabaseDescriptionChanged", type = GregorianCalendar.class, required = false)
     private Calendar databaseDescriptionChanged;
 
-    @Element(name = "MaintenanceHistoryDays")
+    @Element(name = "MaintenanceHistoryDays", required = false)
     private int maintenanceHistoryDays;
 
-    @Element(name = "RecycleBinUUID")
+    @Element(name = "RecycleBinUUID", required = false)
     private UUID recycleBinUuid;
 
-    @Element(name = "RecycleBinChanged", type = GregorianCalendar.class)
+    @Element(name = "RecycleBinChanged", type = GregorianCalendar.class, required = false)
     private Calendar recycleBinChanged;
 
-    @Element(name = "RecycleBinEnabled")
+    @Element(name = "RecycleBinEnabled", required = false)
     private Boolean recycleBinEnabled;
 
-    @Element(name = "HistoryMaxItems")
+    @Element(name = "HistoryMaxItems", required = false)
     private long historyMaxItems;
 
-    @Element(name = "HistoryMaxSize")
+    @Element(name = "HistoryMaxSize", required = false)
     private long historyMaxSize;
 
     @Element(name = "CustomIcons", required = false)

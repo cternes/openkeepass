@@ -17,13 +17,13 @@ import org.simpleframework.xml.Root;
 @Root(strict = false, name = "Group")
 public class Group implements KeePassFileElement {
 
-    @Element(name = "UUID")
+    @Element(name = "UUID", required = false)
     private UUID uuid;
 
     @Element(name = "Name", required = false)
     private String name;
 
-    @Element(name = "IconID")
+    @Element(name = "IconID", required = false)
     private int iconId = 49;
 
     private transient byte[] iconData;
@@ -34,7 +34,7 @@ public class Group implements KeePassFileElement {
     @Element(name = "Times", required = false)
     private Times times;
 
-    @Element(name = "IsExpanded")
+    @Element(name = "IsExpanded", required = false)
     private Boolean isExpanded;
 
     @ElementList(name = "Entry", inline = true, required = false)

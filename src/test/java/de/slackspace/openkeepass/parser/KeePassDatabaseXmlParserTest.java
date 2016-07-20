@@ -139,7 +139,7 @@ public class KeePassDatabaseXmlParserTest {
 
     private KeePassFile parseKeePassXml() throws FileNotFoundException {
         FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("testDatabase_decrypted.xml"));
-        KeePassFile keePassFile = new KeePassDatabaseXmlParser().fromXml(fileInputStream);
+        KeePassFile keePassFile = new KeePassDatabaseXmlParser(new SimpleXmlParser()).fromXml(fileInputStream);
 
         new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), keePassFile);
 
@@ -150,7 +150,7 @@ public class KeePassDatabaseXmlParserTest {
     public void whenWritingKeePassFileShouldBeAbleToReadItAgain() throws IOException {
         // Read decrypted and write again
         FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("testDatabase_decrypted.xml"));
-        KeePassDatabaseXmlParser parser = new KeePassDatabaseXmlParser();
+        KeePassDatabaseXmlParser parser = new KeePassDatabaseXmlParser(new SimpleXmlParser());
         KeePassFile keePassFile = parser.fromXml(fileInputStream);
 
         String testDatabase_decrypted2 = tempFolder.newFile("testDatabase_decrypted2.xml").getPath();

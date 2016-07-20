@@ -9,7 +9,7 @@ import org.simpleframework.xml.Root;
 @Root(strict = false)
 public class History {
 
-    @ElementList(name = "Entry", inline = true)
+    @ElementList(name = "Entry", inline = true, required = false)
     private List<Entry> entries = new ArrayList<Entry>();
 
     public List<Entry> getHistoricEntries() {

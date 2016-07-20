@@ -17,6 +17,7 @@ import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.zipper.GroupZipper;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
+import de.slackspace.openkeepass.parser.SimpleXmlParser;
 import de.slackspace.openkeepass.processor.EncryptionStrategy;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
@@ -90,7 +91,7 @@ public class KeePassDatabaseWriter {
         ProtectedStringCrypto protectedStringCrypto = Salsa20.createInstance(header.getProtectedStreamKey());
         new ProtectedValueProcessor().processProtectedValues(new EncryptionStrategy(protectedStringCrypto), clonedKeePassFile);
 
-        return new KeePassDatabaseXmlParser().toXml(keePassFile).toByteArray();
+        return new KeePassDatabaseXmlParser(new SimpleXmlParser()).toXml(keePassFile).toByteArray();
     }
 
     private ByteArrayOutputStream compressStream(byte[] keePassFilePayload) throws IOException {

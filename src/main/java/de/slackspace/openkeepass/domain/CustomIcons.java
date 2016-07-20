@@ -14,7 +14,7 @@ import org.simpleframework.xml.Root;
 @Root(strict = false)
 public class CustomIcons {
 
-    @ElementList(name = "Icon", inline = true)
+    @ElementList(name = "Icon", inline = true, required = false)
     private List<CustomIcon> customIconList = new ArrayList<CustomIcon>();
 
     CustomIcons() {
