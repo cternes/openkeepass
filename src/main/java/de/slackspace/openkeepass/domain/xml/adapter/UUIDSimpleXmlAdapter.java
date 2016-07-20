@@ -11,11 +11,19 @@ public class UUIDSimpleXmlAdapter implements Transform<UUID> {
 
     @Override
     public UUID read(String value) throws Exception {
-        return null;
+        if(value == null) {
+            return null;
+        }
+        
+        return ByteUtils.bytesToUUID(Base64.decode(value.getBytes()));
     }
 
     @Override
     public String write(UUID value) throws Exception {
+        if(value == null) {
+            return Base64.toBase64String(new byte[0]);
+        }
+        
         return Base64.toBase64String(ByteUtils.uuidToBytes(value));
     }
 
