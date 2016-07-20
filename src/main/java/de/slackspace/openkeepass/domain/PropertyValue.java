@@ -20,7 +20,7 @@ public class PropertyValue {
     private Boolean isProtected;
 
     @Text(required = false)
-    private String value;
+    private String value = "";
 
     PropertyValue() {
     }
