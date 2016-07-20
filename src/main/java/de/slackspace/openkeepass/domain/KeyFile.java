@@ -12,7 +12,7 @@ public class KeyFile {
     private boolean isXmlFile = true;
 
     public KeyFile() {
-        // needed for JAXB serialization
+        // needed for serialization
     }
 
     public KeyFile(boolean isXmlFile) {
