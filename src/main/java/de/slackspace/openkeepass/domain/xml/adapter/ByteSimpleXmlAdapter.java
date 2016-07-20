@@ -7,7 +7,7 @@ public class ByteSimpleXmlAdapter implements Transform<byte[]> {
 
     @Override
     public byte[] read(String value) throws Exception {
-        return null;
+        return Base64.decode(value.getBytes());
     }
 
     @Override
