@@ -1,5 +1,6 @@
 package de.slackspace.openkeepass.domain;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import org.junit.Assert;
@@ -24,5 +25,17 @@ public class PropertyTest {
         
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
         Assert.assertEquals("<String><Key>SomeKey</Key><Value Protected='False'>SomeValue</Value></String>", xml);
+    }
+    
+    @Test
+    public void shouldUnmarshallXmlToObject() throws Exception {
+        Property property = new Property("SomeKey", "SomeValue", false);
+
+        String xml = "<String><Key>SomeKey</Key><Value Protected='False'>SomeValue</Value></String>";
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
+        Property propertyUnmarshalled = new SimpleXmlParser().fromXml(inputStream, Property.class);
+
+        Assert.assertEquals(property.getKey(), propertyUnmarshalled.getKey());
+        Assert.assertEquals(property.getValue(), propertyUnmarshalled.getValue());
     }
 }
