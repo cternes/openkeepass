@@ -28,7 +28,7 @@ public class KeyFileTest {
         String xml = "<KeyFile><Key><Data>RP+rYNZL4lrGtDMBPzOuctlh3NAutSG5KGsT38C+qPQ=</Data></Key></KeyFile>";
         
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        KeyFile keyFile = (KeyFile) new SimpleXmlParser().fromXml(inputStream, KeyFile.class);
+        KeyFile keyFile = new SimpleXmlParser().fromXml(inputStream, KeyFile.class);
 
         Assert.assertEquals("RP+rYNZL4lrGtDMBPzOuctlh3NAutSG5KGsT38C+qPQ=", keyFile.getKey().getData());
     }

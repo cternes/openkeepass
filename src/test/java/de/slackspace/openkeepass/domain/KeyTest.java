@@ -1,5 +1,6 @@
 package de.slackspace.openkeepass.domain;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 import org.junit.Assert;
@@ -19,5 +20,15 @@ public class KeyTest {
 
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
         Assert.assertEquals("<Key><Data>someData</Data></Key>", xml);
+    }
+    
+    @Test
+    public void shouldUnmarshallObject() {
+        String xml = "<Key><Data>someData</Data></Key>";
+        
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
+        Key key = new SimpleXmlParser().fromXml(inputStream, Key.class);
+
+        Assert.assertEquals("someData", key.getData());
     }
 }
