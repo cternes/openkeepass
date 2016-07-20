@@ -3,12 +3,11 @@ package de.slackspace.openkeepass.parser;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
-import javax.xml.bind.DataBindingException;
-
 import org.bouncycastle.util.encoders.Base64;
 
 import de.slackspace.openkeepass.domain.KeyFile;
 import de.slackspace.openkeepass.domain.KeyFileBytes;
+import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 
 public class KeyFileXmlParser implements KeyFileParser {
 
@@ -37,7 +36,7 @@ public class KeyFileXmlParser implements KeyFileParser {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(inputBytes);
             return parser.fromXml(inputStream, KeyFile.class);
-        } catch (DataBindingException e) {
+        } catch (KeePassDatabaseUnreadableException e) {
             return new KeyFile(false);
         }
     }
