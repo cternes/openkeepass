@@ -2,8 +2,8 @@ package de.slackspace.openkeepass.domain.xml.adapter;
 
 import java.util.UUID;
 
-import org.bouncycastle.util.encoders.Base64;
 import org.simpleframework.xml.transform.Transform;
+import org.spongycastle.util.encoders.Base64;
 
 import de.slackspace.openkeepass.util.ByteUtils;
 

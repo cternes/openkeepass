@@ -3,9 +3,9 @@ package de.slackspace.openkeepass.domain;
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
-import org.bouncycastle.util.encoders.Base64;
 import org.junit.Assert;
 import org.junit.Test;
+import org.spongycastle.util.encoders.Base64;
 
 import de.slackspace.openkeepass.parser.SimpleXmlParser;
 import de.slackspace.openkeepass.util.ByteUtils;

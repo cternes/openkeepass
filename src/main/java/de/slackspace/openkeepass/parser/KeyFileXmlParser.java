@@ -3,7 +3,7 @@ package de.slackspace.openkeepass.parser;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
-import org.bouncycastle.util.encoders.Base64;
+import org.spongycastle.util.encoders.Base64;
 
 import de.slackspace.openkeepass.domain.KeyFile;
 import de.slackspace.openkeepass.domain.KeyFileBytes;
