@@ -17,7 +17,13 @@ public class EntryTest {
 
     @Test
     public void equalsContract() {
-        EqualsVerifier.forClass(Entry.class).suppress(Warning.NONFINAL_FIELDS).verify();
+        Entry red = new EntryBuilder("Red").build();
+        Entry black = new EntryBuilder("Black").build();
+        
+        EqualsVerifier.forClass(Entry.class)
+            .withPrefabValues(Entry.class, red, black)
+            .suppress(Warning.NONFINAL_FIELDS)
+            .suppress(Warning.STRICT_INHERITANCE).verify();
     }
     
     @Test

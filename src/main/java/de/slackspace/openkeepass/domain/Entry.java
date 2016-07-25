@@ -194,18 +194,20 @@ public class Entry implements KeePassFileElement {
     }
 
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((customIconUUID == null) ? 0 : customIconUUID.hashCode());
         result = prime * result + ((history == null) ? 0 : history.hashCode());
+        result = prime * result + iconId;
         result = prime * result + ((properties == null) ? 0 : properties.hashCode());
+        result = prime * result + ((times == null) ? 0 : times.hashCode());
         result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
-		result = prime * result + ((times == null) ? 0 : times.hashCode());
         return result;
     }
 
     @Override
-    public final boolean equals(Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
@@ -213,25 +215,37 @@ public class Entry implements KeePassFileElement {
         if (!(obj instanceof Entry))
             return false;
         Entry other = (Entry) obj;
+        if (customIconUUID == null) {
+            if (other.customIconUUID != null)
+                return false;
+        }
+        else if (!customIconUUID.equals(other.customIconUUID))
+            return false;
         if (history == null) {
             if (other.history != null)
                 return false;
-        } else if (!history.equals(other.history))
+        }
+        else if (!history.equals(other.history))
+            return false;
+        if (iconId != other.iconId)
             return false;
         if (properties == null) {
             if (other.properties != null)
                 return false;
-        } else if (!properties.equals(other.properties))
+        }
+        else if (!properties.equals(other.properties))
             return false;
         if (times == null) {
             if (other.times != null)
                 return false;
-        } else if (!times.equals(other.times))
+        }
+        else if (!times.equals(other.times))
             return false;
         if (uuid == null) {
             if (other.uuid != null)
                 return false;
-        } else if (!uuid.equals(other.uuid))
+        }
+        else if (!uuid.equals(other.uuid))
             return false;
         return true;
     }

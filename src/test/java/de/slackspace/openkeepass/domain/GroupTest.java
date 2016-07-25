@@ -17,7 +17,16 @@ public class GroupTest {
 
     @Test
     public void equalsContract() {
-        EqualsVerifier.forClass(Group.class).suppress(Warning.NONFINAL_FIELDS).verify();
+        Entry red = new EntryBuilder("Red").build();
+        Entry black = new EntryBuilder("Black").build();
+        
+        Group redGroup = new GroupBuilder("Red").build();
+        Group blackGroup = new GroupBuilder("Black").build();
+        
+        EqualsVerifier.forClass(Group.class)
+            .withPrefabValues(Entry.class, red, black)
+            .withPrefabValues(Group.class, redGroup, blackGroup)
+            .suppress(Warning.NONFINAL_FIELDS).verify();
     }
     
     @Test
