@@ -1,6 +1,6 @@
 package de.slackspace.openkeepass.parser;
 
-import org.bouncycastle.util.encoders.Base64;
+import org.spongycastle.util.encoders.Base64;
 
 import de.slackspace.openkeepass.domain.KeyFileBytes;
 

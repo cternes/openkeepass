@@ -4,21 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import de.slackspace.openkeepass.domain.xml.adapter.UUIDXmlAdapter;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
 /**
  * Represents an entry in the KeePass database. It typically consists of a
  * title, username and a password.
  *
  */
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(strict = false, name = "Entry")
 public class Entry implements KeePassFileElement {
 
     private static final String USER_NAME = "UserName";
@@ -36,26 +31,24 @@ public class Entry implements KeePassFileElement {
         PROPERTY_KEYS.add(TITLE);
     }
 
-    @XmlElement(name = "UUID")
-    @XmlJavaTypeAdapter(UUIDXmlAdapter.class)
+    @Element(name = "UUID")
     private UUID uuid;
 
-    @XmlElement(name = "IconID")
+    @Element(name = "IconID")
     private int iconId = 0;
 
     private transient byte[] iconData;
 
-    @XmlElement(name = "CustomIconUUID")
-    @XmlJavaTypeAdapter(UUIDXmlAdapter.class)
+    @Element(name = "CustomIconUUID", required = false)
     private UUID customIconUUID;
 
-    @XmlElement(name = "String")
+    @ElementList(name = "String", inline = true)
     private List<Property> properties = new ArrayList<Property>();
 
-    @XmlElement(name = "History")
+    @Element(name = "History", required = false)
     private History history;
 
-    @XmlElement(name = "Times")
+    @Element(name = "Times", required = false)
     private Times times;
 
     Entry() {
@@ -201,18 +194,20 @@ public class Entry implements KeePassFileElement {
     }
 
     @Override
-    public final int hashCode() {
+    public int hashCode() {
         final int prime = 31;
         int result = 1;
+        result = prime * result + ((customIconUUID == null) ? 0 : customIconUUID.hashCode());
         result = prime * result + ((history == null) ? 0 : history.hashCode());
+        result = prime * result + iconId;
         result = prime * result + ((properties == null) ? 0 : properties.hashCode());
+        result = prime * result + ((times == null) ? 0 : times.hashCode());
         result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
-		result = prime * result + ((times == null) ? 0 : times.hashCode());
         return result;
     }
 
     @Override
-    public final boolean equals(Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj == null)
@@ -220,25 +215,37 @@ public class Entry implements KeePassFileElement {
         if (!(obj instanceof Entry))
             return false;
         Entry other = (Entry) obj;
+        if (customIconUUID == null) {
+            if (other.customIconUUID != null)
+                return false;
+        }
+        else if (!customIconUUID.equals(other.customIconUUID))
+            return false;
         if (history == null) {
             if (other.history != null)
                 return false;
-        } else if (!history.equals(other.history))
+        }
+        else if (!history.equals(other.history))
+            return false;
+        if (iconId != other.iconId)
             return false;
         if (properties == null) {
             if (other.properties != null)
                 return false;
-        } else if (!properties.equals(other.properties))
+        }
+        else if (!properties.equals(other.properties))
             return false;
         if (times == null) {
             if (other.times != null)
                 return false;
-        } else if (!times.equals(other.times))
+        }
+        else if (!times.equals(other.times))
             return false;
         if (uuid == null) {
             if (other.uuid != null)
                 return false;
-        } else if (!uuid.equals(other.uuid))
+        }
+        else if (!uuid.equals(other.uuid))
             return false;
         return true;
     }

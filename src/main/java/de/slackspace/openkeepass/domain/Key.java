@@ -1,15 +1,12 @@
 package de.slackspace.openkeepass.domain;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(strict = false, name = "Key")
 public class Key {
 
-    @XmlElement(name = "Data")
+    @Element(name = "Data")
     private String data;
 
     public String getData() {

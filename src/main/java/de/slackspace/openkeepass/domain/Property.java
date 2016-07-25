@@ -1,23 +1,20 @@
 package de.slackspace.openkeepass.domain;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
 /**
  * Represents a key value pair of an {@link Entry}. All properties like username
  * or password of an Entry are represented with this class.
  *
  */
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(strict = false, name = "String")
 public class Property implements KeePassFileElement {
 
-    @XmlElement(name = "Key")
+    @Element(name = "Key")
     private String key;
 
-    @XmlElement(name = "Value")
+    @Element(name = "Value")
     private PropertyValue propertyValue;
 
     Property() {

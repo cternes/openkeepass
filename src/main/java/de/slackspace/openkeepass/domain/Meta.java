@@ -1,62 +1,54 @@
 package de.slackspace.openkeepass.domain;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.UUID;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import de.slackspace.openkeepass.domain.xml.adapter.BooleanXmlAdapter;
-import de.slackspace.openkeepass.domain.xml.adapter.UUIDXmlAdapter;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
 /**
  * Represents the metadata of the KeePass database like database name, custom
  * icons or how much history entries will be preserved.
  *
  */
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(strict = false)
 public class Meta {
 
-    @XmlElement(name = "Generator")
+    @Element(name = "Generator", required = false)
     private String generator;
 
-    @XmlElement(name = "DatabaseName")
+    @Element(name = "DatabaseName", required = false)
     private String databaseName;
 
-    @XmlElement(name = "DatabaseDescription")
+    @Element(name = "DatabaseDescription", required = false)
     private String databaseDescription;
 
-    @XmlElement(name = "DatabaseNameChanged")
+    @Element(name = "DatabaseNameChanged", type = GregorianCalendar.class, required = false)
     private Calendar databaseNameChanged;
 
-    @XmlElement(name = "DatabaseDescriptionChanged")
+    @Element(name = "DatabaseDescriptionChanged", type = GregorianCalendar.class, required = false)
     private Calendar databaseDescriptionChanged;
 
-    @XmlElement(name = "MaintenanceHistoryDays")
+    @Element(name = "MaintenanceHistoryDays", required = false)
     private int maintenanceHistoryDays;
 
-    @XmlElement(name = "RecycleBinUUID")
-    @XmlJavaTypeAdapter(UUIDXmlAdapter.class)
+    @Element(name = "RecycleBinUUID", required = false)
     private UUID recycleBinUuid;
 
-    @XmlElement(name = "RecycleBinChanged")
+    @Element(name = "RecycleBinChanged", type = GregorianCalendar.class, required = false)
     private Calendar recycleBinChanged;
 
-    @XmlElement(name = "RecycleBinEnabled")
-    @XmlJavaTypeAdapter(BooleanXmlAdapter.class)
+    @Element(name = "RecycleBinEnabled", required = false)
     private Boolean recycleBinEnabled;
 
-    @XmlElement(name = "HistoryMaxItems")
+    @Element(name = "HistoryMaxItems", required = false)
     private long historyMaxItems;
 
-    @XmlElement(name = "HistoryMaxSize")
+    @Element(name = "HistoryMaxSize", required = false)
     private long historyMaxSize;
 
-    @XmlElement(name = "CustomIcons")
+    @Element(name = "CustomIcons", required = false)
     private CustomIcons customIcons;
 
     Meta() {

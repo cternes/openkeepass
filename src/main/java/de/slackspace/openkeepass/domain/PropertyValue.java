@@ -1,13 +1,8 @@
 package de.slackspace.openkeepass.domain;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlValue;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import de.slackspace.openkeepass.domain.xml.adapter.BooleanXmlAdapter;
+import org.simpleframework.xml.Attribute;
+import org.simpleframework.xml.Root;
+import org.simpleframework.xml.Text;
 
 /**
  * Represents the value part of a key value {@link Property}.
@@ -18,16 +13,14 @@ import de.slackspace.openkeepass.domain.xml.adapter.BooleanXmlAdapter;
  * passwords are protected.
  *
  */
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(strict = false)
 public class PropertyValue {
 
-    @XmlAttribute(name = "Protected")
-    @XmlJavaTypeAdapter(BooleanXmlAdapter.class)
+    @Attribute(name = "Protected", required = false)
     private Boolean isProtected;
 
-    @XmlValue
-    private String value;
+    @Text(required = false)
+    private String value = "";
 
     PropertyValue() {
     }

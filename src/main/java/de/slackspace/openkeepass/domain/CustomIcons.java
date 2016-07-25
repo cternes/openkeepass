@@ -4,20 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
 
 /**
  * Represents a list of custom icons in the metadata of a KeePass file.
  *
  */
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@Root(strict = false)
 public class CustomIcons {
 
-    @XmlElement(name = "Icon")
+    @ElementList(name = "Icon", inline = true, required = false)
     private List<CustomIcon> customIconList = new ArrayList<CustomIcon>();
 
     CustomIcons() {

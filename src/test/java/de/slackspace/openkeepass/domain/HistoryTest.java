@@ -9,6 +9,11 @@ public class HistoryTest {
 
     @Test
     public void equalsContract() {
-        EqualsVerifier.forClass(History.class).suppress(Warning.NONFINAL_FIELDS).verify();
+        Entry red = new EntryBuilder("Red").build();
+        Entry black = new EntryBuilder("Black").build();
+        
+        EqualsVerifier.forClass(History.class)
+            .withPrefabValues(Entry.class, red, black)
+            .suppress(Warning.NONFINAL_FIELDS).verify();
     }
 }
