@@ -11,6 +11,7 @@ Features included so far:
 
 - Reading and writing support for KeePass 2.x
 - Password or Keyfile credentials: openkeepass can open password protected databases as well as keyfile protected databases.
+- Android Support: Will run on Android devices.
 - Easy to learn API: openkeepass has a simple API with convenient methods that makes it easy to read data from a KeePass database.
 - Very lean: openkeepass tries to keep the necessary dependencies to an absolute minimum.
 - Backward compatible until Java 6
@@ -23,7 +24,7 @@ The easiest way is to add openkeepass as a maven dependency.
 	<dependency>
 	    <groupId>de.slackspace</groupId>
     	<artifactId>openkeepass</artifactId>
-	    <version>0.5.1</version>
+	    <version>0.6.0</version>
 	</dependency>
 
 Prerequisites
