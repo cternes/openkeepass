@@ -29,12 +29,24 @@ The easiest way is to add openkeepass as a maven dependency.
 
 Prerequisites
 =============
+
 Before using this library make sure that you have the Java Cryptography Extension (JCE) installed on your system. 
 
 You can download JCE here:
 
 - [Download JCE for JDK 7](http://www.oracle.com/technetwork/java/embedded/embedded-se/downloads/jce-7-download-432124.html)
 - [Download JCE for JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html)
+
+Android
+=============
+
+Android users should apply the following dependency to avoid an error regarding build-in xml libraries:
+
+    compile ('de.slackspace:openkeepass:0.6.0') {
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
 
 Examples for reading
 =============
