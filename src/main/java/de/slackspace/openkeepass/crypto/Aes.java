@@ -15,7 +15,9 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
+import sun.misc.Unsafe;
 
+@SuppressWarnings("restriction")
 public class Aes {
 
     private static final String MSG_KEY_MUST_NOT_BE_NULL = "Key must not be null";
@@ -34,20 +36,35 @@ public class Aes {
 
     private static void tryAvoidJCE() {
         try {
-            Field field = Class.forName("javax.crypto.JceSecurity").getDeclaredField("isRestricted");
-            field.setAccessible(true);
-            field.set(null, java.lang.Boolean.FALSE);
-        } catch (ClassNotFoundException e) {
-            // ignore, the user will have to install JCE manually
-        } catch (NoSuchFieldException e) {
-            // ignore, the user will have to install JCE manually
-        } catch (SecurityException e) {
-            // ignore, the user will have to install JCE manually
-        } catch (IllegalArgumentException e) {
-            // ignore, the user will have to install JCE manually
-        } catch (IllegalAccessException e) {
-            // ignore, the user will have to install JCE manually
+            setJceSecurityUnrestricted();
         }
+        catch (Exception e) {
+            try {
+                setJceSecurityUnrestricted(getUnsafe());
+            }
+            catch (Exception e1) {
+                // ignore, the user will have to install JCE manually
+            }
+        }
+    }
+    
+    private static void setJceSecurityUnrestricted() throws NoSuchFieldException, ClassNotFoundException, IllegalAccessException, NoSuchMethodException {
+        Field field = Class.forName("javax.crypto.JceSecurity").getDeclaredField("isRestricted");
+        field.setAccessible(true);
+        field.setBoolean(null, false);
+    }
+    
+    @SuppressWarnings("restriction")
+    private static void setJceSecurityUnrestricted(Unsafe unsafe) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException, InstantiationException {
+        Field field = Class.forName("javax.crypto.JceSecurity").getDeclaredField("isRestricted");
+        unsafe.putBoolean(Class.forName("javax.crypto.JceSecurity"), unsafe.staticFieldOffset(field), false);
+    }
+    
+    @SuppressWarnings("restriction")
+    private static Unsafe getUnsafe() throws NoSuchFieldException, IllegalAccessException {
+        Field f = Unsafe.class.getDeclaredField("theUnsafe");
+        f.setAccessible(true);
+        return (Unsafe) f.get(null);
     }
 
     public static byte[] decrypt(byte[] key, byte[] ivRaw, byte[] data) {
