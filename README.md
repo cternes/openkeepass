@@ -3,7 +3,7 @@
 openkeepass
 ===========
 
-openkeepass is a java library for reading and writing KeePass databases. It is the only java library that supports **KeePass 2.x database files**.  
+openkeepass is a java library for reading and writing KeePass databases. It is an intuitive java library that supports **KeePass 2.x database files**.  
 
 *Only KeePass files created with version 2.x are supported. KeePass files created with version 1.x are NOT supported.* 
 
