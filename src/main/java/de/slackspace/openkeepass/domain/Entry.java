@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Order;
 import org.simpleframework.xml.Root;
 
 /**
@@ -14,6 +15,7 @@ import org.simpleframework.xml.Root;
  *
  */
 @Root(strict = false, name = "Entry")
+@Order(elements = { "UUID", "IconID", "CustomIconUUID", "String", "Times", "History"})
 public class Entry implements KeePassFileElement {
 
     private static final String USER_NAME = "UserName";
