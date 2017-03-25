@@ -25,6 +25,8 @@ public class KeePassHeader {
     public static final int PROTECTED_STREAM_KEY = 8;
     public static final int STREAM_START_BYTES = 9;
     public static final int INNER_RANDOM_STREAM_ID = 10;
+    public static final int KDF_PARAMETERS = 11;
+    public static final int PUBLIC_CUSTOM_DATA = 12;
 
     // KeePass 2.x signature
     private static final byte[] DATABASE_V2_FILE_SIGNATURE_1 = ByteUtils.hexStringToByteArray("03d9a29a");
@@ -60,7 +62,8 @@ public class KeePassHeader {
     private long transformRounds;
     private CrsAlgorithm crsAlgorithm;
     private int fileFormatVersion;
-
+    private VariantDictionary variantDictionary;
+    
     public KeePassHeader() {
         // empty constructor
     }
@@ -119,6 +122,9 @@ public class KeePassHeader {
         case INNER_RANDOM_STREAM_ID:
             setInnerRandomStreamId(value);
             break;
+        case KDF_PARAMETERS:
+            setKdfParameters(value); 
+            break;
         default: // other field Ids are not necessary but do not harm the
                  // application
             break;
@@ -156,7 +162,7 @@ public class KeePassHeader {
 
     private boolean isVersionSupported(int version) {
         if((version & FILE_VERSION_CRITICAL_MASK) > 
-                (DATABASE_V3_FILE_VERSION_INT & FILE_VERSION_CRITICAL_MASK)) {
+                (DATABASE_V4_FILE_VERSION_INT & FILE_VERSION_CRITICAL_MASK)) {
             return false;
         }
         
@@ -175,11 +181,23 @@ public class KeePassHeader {
     public void read(byte[] keepassFile) throws IOException {
         SafeInputStream inputStream = new SafeInputStream(new BufferedInputStream(new ByteArrayInputStream(keepassFile)));
         inputStream.skipSafe(VERSION_SIGNATURE_LENGTH); // skip version
-
+        
+        if(fileFormatVersion == 0) {
+            throw new UnsupportedOperationException("File format version not set! Make sure to call checkVersionSupport before ");
+        }
+        
         while (true) {
             try {
                 int fieldId = inputStream.read();
-                byte[] fieldLength = new byte[2];
+                
+                byte[] fieldLength;
+                if(fileFormatVersion < DATABASE_V4_FILE_VERSION_INT) {
+                    fieldLength = new byte[2];
+                }
+                else {
+                    fieldLength = new byte[4];
+                }
+                
                 inputStream.readSafe(fieldLength);
 
                 ByteBuffer fieldLengthBuffer = ByteBuffer.wrap(fieldLength);
@@ -377,6 +395,10 @@ public class KeePassHeader {
 
     public byte[] getTransformSeed() {
         return transformSeed;
+    }
+    
+    private void setKdfParameters(byte[] value) {
+        variantDictionary = new VariantDictionary(value);
     }
 
     public int getHeaderSize() {
