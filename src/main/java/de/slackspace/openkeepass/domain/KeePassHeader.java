@@ -400,6 +400,10 @@ public class KeePassHeader {
     private void setKdfParameters(byte[] value) {
         variantDictionary = new VariantDictionary(value);
     }
+    
+    public VariantDictionary getKdfParameters() {
+        return variantDictionary;
+    }
 
     public int getHeaderSize() {
         int size = 0;

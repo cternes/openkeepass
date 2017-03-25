@@ -1,5 +1,6 @@
 package de.slackspace.openkeepass.domain;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
@@ -10,6 +11,8 @@ import org.junit.Test;
 
 import de.slackspace.openkeepass.crypto.RandomGenerator;
 import de.slackspace.openkeepass.util.ByteUtils;
+import de.slackspace.openkeepass.util.ResourceUtils;
+import de.slackspace.openkeepass.util.StreamUtils;
 
 public class KeepassHeaderTest {
 
@@ -111,9 +114,28 @@ public class KeepassHeaderTest {
         KeePassHeader header = new KeePassHeader(new RandomGenerator());
         
         // new v4 format
-        byte[] rawHeader = ByteUtils.hexStringToByteArray("03D9A29A67FB4BB500000400021000000031C1F2E6BF714350BE5805216AFC5AFF03040000000100000004200000001E0DF1C39946653BB3089D4B15B04B3DA33762BA20C56A67B9B30CA2E61E9DD70B8B00000000014205000000245555494410000000EF636DDF8C29444B91F7A9A403E30A0C040100000056040000001300000005010000004908000000020000000000000005010000004D0800000000001000000000000401000000500400000002000000420100000053200000007EA16CCBF5F48CB5F77B01A9192123164C5F5F5245A10E5F9C848F47F0C93A4C000710000000EA17BDE395DF2917B8DB80EF1530949800040000000D0A0D0A");
+        FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("DatabaseWithV4Format.kdbx"));
+        byte[] rawHeader = StreamUtils.toByteArray(fileInputStream);
         
         header.checkVersionSupport(rawHeader);
+    }
+    
+    @Test
+    public void whenKdfParameterAreProvidedShouldReadKdfParameters() throws IOException {
+        KeePassHeader header = new KeePassHeader(new RandomGenerator());
+        FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("DatabaseWithV4Format.kdbx"));
+        byte[] rawFile = StreamUtils.toByteArray(fileInputStream);
+        
+        header.checkVersionSupport(rawFile);
+        header.read(rawFile);
+        
+        VariantDictionary kdfParameters = header.getKdfParameters();
+        Assert.assertArrayEquals(ByteUtils.hexStringToByteArray("ef636ddf8c29444b91f7a9a403e30a0c"), kdfParameters.getByteArray("$UUID"));
+        Assert.assertEquals(19, kdfParameters.getInt("V"));
+        Assert.assertEquals(2, kdfParameters.getLong("I"));
+        Assert.assertEquals(2, kdfParameters.getInt("P"));
+        Assert.assertEquals(1048576, kdfParameters.getLong("M"));
+        Assert.assertArrayEquals(ByteUtils.hexStringToByteArray("7ea16ccbf5f48cb5f77b01a9192123164c5f5f5245a10e5f9c848f47f0c93a4c"), kdfParameters.getByteArray("S"));
     }
     
 }

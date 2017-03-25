@@ -91,4 +91,12 @@ public class VariantDictionary {
     public byte[] getByteArray(String key) {
         return (byte[]) map.get(key);
     }
+
+    public int getInt(String key) {
+        return (Integer) map.get(key);
+    }
+    
+    public long getLong(String key) {
+        return (Long) map.get(key);
+    }
 }
