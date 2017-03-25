@@ -59,6 +59,7 @@ public class KeePassHeader {
     private CompressionAlgorithm compressionAlgorithm;
     private long transformRounds;
     private CrsAlgorithm crsAlgorithm;
+    private int fileFormatVersion;
 
     public KeePassHeader() {
         // empty constructor
@@ -139,6 +140,7 @@ public class KeePassHeader {
         int signaturePart1 = ByteUtils.toUnsignedInt(signatureBuffer.getInt());
         int signaturePart2 = ByteUtils.toUnsignedInt(signatureBuffer.getInt());
         int version = signatureBuffer.getInt();
+        this.fileFormatVersion = version;
 
         if (signaturePart1 == DATABASE_V2_FILE_SIGNATURE_1_INT && signaturePart2 == DATABASE_V2_FILE_SIGNATURE_2_INT) {
             if(!isVersionSupported(version)) {
@@ -397,6 +399,10 @@ public class KeePassHeader {
 
     public byte[] getProtectedStreamKey() {
         return protectedStreamKey;
+    }
+    
+    public int getFileFormatVersion() {
+        return fileFormatVersion;
     }
 
     private ByteBuffer wrapInBuffer(byte[] value) {
