@@ -113,9 +113,8 @@ public class KeepassHeaderTest {
     public void whenVersionIsNotSupportedShouldThrowException() throws IOException {
         KeePassHeader header = new KeePassHeader(new RandomGenerator());
         
-        // new v4 format
-        FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("DatabaseWithV4Format.kdbx"));
-        byte[] rawHeader = StreamUtils.toByteArray(fileInputStream);
+        // unsupported format --> e.g. v5
+        byte[] rawHeader = ByteUtils.hexStringToByteArray("03D9A29A67FB4BB501000500");
         
         header.checkVersionSupport(rawHeader);
     }
