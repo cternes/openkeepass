@@ -1,5 +1,6 @@
 package de.slackspace.openkeepass.domain;
 
+import java.io.IOException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -104,4 +105,15 @@ public class KeepassHeaderTest {
         Assert.assertEquals(8000, header.getTransformRounds());
         Assert.assertEquals("31c1f2e6bf714350be5805216afc5aff", ByteUtils.toHexString(header.getCipher()));
     }
+    
+    @Test(expected = UnsupportedOperationException.class)
+    public void whenVersionIsNotSupportedShouldThrowException() throws IOException {
+        KeePassHeader header = new KeePassHeader(new RandomGenerator());
+        
+        // new v4 format
+        byte[] rawHeader = ByteUtils.hexStringToByteArray("03D9A29A67FB4BB500000400021000000031C1F2E6BF714350BE5805216AFC5AFF03040000000100000004200000001E0DF1C39946653BB3089D4B15B04B3DA33762BA20C56A67B9B30CA2E61E9DD70B8B00000000014205000000245555494410000000EF636DDF8C29444B91F7A9A403E30A0C040100000056040000001300000005010000004908000000020000000000000005010000004D0800000000001000000000000401000000500400000002000000420100000053200000007EA16CCBF5F48CB5F77B01A9192123164C5F5F5245A10E5F9C848F47F0C93A4C000710000000EA17BDE395DF2917B8DB80EF1530949800040000000D0A0D0A");
+        
+        header.checkVersionSupport(rawHeader);
+    }
+    
 }

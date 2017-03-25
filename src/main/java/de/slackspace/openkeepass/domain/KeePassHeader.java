@@ -30,6 +30,11 @@ public class KeePassHeader {
     private static final byte[] DATABASE_V2_FILE_SIGNATURE_1 = ByteUtils.hexStringToByteArray("03d9a29a");
     private static final byte[] DATABASE_V2_FILE_SIGNATURE_2 = ByteUtils.hexStringToByteArray("67fb4bb5");
     private static final byte[] DATABASE_V2_FILE_VERSION = ByteUtils.hexStringToByteArray("00000300");
+    
+    private static final int FILE_VERSION_CRITICAL_MASK = 0xFFFF0000;
+    
+    private static final int DATABASE_V3_FILE_VERSION_INT = 0x00030001;
+    private static final int DATABASE_V4_FILE_VERSION_INT = 0x00040000;
 
     // KeePass Magic Bytes for AES Cipher
     private static final byte[] DATABASE_V2_AES_CIPHER = ByteUtils.hexStringToByteArray("31C1F2E6BF714350BE5805216AFC5AFF");
@@ -133,14 +138,27 @@ public class KeePassHeader {
 
         int signaturePart1 = ByteUtils.toUnsignedInt(signatureBuffer.getInt());
         int signaturePart2 = ByteUtils.toUnsignedInt(signatureBuffer.getInt());
+        int version = signatureBuffer.getInt();
 
         if (signaturePart1 == DATABASE_V2_FILE_SIGNATURE_1_INT && signaturePart2 == DATABASE_V2_FILE_SIGNATURE_2_INT) {
-            return;
+            if(!isVersionSupported(version)) {
+                throw new UnsupportedOperationException("The provided KeePass database file seems to be from a newer KeePass version which is not supported!");    
+            }
         } else if (signaturePart1 == OLD_DATABASE_V1_FILE_SIGNATURE_1_INT && signaturePart2 == OLD_DATABASE_V1_FILE_SIGNATURE_2_INT) {
             throw new UnsupportedOperationException("The provided KeePass database file seems to be from KeePass 1.x which is not supported!");
-        } else {
+        } 
+        else {
             throw new UnsupportedOperationException("The provided file seems to be no KeePass database file!");
         }
+    }
+
+    private boolean isVersionSupported(int version) {
+        if((version & FILE_VERSION_CRITICAL_MASK) > 
+                (DATABASE_V3_FILE_VERSION_INT & FILE_VERSION_CRITICAL_MASK)) {
+            return false;
+        }
+        
+        return true;
     }
 
     /**
