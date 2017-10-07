@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import de.slackspace.openkeepass.util.StringUtils;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Order;
@@ -15,8 +16,10 @@ import org.simpleframework.xml.Root;
  *
  */
 @Root(strict = false, name = "Entry")
-@Order(elements = { "UUID", "IconID", "CustomIconUUID", "String", "Times", "History"})
+@Order(elements = {"UUID", "IconID", "CustomIconUUID", "Tags", "String", "Times", "History"})
 public class Entry implements KeePassFileElement {
+
+    private static final String TAG_SEPARATOR = ";";
 
     private static final String USER_NAME = "UserName";
     private static final String NOTES = "Notes";
@@ -53,6 +56,9 @@ public class Entry implements KeePassFileElement {
     @Element(name = "Times", required = false)
     private Times times;
 
+    @Element(name = "Tags", required = false)
+    private String tags;
+
     Entry() {
         this.uuid = UUID.randomUUID();
     }
@@ -64,6 +70,7 @@ public class Entry implements KeePassFileElement {
         this.iconId = entryContract.getIconId();
         this.customIconUUID = entryContract.getCustomIconUUID();
         this.times = entryContract.getTimes();
+        this.tags = StringUtils.join(entryContract.getTags(), TAG_SEPARATOR);
 
         setValue(false, NOTES, entryContract.getNotes());
         setValue(true, PASSWORD, entryContract.getPassword());
@@ -193,6 +200,13 @@ public class Entry implements KeePassFileElement {
 
     public History getHistory() {
         return history;
+    }
+
+    public String[] getTags() {
+        if (tags != null) {
+            return tags.split(TAG_SEPARATOR);
+        }
+        return null;
     }
 
     @Override

@@ -34,6 +34,8 @@ public class EntryBuilder implements EntryContract {
 
     private Times times;
 
+    private String[] tags;
+
     private List<Property> customPropertyList = new ArrayList<Property>();
 
     /**
@@ -87,6 +89,7 @@ public class EntryBuilder implements EntryContract {
         this.customIconUUID = entry.getCustomIconUuid();
         this.customPropertyList.addAll(entry.getCustomProperties());
         this.times = entry.getTimes();
+        this.tags = entry.getTags();
     }
 
     public EntryBuilder title(String title) {
@@ -146,6 +149,11 @@ public class EntryBuilder implements EntryContract {
 
     public EntryBuilder clearHistory() {
         this.history = new History();
+        return this;
+    }
+
+    public EntryBuilder tags(String[] tags) {
+        this.tags = tags;
         return this;
     }
 
@@ -235,6 +243,11 @@ public class EntryBuilder implements EntryContract {
     @Override
     public Times getTimes() {
         return times;
+    }
+
+    @Override
+    public String[] getTags() {
+        return tags;
     }
 
 }

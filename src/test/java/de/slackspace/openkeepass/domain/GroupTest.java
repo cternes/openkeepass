@@ -50,6 +50,7 @@ public class GroupTest {
                 .customIconUuid(UUID.fromString("87d4f441-a5ec-4ce0-8ca9-82a5079d28ef"))
                 .iconId(23)
                 .iconData(new byte[1])
+                .tags(new String[] { "tag" })
                 .build();
 
         Group group = new GroupBuilder(UUID.fromString("87d4f441-a5ec-4ce0-8ca9-82a5079d28ef"))
@@ -60,7 +61,7 @@ public class GroupTest {
         ByteArrayOutputStream bos = new SimpleXmlParser().toXml(group);
         
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
-        Assert.assertEquals("<Group><UUID>h9T0QaXsTOCMqYKlB50o7w==</UUID><Name>Test</Name><IconID>49</IconID><Times><LastModificationTime>2016-01-18T00:00:00</LastModificationTime><CreationTime>2016-01-15T00:00:00</CreationTime><LastAccessTime>2016-01-17T00:00:00</LastAccessTime><ExpiryTime>2016-01-16T00:00:00</ExpiryTime><Expires>True</Expires><UsageCount>23</UsageCount><LocationChanged>2016-01-19T00:00:00</LocationChanged></Times><IsExpanded>False</IsExpanded><Entry><UUID>h9T0QaXsTOCMqYKlB50o7w==</UUID><IconID>23</IconID><CustomIconUUID>h9T0QaXsTOCMqYKlB50o7w==</CustomIconUUID><String><Key>Notes</Key><Value Protected='False'>MyNote</Value></String><String><Key>Password</Key><Value Protected='True'>MyPasswd</Value></String><String><Key>Title</Key><Value Protected='False'>SomeTitle</Value></String><String><Key>UserName</Key><Value Protected='False'>MyUser</Value></String><String><Key>URL</Key><Value Protected='False'>http://test.com</Value></String></Entry></Group>", xml);
+        Assert.assertEquals("<Group><UUID>h9T0QaXsTOCMqYKlB50o7w==</UUID><Name>Test</Name><IconID>49</IconID><Times><LastModificationTime>2016-01-18T00:00:00</LastModificationTime><CreationTime>2016-01-15T00:00:00</CreationTime><LastAccessTime>2016-01-17T00:00:00</LastAccessTime><ExpiryTime>2016-01-16T00:00:00</ExpiryTime><Expires>True</Expires><UsageCount>23</UsageCount><LocationChanged>2016-01-19T00:00:00</LocationChanged></Times><IsExpanded>False</IsExpanded><Entry><UUID>h9T0QaXsTOCMqYKlB50o7w==</UUID><IconID>23</IconID><CustomIconUUID>h9T0QaXsTOCMqYKlB50o7w==</CustomIconUUID><Tags>tag</Tags><String><Key>Notes</Key><Value Protected='False'>MyNote</Value></String><String><Key>Password</Key><Value Protected='True'>MyPasswd</Value></String><String><Key>Title</Key><Value Protected='False'>SomeTitle</Value></String><String><Key>UserName</Key><Value Protected='False'>MyUser</Value></String><String><Key>URL</Key><Value Protected='False'>http://test.com</Value></String></Entry></Group>", xml);
     }
     
     @Test
@@ -84,6 +85,7 @@ public class GroupTest {
                 .customIconUuid(UUID.fromString("87d4f441-a5ec-4ce0-8ca9-82a5079d28ef"))
                 .iconId(23)
                 .iconData(new byte[1])
+                .tags(new String[] { "tag" })
                 .build();
 
         Group group = new GroupBuilder(UUID.fromString("87d4f441-a5ec-4ce0-8ca9-82a5079d28ef"))
@@ -91,7 +93,7 @@ public class GroupTest {
             .name("Test")
             .build();
 
-        String xml = "<Group><UUID>h9T0QaXsTOCMqYKlB50o7w==</UUID><Name>Test</Name><IconID>49</IconID><Times><LastModificationTime>2016-01-18T00:00:00</LastModificationTime><CreationTime>2016-01-15T00:00:00</CreationTime><LastAccessTime>2016-01-17T00:00:00</LastAccessTime><ExpiryTime>2016-01-16T00:00:00</ExpiryTime><Expires>True</Expires><UsageCount>23</UsageCount><LocationChanged>2016-01-19T00:00:00</LocationChanged></Times><IsExpanded>False</IsExpanded><Entry><UUID>h9T0QaXsTOCMqYKlB50o7w==</UUID><IconID>23</IconID><CustomIconUUID>h9T0QaXsTOCMqYKlB50o7w==</CustomIconUUID><String><Key>Notes</Key><Value Protected='False'>MyNote</Value></String><String><Key>Password</Key><Value Protected='True'>MyPasswd</Value></String><String><Key>Title</Key><Value Protected='False'>SomeTitle</Value></String><String><Key>UserName</Key><Value Protected='False'>MyUser</Value></String><String><Key>URL</Key><Value Protected='False'>http://test.com</Value></String></Entry></Group>";
+        String xml = "<Group><UUID>h9T0QaXsTOCMqYKlB50o7w==</UUID><Name>Test</Name><IconID>49</IconID><Times><LastModificationTime>2016-01-18T00:00:00</LastModificationTime><CreationTime>2016-01-15T00:00:00</CreationTime><LastAccessTime>2016-01-17T00:00:00</LastAccessTime><ExpiryTime>2016-01-16T00:00:00</ExpiryTime><Expires>True</Expires><UsageCount>23</UsageCount><LocationChanged>2016-01-19T00:00:00</LocationChanged></Times><IsExpanded>False</IsExpanded><Entry><UUID>h9T0QaXsTOCMqYKlB50o7w==</UUID><IconID>23</IconID><CustomIconUUID>h9T0QaXsTOCMqYKlB50o7w==</CustomIconUUID><Tags>tag</Tags><String><Key>Notes</Key><Value Protected='False'>MyNote</Value></String><String><Key>Password</Key><Value Protected='True'>MyPasswd</Value></String><String><Key>Title</Key><Value Protected='False'>SomeTitle</Value></String><String><Key>UserName</Key><Value Protected='False'>MyUser</Value></String><String><Key>URL</Key><Value Protected='False'>http://test.com</Value></String></Entry></Group>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
         Group groupUnmarshalled = new SimpleXmlParser().fromXml(inputStream, Group.class);
 
