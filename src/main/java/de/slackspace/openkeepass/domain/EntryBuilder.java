@@ -34,6 +34,8 @@ public class EntryBuilder implements EntryContract {
 
     private Times times;
 
+    private List<String> tags = new ArrayList<String>();
+
     private List<Property> customPropertyList = new ArrayList<Property>();
 
     /**
@@ -46,8 +48,7 @@ public class EntryBuilder implements EntryContract {
     /**
      * Creates a new builder with the given UUID.
      *
-     * @param uuid
-     *            the UUID which should be used
+     * @param uuid the UUID which should be used
      */
     public EntryBuilder(UUID uuid) {
         this.uuid = uuid;
@@ -56,8 +57,7 @@ public class EntryBuilder implements EntryContract {
     /**
      * Creates a new builder with the given title.
      *
-     * @param title
-     *            the title which should be used
+     * @param title the title which should be used
      */
     public EntryBuilder(String title) {
         this();
@@ -67,8 +67,7 @@ public class EntryBuilder implements EntryContract {
     /**
      * Initializes the builder with values from the given entry.
      *
-     * @param entry
-     *            the values from this will initialize the builder
+     * @param entry the values from this will initialize the builder
      */
     public EntryBuilder(Entry entry) {
         if (entry == null) {
@@ -87,6 +86,7 @@ public class EntryBuilder implements EntryContract {
         this.customIconUUID = entry.getCustomIconUuid();
         this.customPropertyList.addAll(entry.getCustomProperties());
         this.times = entry.getTimes();
+        this.tags = entry.getTags();
     }
 
     public EntryBuilder title(String title) {
@@ -146,6 +146,16 @@ public class EntryBuilder implements EntryContract {
 
     public EntryBuilder clearHistory() {
         this.history = new History();
+        return this;
+    }
+
+    public EntryBuilder tags(List<String> tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public EntryBuilder addTag(String tag) {
+        this.tags.add(tag);
         return this;
     }
 
@@ -237,4 +247,8 @@ public class EntryBuilder implements EntryContract {
         return times;
     }
 
+    @Override
+    public List<String> getTags() {
+        return tags;
+    }
 }

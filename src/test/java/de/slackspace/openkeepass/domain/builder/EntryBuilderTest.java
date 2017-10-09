@@ -1,6 +1,11 @@
 package de.slackspace.openkeepass.domain.builder;
 
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.junit.Assert.assertThat;
+
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.UUID;
 
 import org.junit.Assert;
@@ -79,7 +84,8 @@ public class EntryBuilderTest {
 
     @Test
     public void shouldCheckEqualityOfObjects() {
-        Entry entry = new EntryBuilder().title("test").notes("a note").password("secret").username("user").url("myUrl").build();
+        Entry entry = new EntryBuilder().title("test").notes("a note").password("secret").username("user").url("myUrl")
+                .build();
 
         Entry entryCopyEqual = new EntryBuilder(entry).build();
         Assert.assertEquals(entry, entryCopyEqual);
@@ -97,5 +103,33 @@ public class EntryBuilderTest {
         for (Entry historicEntry : entryThree.getHistory().getHistoricEntries()) {
             Assert.assertEquals(0, historicEntry.getHistory().getHistoricEntries().size());
         }
+    }
+
+    @Test
+    public void shouldBuildEntryWithTagList() {
+        UUID uuid = UUID.randomUUID();
+        List<String> tags = Arrays.asList("a", "b", "c");
+
+        Entry entry = new EntryBuilder(uuid).title("test").tags(tags).build();
+
+        Assert.assertEquals(uuid, entry.getUuid());
+        Assert.assertEquals("test", entry.getTitle());
+        assertThat(entry.getTags(), hasItems("a", "b", "c"));
+    }
+
+    @Test
+    public void shouldBuildEntryWithTags() {
+        UUID uuid = UUID.randomUUID();
+
+        Entry entry = new EntryBuilder(uuid)
+                .title("test")
+                .addTag("a")
+                .addTag("b")
+                .addTag("c")
+                .build();
+
+        Assert.assertEquals(uuid, entry.getUuid());
+        Assert.assertEquals("test", entry.getTitle());
+        assertThat(entry.getTags(), hasItems("a", "b", "c"));
     }
 }

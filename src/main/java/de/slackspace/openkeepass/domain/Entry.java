@@ -9,13 +9,14 @@ import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Order;
 import org.simpleframework.xml.Root;
 
+import de.slackspace.openkeepass.parser.TagParser;
+
 /**
- * Represents an entry in the KeePass database. It typically consists of a
- * title, username and a password.
+ * Represents an entry in the KeePass database. It typically consists of a title, username and a password.
  *
  */
 @Root(strict = false, name = "Entry")
-@Order(elements = { "UUID", "IconID", "CustomIconUUID", "String", "Times", "History"})
+@Order(elements = {"UUID", "IconID", "CustomIconUUID", "Tags", "String", "Times", "History"})
 public class Entry implements KeePassFileElement {
 
     private static final String USER_NAME = "UserName";
@@ -53,6 +54,11 @@ public class Entry implements KeePassFileElement {
     @Element(name = "Times", required = false)
     private Times times;
 
+    @Element(name = "Tags", required = false)
+    private String tags;
+
+    private TagParser tagParser = new TagParser();
+
     Entry() {
         this.uuid = UUID.randomUUID();
     }
@@ -64,6 +70,7 @@ public class Entry implements KeePassFileElement {
         this.iconId = entryContract.getIconId();
         this.customIconUUID = entryContract.getCustomIconUUID();
         this.times = entryContract.getTimes();
+        this.tags = tagParser.toTagString(entryContract.getTags());
 
         setValue(false, NOTES, entryContract.getNotes());
         setValue(true, PASSWORD, entryContract.getPassword());
@@ -97,8 +104,7 @@ public class Entry implements KeePassFileElement {
     }
 
     /**
-     * Returns the raw data of either the custom icon (if specified) or the
-     * chosen stock icon.
+     * Returns the raw data of either the custom icon (if specified) or the chosen stock icon.
      *
      * @return the raw icon data if available or null otherwise
      */
@@ -159,7 +165,8 @@ public class Entry implements KeePassFileElement {
         if (property == null) {
             property = new Property(propertyName, propertyValue, isProtected);
             properties.add(property);
-        } else {
+        }
+        else {
             properties.remove(property);
             properties.add(new Property(propertyName, propertyValue, isProtected));
         }
@@ -177,8 +184,7 @@ public class Entry implements KeePassFileElement {
     /**
      * Retrieves a property by it's name (ignores case)
      *
-     * @param name
-     *            the name of the property to find
+     * @param name the name of the property to find
      * @return the property if found, null otherwise
      */
     public Property getPropertyByName(String name) {
@@ -193,6 +199,14 @@ public class Entry implements KeePassFileElement {
 
     public History getHistory() {
         return history;
+    }
+
+    public List<String> getTags() {
+        if (tags != null) {
+            return tagParser.fromTagString(tags);
+        }
+
+        return null;
     }
 
     @Override
@@ -210,51 +224,66 @@ public class Entry implements KeePassFileElement {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (!(obj instanceof Entry))
+        }
+        if (!(obj instanceof Entry)) {
             return false;
+        }
         Entry other = (Entry) obj;
         if (customIconUUID == null) {
-            if (other.customIconUUID != null)
+            if (other.customIconUUID != null) {
                 return false;
+            }
         }
-        else if (!customIconUUID.equals(other.customIconUUID))
+        else if (!customIconUUID.equals(other.customIconUUID)) {
             return false;
+        }
         if (history == null) {
-            if (other.history != null)
+            if (other.history != null) {
                 return false;
+            }
         }
-        else if (!history.equals(other.history))
+        else if (!history.equals(other.history)) {
             return false;
-        if (iconId != other.iconId)
+        }
+        if (iconId != other.iconId) {
             return false;
+        }
         if (properties == null) {
-            if (other.properties != null)
+            if (other.properties != null) {
                 return false;
+            }
         }
-        else if (!properties.equals(other.properties))
+        else if (!properties.equals(other.properties)) {
             return false;
+        }
         if (times == null) {
-            if (other.times != null)
+            if (other.times != null) {
                 return false;
+            }
         }
-        else if (!times.equals(other.times))
+        else if (!times.equals(other.times)) {
             return false;
+        }
         if (uuid == null) {
-            if (other.uuid != null)
+            if (other.uuid != null) {
                 return false;
+            }
         }
-        else if (!uuid.equals(other.uuid))
+        else if (!uuid.equals(other.uuid)) {
             return false;
+        }
         return true;
     }
 
     @Override
     public String toString() {
-        return "Entry [uuid=" + uuid + ", getTitle()=" + getTitle() + ", getPassword()=" + getPassword() + ", getUsername()=" + getUsername() + "]";
+        return "Entry [uuid=" + uuid + ", getTitle()=" + getTitle() + ", getPassword()=" + getPassword()
+                + ", getUsername()=" + getUsername() + "]";
     }
 
 }
