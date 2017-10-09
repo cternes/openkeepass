@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,13 +12,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
-
-import javax.xml.bind.DatatypeConverter;
-
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 import de.slackspace.openkeepass.KeePassDatabase;
 import de.slackspace.openkeepass.crypto.Salsa20;
@@ -46,6 +40,10 @@ import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.CalendarHandler;
 import de.slackspace.openkeepass.util.ResourceUtils;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class KeepassDatabaseWriterTest {
 
@@ -266,6 +264,28 @@ public class KeepassDatabaseWriterTest {
 
         List<String> tags = readDb.getEntryByTitle("1").getTags();
         assertThat(tags, hasItems("x", "y"));
+    }
+
+    @Test
+    public void shouldWriteDatabaseWithColors() throws IOException {
+        // build database
+        Meta meta = new MetaBuilder("colorTest").build();
+        Entry entry1 = new EntryBuilder("1").foregroundColor("#FFFFFF").backgroundColor("#000000").build();
+        Group groupA = new GroupBuilder("A").addEntry(entry1).build();
+
+        KeePassFile keePassFile = new KeePassFileBuilder(meta).addTopGroups(groupA).build();
+
+        // write
+        String dbFilename = tempFolder.newFile("dbWithColors.kdbx").getPath();
+        KeePassDatabase.write(keePassFile, "abcdefg", dbFilename);
+
+        // read and assert
+        KeePassFile readDb = KeePassDatabase.getInstance(dbFilename).openDatabase("abcdefg");
+        assertThat(readDb.getMeta().getDatabaseName(), is("colorTest"));
+
+        Entry entry = readDb.getEntryByTitle("1");
+        Assert.assertEquals("#FFFFFF", entry.getForegroundColor());
+        Assert.assertEquals("#000000", entry.getBackgroundColor());
     }
 
 }

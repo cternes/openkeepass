@@ -36,6 +36,10 @@ public class EntryBuilder implements EntryContract {
 
     private List<String> tags = new ArrayList<String>();
 
+    private String foregroundColor;
+
+    private String backgroundColor;
+
     private List<Property> customPropertyList = new ArrayList<Property>();
 
     /**
@@ -87,6 +91,8 @@ public class EntryBuilder implements EntryContract {
         this.customPropertyList.addAll(entry.getCustomProperties());
         this.times = entry.getTimes();
         this.tags = entry.getTags();
+        this.foregroundColor = entry.getForegroundColor();
+        this.backgroundColor = entry.getBackgroundColor();
     }
 
     public EntryBuilder title(String title) {
@@ -156,6 +162,16 @@ public class EntryBuilder implements EntryContract {
 
     public EntryBuilder addTag(String tag) {
         this.tags.add(tag);
+        return this;
+    }
+
+    public EntryBuilder foregroundColor(String foregroundColor) {
+        this.foregroundColor = foregroundColor;
+        return this;
+    }
+
+    public EntryBuilder backgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
         return this;
     }
 
@@ -250,5 +266,15 @@ public class EntryBuilder implements EntryContract {
     @Override
     public List<String> getTags() {
         return tags;
+    }
+
+    @Override
+    public String getForegroundColor() {
+        return foregroundColor;
+    }
+
+    @Override
+    public String getBackgroundColor() {
+        return backgroundColor;
     }
 }
