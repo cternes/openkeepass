@@ -28,6 +28,6 @@ public interface EntryContract {
     History getHistory();
 
     Times getTimes();
-    
-    String[] getTags();
+
+    List<String> getTags();
 }
