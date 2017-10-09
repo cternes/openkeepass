@@ -1,5 +1,8 @@
 package de.slackspace.openkeepass.api;
 
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.junit.Assert.assertThat;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,20 +69,33 @@ public class KeepassDatabaseReaderTest {
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
         KeePassHeader header = reader.getHeader();
 
-        Assert.assertTrue(Arrays.equals(ByteUtils.hexStringToByteArray("31C1F2E6BF714350BE5805216AFC5AFF"), header.getCipher()));
+        Assert.assertTrue(
+                Arrays.equals(ByteUtils.hexStringToByteArray("31C1F2E6BF714350BE5805216AFC5AFF"), header.getCipher()));
         Assert.assertEquals(CompressionAlgorithm.Gzip, header.getCompression());
         Assert.assertEquals(8000, header.getTransformRounds());
         Assert.assertTrue("EncryptionIV is not 2c605455f181fbc9462aefb817852b37",
-                Arrays.equals(ByteUtils.hexStringToByteArray("2c605455f181fbc9462aefb817852b37"), header.getEncryptionIV()));
+                Arrays.equals(ByteUtils.hexStringToByteArray("2c605455f181fbc9462aefb817852b37"),
+                        header.getEncryptionIV()));
         Assert.assertTrue("StartBytes are not 69d788d9b01ea1facd1c0bf0187e7d74e4aa07b20d464f3d23d0b2dc2f059ff8", Arrays
-                .equals(ByteUtils.hexStringToByteArray("69d788d9b01ea1facd1c0bf0187e7d74e4aa07b20d464f3d23d0b2dc2f059ff8"), header.getStreamStartBytes()));
+                .equals(ByteUtils
+                        .hexStringToByteArray("69d788d9b01ea1facd1c0bf0187e7d74e4aa07b20d464f3d23d0b2dc2f059ff8"),
+                        header.getStreamStartBytes()));
         Assert.assertEquals(CrsAlgorithm.Salsa20, header.getCrsAlgorithm());
         Assert.assertTrue("MasterSeed is not 35ac8b529bc4f6e44194bccd0537fcb433a30bcb847e63156262c4df99c528ca",
-                Arrays.equals(ByteUtils.hexStringToByteArray("35ac8b529bc4f6e44194bccd0537fcb433a30bcb847e63156262c4df99c528ca"), header.getMasterSeed()));
+                Arrays.equals(
+                        ByteUtils.hexStringToByteArray(
+                                "35ac8b529bc4f6e44194bccd0537fcb433a30bcb847e63156262c4df99c528ca"),
+                        header.getMasterSeed()));
         Assert.assertTrue("TransformBytes are not 0d52d93efc5493ae6623f0d5d69bb76bd976bb717f4ee67abbe43528ebfbb646",
-                Arrays.equals(ByteUtils.hexStringToByteArray("0d52d93efc5493ae6623f0d5d69bb76bd976bb717f4ee67abbe43528ebfbb646"), header.getTransformSeed()));
-        Assert.assertTrue("ProtectedStreamKey is not ec77a2169769734c5d26e5341401f8d7b11052058f8455d314879075d0b7e257", Arrays
-                .equals(ByteUtils.hexStringToByteArray("ec77a2169769734c5d26e5341401f8d7b11052058f8455d314879075d0b7e257"), header.getProtectedStreamKey()));
+                Arrays.equals(
+                        ByteUtils.hexStringToByteArray(
+                                "0d52d93efc5493ae6623f0d5d69bb76bd976bb717f4ee67abbe43528ebfbb646"),
+                        header.getTransformSeed()));
+        Assert.assertTrue("ProtectedStreamKey is not ec77a2169769734c5d26e5341401f8d7b11052058f8455d314879075d0b7e257",
+                Arrays
+                        .equals(ByteUtils.hexStringToByteArray(
+                                "ec77a2169769734c5d26e5341401f8d7b11052058f8455d314879075d0b7e257"),
+                                header.getProtectedStreamKey()));
         Assert.assertEquals(210, header.getHeaderSize());
     }
 
@@ -163,7 +179,8 @@ public class KeepassDatabaseReaderTest {
     }
 
     @Test
-    public void whenKeePassFileIsSecuredWithBinaryKeyFileShouldOpenKeePassFileWithKeyFile() throws FileNotFoundException {
+    public void whenKeePassFileIsSecuredWithBinaryKeyFileShouldOpenKeePassFileWithKeyFile()
+            throws FileNotFoundException {
         FileInputStream keePassFile = new FileInputStream(ResourceUtils.getResource("DatabaseWithBinaryKeyfile.kdbx"));
         FileInputStream keyFile = new FileInputStream(ResourceUtils.getResource("0.png"));
 
@@ -174,8 +191,10 @@ public class KeepassDatabaseReaderTest {
     }
 
     @Test
-    public void whenKeePassFileIsSecuredWithBinaryKeyFileAndPasswordShouldOpenKeePassFile() throws FileNotFoundException {
-        FileInputStream keePassFile = new FileInputStream(ResourceUtils.getResource("DatabaseWithPasswordAndBinaryKeyfile.kdbx"));
+    public void whenKeePassFileIsSecuredWithBinaryKeyFileAndPasswordShouldOpenKeePassFile()
+            throws FileNotFoundException {
+        FileInputStream keePassFile =
+                new FileInputStream(ResourceUtils.getResource("DatabaseWithPasswordAndBinaryKeyfile.kdbx"));
         FileInputStream keyFile = new FileInputStream(ResourceUtils.getResource("0.png"));
 
         KeePassFile database = KeePassDatabase.getInstance(keePassFile).openDatabase("1234", keyFile);
@@ -196,8 +215,10 @@ public class KeepassDatabaseReaderTest {
     }
 
     @Test
-    public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldOpenKeePassFileWithPasswordAndKeyFile() throws FileNotFoundException {
-        FileInputStream keePassFile = new FileInputStream(ResourceUtils.getResource("DatabaseWithPasswordAndKeyfile.kdbx"));
+    public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldOpenKeePassFileWithPasswordAndKeyFile()
+            throws FileNotFoundException {
+        FileInputStream keePassFile =
+                new FileInputStream(ResourceUtils.getResource("DatabaseWithPasswordAndKeyfile.kdbx"));
         FileInputStream keyFile = new FileInputStream(ResourceUtils.getResource("DatabaseWithPasswordAndKeyfile.key"));
 
         KeePassFile database = KeePassDatabase.getInstance(keePassFile).openDatabase("test123", keyFile);
@@ -207,15 +228,19 @@ public class KeepassDatabaseReaderTest {
     }
 
     @Test(expected = KeePassDatabaseUnreadableException.class)
-    public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldNotOpenKeePassFileWithPassword() throws FileNotFoundException {
-        FileInputStream keePassFile = new FileInputStream(ResourceUtils.getResource("DatabaseWithPasswordAndKeyfile.kdbx"));
+    public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldNotOpenKeePassFileWithPassword()
+            throws FileNotFoundException {
+        FileInputStream keePassFile =
+                new FileInputStream(ResourceUtils.getResource("DatabaseWithPasswordAndKeyfile.kdbx"));
 
         KeePassDatabase.getInstance(keePassFile).openDatabase("test123");
     }
 
     @Test(expected = KeePassDatabaseUnreadableException.class)
-    public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldNotOpenKeePassFileWithKeyFile() throws FileNotFoundException {
-        FileInputStream keePassFile = new FileInputStream(ResourceUtils.getResource("DatabaseWithPasswordAndKeyfile.kdbx"));
+    public void whenKeePassFileIsSecuredWithPasswordAndKeyFileShouldNotOpenKeePassFileWithKeyFile()
+            throws FileNotFoundException {
+        FileInputStream keePassFile =
+                new FileInputStream(ResourceUtils.getResource("DatabaseWithPasswordAndKeyfile.kdbx"));
         FileInputStream keyFile = new FileInputStream(ResourceUtils.getResource("DatabaseWithPasswordAndKeyfile.key"));
 
         KeePassDatabase.getInstance(keePassFile).openDatabase(keyFile);
@@ -223,14 +248,16 @@ public class KeepassDatabaseReaderTest {
 
     @Test
     public void whenGettingInstanceByStringShouldOpenDatabase() throws FileNotFoundException {
-        KeePassFile database = KeePassDatabase.getInstance(ResourceUtils.getResource("fullBlownDatabase.kdbx")).openDatabase("123456");
+        KeePassFile database =
+                KeePassDatabase.getInstance(ResourceUtils.getResource("fullBlownDatabase.kdbx")).openDatabase("123456");
         List<Entry> entries = database.getEntries();
         Assert.assertEquals("2f29047129b9e4c48f05d09907e52b9b", entries.get(0).getPassword());
     }
 
     @Test
     public void whenGettingInstanceByFileShouldOpenDatabase() {
-        KeePassFile database = KeePassDatabase.getInstance(new File(ResourceUtils.getResource("fullBlownDatabase.kdbx"))).openDatabase("123456");
+        KeePassFile database = KeePassDatabase
+                .getInstance(new File(ResourceUtils.getResource("fullBlownDatabase.kdbx"))).openDatabase("123456");
         List<Entry> entries = database.getEntries();
         Assert.assertEquals("2f29047129b9e4c48f05d09907e52b9b", entries.get(0).getPassword());
     }
@@ -282,4 +309,16 @@ public class KeepassDatabaseReaderTest {
         Assert.assertEquals(122, db.getEntries().size());
     }
 
+    @Test
+    public void whenGettingTagsShouldReturnTags() throws FileNotFoundException {
+        FileInputStream file = new FileInputStream(ResourceUtils.getResource("DatabaseWithTags.kdbx"));
+
+        KeePassDatabase reader = KeePassDatabase.getInstance(file);
+        KeePassFile database = reader.openDatabase("abcdefg");
+
+        Entry entry = database.getEntryByTitle("Sample Entry");
+        List<String> tags = entry.getTags();
+
+        assertThat(tags, hasItems("tag1", "tag2", "tag3"));
+    }
 }
