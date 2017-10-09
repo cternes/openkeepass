@@ -11,7 +11,14 @@ public final class StringUtils {
             return "";
         }
 
-        return String.join(separator, list);
+        StringBuilder sb = new StringBuilder();
+        sb.append(list.get(0));
+
+        for (int i = 1; i < list.size(); i++) {
+            sb.append(separator).append(list.get(i));
+        }
+
+        return sb.toString();
     }
 
 }
