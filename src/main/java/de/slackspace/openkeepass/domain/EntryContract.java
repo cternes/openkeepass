@@ -30,4 +30,8 @@ public interface EntryContract {
     Times getTimes();
 
     List<String> getTags();
+
+    String getForegroundColor();
+
+    String getBackgroundColor();
 }

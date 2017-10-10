@@ -132,4 +132,32 @@ public class EntryBuilderTest {
         Assert.assertEquals("test", entry.getTitle());
         assertThat(entry.getTags(), hasItems("a", "b", "c"));
     }
+
+    @Test
+    public void shouldBuildEntryWithForegroundColor() {
+        UUID uuid = UUID.randomUUID();
+
+        Entry entry = new EntryBuilder(uuid)
+                .title("test")
+                .foregroundColor("#FFFFFF")
+                .build();
+
+        Assert.assertEquals(uuid, entry.getUuid());
+        Assert.assertEquals("test", entry.getTitle());
+        Assert.assertEquals("#FFFFFF", entry.getForegroundColor());
+    }
+
+    @Test
+    public void shouldBuildEntryWithBackgroundColor() {
+        UUID uuid = UUID.randomUUID();
+
+        Entry entry = new EntryBuilder(uuid)
+            .title("test")
+            .backgroundColor("#000000")
+            .build();
+
+        Assert.assertEquals(uuid, entry.getUuid());
+        Assert.assertEquals("test", entry.getTitle());
+        Assert.assertEquals("#000000", entry.getBackgroundColor());
+    }
 }

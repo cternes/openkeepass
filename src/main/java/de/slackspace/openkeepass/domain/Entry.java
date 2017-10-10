@@ -16,7 +16,8 @@ import de.slackspace.openkeepass.parser.TagParser;
  *
  */
 @Root(strict = false, name = "Entry")
-@Order(elements = {"UUID", "IconID", "CustomIconUUID", "Tags", "String", "Times", "History"})
+@Order(elements = {"UUID", "IconID", "CustomIconUUID", "ForegroundColor",
+    "BackgroundColor", "Tags", "String", "Times", "History"})
 public class Entry implements KeePassFileElement {
 
     private static final String USER_NAME = "UserName";
@@ -57,6 +58,12 @@ public class Entry implements KeePassFileElement {
     @Element(name = "Tags", required = false)
     private String tags;
 
+    @Element(name = "ForegroundColor", required = false)
+    private String foregroundColor;
+
+    @Element(name = "BackgroundColor", required = false)
+    private String backgroundColor;
+
     private TagParser tagParser = new TagParser();
 
     Entry() {
@@ -71,6 +78,8 @@ public class Entry implements KeePassFileElement {
         this.customIconUUID = entryContract.getCustomIconUUID();
         this.times = entryContract.getTimes();
         this.tags = tagParser.toTagString(entryContract.getTags());
+        this.foregroundColor = entryContract.getForegroundColor();
+        this.backgroundColor = entryContract.getBackgroundColor();
 
         setValue(false, NOTES, entryContract.getNotes());
         setValue(true, PASSWORD, entryContract.getPassword());
@@ -207,6 +216,14 @@ public class Entry implements KeePassFileElement {
         }
 
         return null;
+    }
+
+    public String getForegroundColor() {
+        return foregroundColor;
+    }
+
+    public String getBackgroundColor() {
+        return backgroundColor;
     }
 
     @Override

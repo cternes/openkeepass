@@ -321,4 +321,17 @@ public class KeepassDatabaseReaderTest {
 
         assertThat(tags, hasItems("tag1", "tag2", "tag3"));
     }
+
+    @Test
+    public void whenGettingColorsShouldReturnColors() throws FileNotFoundException {
+        FileInputStream file = new FileInputStream(ResourceUtils.getResource("DatabaseWithColors.kdbx"));
+
+        KeePassDatabase reader = KeePassDatabase.getInstance(file);
+        KeePassFile database = reader.openDatabase("qwerty");
+
+        Entry entry = database.getEntryByTitle("Sample Entry");
+
+        Assert.assertEquals("#0080FF", entry.getForegroundColor());
+        Assert.assertEquals("#FF0000", entry.getBackgroundColor());
+    }
 }
