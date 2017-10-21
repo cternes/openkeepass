@@ -42,6 +42,8 @@ public class EntryBuilder implements EntryContract {
 
     private List<Property> customPropertyList = new ArrayList<Property>();
 
+    private List<Attachment> attachmentList = new ArrayList<Attachment>();
+
     /**
      * Creates a new builder with a random UUID.
      */
@@ -93,6 +95,7 @@ public class EntryBuilder implements EntryContract {
         this.tags = entry.getTags();
         this.foregroundColor = entry.getForegroundColor();
         this.backgroundColor = entry.getBackgroundColor();
+        this.attachmentList.addAll(entry.getAttachments());
     }
 
     public EntryBuilder title(String title) {
@@ -172,6 +175,11 @@ public class EntryBuilder implements EntryContract {
 
     public EntryBuilder backgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
+        return this;
+    }
+
+    public EntryBuilder addAttachment(String key, int id) {
+        this.attachmentList.add(new Attachment(key, id));
         return this;
     }
 
@@ -276,5 +284,10 @@ public class EntryBuilder implements EntryContract {
     @Override
     public String getBackgroundColor() {
         return backgroundColor;
+    }
+
+    @Override
+    public List<Attachment> getAttachmentList() {
+        return attachmentList;
     }
 }

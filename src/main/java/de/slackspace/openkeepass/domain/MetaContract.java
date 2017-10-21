@@ -28,4 +28,6 @@ public interface MetaContract {
     long getHistoryMaxSize();
 
     CustomIcons getCustomIcons();
+
+    Binaries getBinaries();
 }

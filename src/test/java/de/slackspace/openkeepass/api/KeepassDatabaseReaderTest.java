@@ -3,6 +3,7 @@ package de.slackspace.openkeepass.api;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.assertThat;
 
+import javax.xml.bind.DatatypeConverter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,10 +13,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import de.slackspace.openkeepass.KeePassDatabase;
+import de.slackspace.openkeepass.domain.Attachment;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.Entry;
@@ -26,6 +25,8 @@ import de.slackspace.openkeepass.domain.Property;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.ResourceUtils;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class KeepassDatabaseReaderTest {
 
@@ -333,5 +334,21 @@ public class KeepassDatabaseReaderTest {
 
         Assert.assertEquals("#0080FF", entry.getForegroundColor());
         Assert.assertEquals("#FF0000", entry.getBackgroundColor());
+    }
+
+    @Test
+    public void whenGettingAttachmentShouldReturnAttachment() throws FileNotFoundException {
+        FileInputStream file = new FileInputStream(ResourceUtils.getResource("DatabaseWithAttachments.kdbx"));
+
+        KeePassDatabase reader = KeePassDatabase.getInstance(file);
+        KeePassFile database = reader.openDatabase("abcdefg");
+
+        Entry entry = database.getEntryByTitle("Sample Entry");
+
+        Assert.assertEquals(1, entry.getAttachments().size());
+        Attachment attachment = entry.getAttachments().get(0);
+        Assert.assertEquals(0, attachment.getRef());
+        Assert.assertEquals("attachment.txt", attachment.getKey());
+        Assert.assertEquals("H4sIAAAAAAAAAwtJrSgBAPkIuZsEAAAA", DatatypeConverter.printBase64Binary(attachment.getData()));
     }
 }
