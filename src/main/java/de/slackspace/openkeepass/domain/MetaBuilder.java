@@ -33,6 +33,8 @@ public class MetaBuilder implements MetaContract {
 
     CustomIcons customIcons;
 
+    Binaries binaries;
+
     /**
      * Creates a new builder with the given database name.
      *
@@ -62,6 +64,7 @@ public class MetaBuilder implements MetaContract {
         this.historyMaxItems = meta.getHistoryMaxItems();
         this.historyMaxSize = meta.getHistoryMaxSize();
         this.customIcons = meta.getCustomIcons();
+        this.binaries = meta.getBinaries();
     }
 
     public MetaBuilder databaseName(String databaseName) {
@@ -121,6 +124,11 @@ public class MetaBuilder implements MetaContract {
 
     public MetaBuilder customIcons(CustomIcons customIcons) {
         this.customIcons = customIcons;
+        return this;
+    }
+
+    public MetaBuilder binaries(Binaries binaries) {
+        this.binaries = binaries;
         return this;
     }
 
@@ -191,6 +199,11 @@ public class MetaBuilder implements MetaContract {
     @Override
     public CustomIcons getCustomIcons() {
         return customIcons;
+    }
+
+    @Override
+    public Binaries getBinaries() {
+        return binaries;
     }
 
 }

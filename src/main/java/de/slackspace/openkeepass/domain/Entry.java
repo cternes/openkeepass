@@ -64,6 +64,9 @@ public class Entry implements KeePassFileElement {
     @Element(name = "BackgroundColor", required = false)
     private String backgroundColor;
 
+    @ElementList(name = "Binary", inline = true, required = false)
+    private List<Attachment> attachments = new ArrayList<Attachment>();
+
     private TagParser tagParser = new TagParser();
 
     Entry() {
@@ -88,6 +91,7 @@ public class Entry implements KeePassFileElement {
         setValue(false, URL, entryContract.getUrl());
 
         this.properties.addAll(entryContract.getCustomPropertyList());
+        this.attachments.addAll(entryContract.getAttachmentList());
     }
 
     public UUID getUuid() {
@@ -167,6 +171,10 @@ public class Entry implements KeePassFileElement {
 
     public Times getTimes() {
         return times;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
     }
 
     private void setValue(boolean isProtected, String propertyName, String propertyValue) {

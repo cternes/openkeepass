@@ -1,6 +1,8 @@
 package de.slackspace.openkeepass.api;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayInputStream;
@@ -16,6 +18,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.KeePassDatabase;
+import de.slackspace.openkeepass.domain.Attachment;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.Entry;
@@ -26,6 +29,7 @@ import de.slackspace.openkeepass.domain.Property;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.ResourceUtils;
+import de.slackspace.openkeepass.util.StreamUtils;
 
 public class KeepassDatabaseReaderTest {
 
@@ -333,5 +337,27 @@ public class KeepassDatabaseReaderTest {
 
         Assert.assertEquals("#0080FF", entry.getForegroundColor());
         Assert.assertEquals("#FF0000", entry.getBackgroundColor());
+    }
+
+    @Test
+    public void whenGettingAttachmentShouldReturnAttachment() throws IOException {
+        FileInputStream file = new FileInputStream(ResourceUtils.getResource("DatabaseWithAttachments.kdbx"));
+
+        KeePassDatabase reader = KeePassDatabase.getInstance(file);
+        KeePassFile database = reader.openDatabase("abcdefg");
+
+        Entry entry = database.getEntryByTitle("Sample Entry");
+
+        Assert.assertEquals(2, entry.getAttachments().size());
+        List<Attachment> attachments = entry.getAttachments();
+
+        Attachment image = attachments.get(0);
+        assertThat(image.getKey(), is("0.png"));
+        assertThat(image.getRef(), is(0));
+
+        FileInputStream originalImage = new FileInputStream(ResourceUtils.getResource("0.png"));
+        byte[] originalByteArray = StreamUtils.toByteArray(originalImage);
+
+        assertThat(image.getData(), equalTo(originalByteArray));
     }
 }

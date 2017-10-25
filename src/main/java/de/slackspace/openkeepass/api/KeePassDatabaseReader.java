@@ -16,6 +16,7 @@ import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.processor.BinaryEnricher;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
 import de.slackspace.openkeepass.processor.IconEnricher;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
@@ -58,7 +59,8 @@ public class KeePassDatabaseReader {
         KeePassFile unprocessedKeepassFile = keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed));
         new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(protectedStringCrypto), unprocessedKeepassFile);
 
-        return new IconEnricher().enrichNodesWithIconData(unprocessedKeepassFile);
+        KeePassFile iconEnrichedKeepassFile = new IconEnricher().enrichNodesWithIconData(unprocessedKeepassFile);
+        return new BinaryEnricher().enrichNodesWithBinaryData(iconEnrichedKeepassFile);
     }
 
     private ProtectedStringCrypto getProtectedStringCrypto() {

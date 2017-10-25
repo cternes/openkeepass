@@ -34,4 +34,6 @@ public interface EntryContract {
     String getForegroundColor();
 
     String getBackgroundColor();
+
+    List<Attachment> getAttachmentList();
 }

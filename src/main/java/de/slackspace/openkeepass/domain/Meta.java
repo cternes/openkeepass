@@ -51,6 +51,9 @@ public class Meta {
     @Element(name = "CustomIcons", required = false)
     private CustomIcons customIcons;
 
+    @Element(name = "Binaries", required = false)
+    private Binaries binaries;
+
     Meta() {
     }
 
@@ -67,6 +70,7 @@ public class Meta {
         this.recycleBinEnabled = metaContract.getRecycleBinEnabled();
         this.recycleBinUuid = metaContract.getRecycleBinUuid();
         this.customIcons = metaContract.getCustomIcons();
+        this.binaries = metaContract.getBinaries();
     }
 
     public String getDatabaseName() {
@@ -117,6 +121,10 @@ public class Meta {
         return customIcons;
     }
 
+    public Binaries getBinaries() {
+        return binaries;
+    }
+
     @Override
     public final int hashCode() {
         final int prime = 31;
@@ -133,6 +141,7 @@ public class Meta {
         result = prime * result + ((recycleBinChanged == null) ? 0 : recycleBinChanged.hashCode());
         result = prime * result + ((recycleBinEnabled == null) ? 0 : recycleBinEnabled.hashCode());
         result = prime * result + ((recycleBinUuid == null) ? 0 : recycleBinUuid.hashCode());
+        result = prime * result + ((binaries == null) ? 0 : binaries.hashCode());
         return result;
     }
 
@@ -195,6 +204,11 @@ public class Meta {
             if (other.recycleBinUuid != null)
                 return false;
         } else if (!recycleBinUuid.equals(other.recycleBinUuid))
+            return false;
+        if (binaries == null) {
+            if (other.binaries != null)
+                return false;
+        } else if (!binaries.equals(other.binaries))
             return false;
         return true;
     }

@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,8 +12,20 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
+import javax.xml.bind.DatatypeConverter;
+
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
 import de.slackspace.openkeepass.KeePassDatabase;
 import de.slackspace.openkeepass.crypto.Salsa20;
+import de.slackspace.openkeepass.domain.Attachment;
+import de.slackspace.openkeepass.domain.Binaries;
+import de.slackspace.openkeepass.domain.BinariesBuilder;
+import de.slackspace.openkeepass.domain.Binary;
+import de.slackspace.openkeepass.domain.BinaryBuilder;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.CustomIcon;
@@ -40,10 +51,7 @@ import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.CalendarHandler;
 import de.slackspace.openkeepass.util.ResourceUtils;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import de.slackspace.openkeepass.util.StreamUtils;
 
 public class KeepassDatabaseWriterTest {
 
@@ -209,6 +217,38 @@ public class KeepassDatabaseWriterTest {
         Assert.assertEquals(base64Icon, DatatypeConverter.printBase64Binary(readDb.getGroupByName("A").getIconData()));
         Assert.assertEquals(iconUuid, readDb.getEntryByTitle("1").getCustomIconUuid());
         Assert.assertEquals(base64Icon, DatatypeConverter.printBase64Binary(readDb.getEntryByTitle("1").getIconData()));
+    }
+
+    @Test
+    public void shouldWriteDatabaseWithAttachment() throws IOException {
+        FileInputStream image = new FileInputStream(ResourceUtils.getResource("0.png"));
+        byte[] imageData = StreamUtils.toByteArray(image);
+
+        String attachmentKey = "dummy.png";
+        int attachmentId = 0;
+
+        Binary binary = new BinaryBuilder().id(attachmentId).isCompressed(true).data(imageData).build();
+        Binaries binaries = new BinariesBuilder().addBinary(binary).build();
+
+        Meta meta = new MetaBuilder("attachmentTest").binaries(binaries).build();
+        Entry entry = new EntryBuilder("1").addAttachment(attachmentKey, attachmentId).build();
+        Group group = new GroupBuilder("A").addEntry(entry).build();
+
+        KeePassFile keePassFile = new KeePassFileBuilder(meta).addTopGroups(group).build();
+
+        // write
+        String dbFilename = tempFolder.newFile("databaseWithAttachment.kdbx").getPath();
+        KeePassDatabase.write(keePassFile, "abcdefg", dbFilename);
+
+        // read and assert
+        KeePassFile readDb = KeePassDatabase.getInstance(dbFilename).openDatabase("abcdefg");
+        Assert.assertEquals("attachmentTest", readDb.getMeta().getDatabaseName());
+        List<Attachment> attachments = readDb.getEntryByTitle("1").getAttachments();
+
+        assertThat(attachments.size(), is(1));
+        assertThat(attachments.get(0).getRef(), is(attachmentId));
+        assertThat(attachments.get(0).getKey(), is(attachmentKey));
+        assertThat(attachments.get(0).getData(), is(imageData));
     }
 
     @Test
