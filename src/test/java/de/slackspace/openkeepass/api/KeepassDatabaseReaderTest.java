@@ -1,9 +1,10 @@
 package de.slackspace.openkeepass.api;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +13,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+
+import org.junit.Assert;
+import org.junit.Test;
 
 import de.slackspace.openkeepass.KeePassDatabase;
 import de.slackspace.openkeepass.domain.Attachment;
@@ -25,8 +29,7 @@ import de.slackspace.openkeepass.domain.Property;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.ResourceUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import de.slackspace.openkeepass.util.StreamUtils;
 
 public class KeepassDatabaseReaderTest {
 
@@ -337,7 +340,7 @@ public class KeepassDatabaseReaderTest {
     }
 
     @Test
-    public void whenGettingAttachmentShouldReturnAttachment() throws FileNotFoundException {
+    public void whenGettingAttachmentShouldReturnAttachment() throws IOException {
         FileInputStream file = new FileInputStream(ResourceUtils.getResource("DatabaseWithAttachments.kdbx"));
 
         KeePassDatabase reader = KeePassDatabase.getInstance(file);
@@ -345,10 +348,16 @@ public class KeepassDatabaseReaderTest {
 
         Entry entry = database.getEntryByTitle("Sample Entry");
 
-        Assert.assertEquals(1, entry.getAttachments().size());
-        Attachment attachment = entry.getAttachments().get(0);
-        Assert.assertEquals(0, attachment.getRef());
-        Assert.assertEquals("attachment.txt", attachment.getKey());
-        Assert.assertEquals("H4sIAAAAAAAAAwtJrSgBAPkIuZsEAAAA", DatatypeConverter.printBase64Binary(attachment.getData()));
+        Assert.assertEquals(2, entry.getAttachments().size());
+        List<Attachment> attachments = entry.getAttachments();
+
+        Attachment image = attachments.get(0);
+        assertThat(image.getKey(), is("0.png"));
+        assertThat(image.getRef(), is(0));
+
+        FileInputStream originalImage = new FileInputStream(ResourceUtils.getResource("0.png"));
+        byte[] originalByteArray = StreamUtils.toByteArray(originalImage);
+
+        assertThat(image.getData(), equalTo(originalByteArray));
     }
 }

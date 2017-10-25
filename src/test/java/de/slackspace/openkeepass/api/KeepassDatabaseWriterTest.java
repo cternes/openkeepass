@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import javax.xml.bind.DatatypeConverter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,6 +11,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
+
+import javax.xml.bind.DatatypeConverter;
+
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import de.slackspace.openkeepass.KeePassDatabase;
 import de.slackspace.openkeepass.crypto.Salsa20;
@@ -45,10 +51,7 @@ import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.CalendarHandler;
 import de.slackspace.openkeepass.util.ResourceUtils;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import de.slackspace.openkeepass.util.StreamUtils;
 
 public class KeepassDatabaseWriterTest {
 
@@ -218,13 +221,13 @@ public class KeepassDatabaseWriterTest {
 
     @Test
     public void shouldWriteDatabaseWithAttachment() throws IOException {
-        String base64Attachment = "H4sIAAAAAAAAAwtJrSgBAPkIuZsEAAAA";
+        FileInputStream image = new FileInputStream(ResourceUtils.getResource("0.png"));
+        byte[] imageData = StreamUtils.toByteArray(image);
 
-        String attachmentKey = "text.txt";
+        String attachmentKey = "dummy.png";
         int attachmentId = 0;
-        byte[] data = DatatypeConverter.parseBase64Binary(base64Attachment);
 
-        Binary binary = new BinaryBuilder().id(attachmentId).isCompressed(true).data(data).build();
+        Binary binary = new BinaryBuilder().id(attachmentId).isCompressed(true).data(imageData).build();
         Binaries binaries = new BinariesBuilder().addBinary(binary).build();
 
         Meta meta = new MetaBuilder("attachmentTest").binaries(binaries).build();
@@ -241,10 +244,11 @@ public class KeepassDatabaseWriterTest {
         KeePassFile readDb = KeePassDatabase.getInstance(dbFilename).openDatabase("abcdefg");
         Assert.assertEquals("attachmentTest", readDb.getMeta().getDatabaseName());
         List<Attachment> attachments = readDb.getEntryByTitle("1").getAttachments();
-        Assert.assertEquals(1, attachments.size());
-        Assert.assertEquals(attachmentId, attachments.get(0).getRef());
-        Assert.assertEquals(attachmentKey, attachments.get(0).getKey());
-        Assert.assertEquals(base64Attachment, DatatypeConverter.printBase64Binary(attachments.get(0).getData()));
+
+        assertThat(attachments.size(), is(1));
+        assertThat(attachments.get(0).getRef(), is(attachmentId));
+        assertThat(attachments.get(0).getKey(), is(attachmentKey));
+        assertThat(attachments.get(0).getData(), is(imageData));
     }
 
     @Test
