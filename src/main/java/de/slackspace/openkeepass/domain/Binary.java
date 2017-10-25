@@ -1,10 +1,19 @@
 package de.slackspace.openkeepass.domain;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.Text;
+
+import de.slackspace.openkeepass.exception.AttachmentUnreadableException;
+import de.slackspace.openkeepass.exception.AttachmentUnwriteableException;
+import de.slackspace.openkeepass.util.StreamUtils;
 
 /**
  * Represents a binary item in the KeePass database.
@@ -22,13 +31,18 @@ public class Binary {
     @Text
     private byte[] data;
 
-    Binary() {
-    }
+    Binary() {}
 
     public Binary(BinaryContract binaryContract) {
         this.id = binaryContract.getId();
         this.isCompressed = binaryContract.isCompressed();
-        this.data = binaryContract.getData();
+
+        if (isCompressed) {
+            this.data = compressData(binaryContract);
+        }
+        else {
+            this.data = binaryContract.getData();
+        }
     }
 
     /**
@@ -58,7 +72,52 @@ public class Binary {
      * @return raw binary data as bytes
      */
     public byte[] getData() {
+        if (isCompressed()) {
+            return decompressData();
+        }
+
         return data;
+    }
+
+    private byte[] decompressData() {
+        GZIPInputStream gzipInputStream = null;
+        try {
+            gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(data));
+            byte[] decompressed = StreamUtils.toByteArray(gzipInputStream);
+            return decompressed;
+        }
+        catch (IOException e) {
+            throw new AttachmentUnreadableException("Could not read attachment from resource with id '" + id + "'", e);
+        }
+        finally {
+            try {
+                if (gzipInputStream != null) {
+                    gzipInputStream.close();
+                }
+            }
+            catch (IOException e) {
+                // Ignore
+            }
+        }
+    }
+
+    private byte[] compressData(BinaryContract binaryContract) {
+        if (binaryContract.getData() == null) {
+            return null;
+        }
+
+        try {
+            ByteArrayOutputStream streamToZip = new ByteArrayOutputStream();
+            GZIPOutputStream gzipOutputStream;
+            gzipOutputStream = new GZIPOutputStream(streamToZip);
+            gzipOutputStream.write(binaryContract.getData());
+            gzipOutputStream.close();
+            return streamToZip.toByteArray();
+        }
+        catch (IOException e) {
+            throw new AttachmentUnwriteableException(
+                    "Could not compress attachment with id '" + binaryContract.getId() + "'");
+        }
     }
 
     @Override
@@ -73,22 +132,30 @@ public class Binary {
 
     @Override
     public final boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (!(obj instanceof Binary))
+        }
+        if (!(obj instanceof Binary)) {
             return false;
+        }
         Binary other = (Binary) obj;
-        if (id != other.id)
+        if (id != other.id) {
             return false;
-        if (!Arrays.equals(data, other.data))
+        }
+        if (!Arrays.equals(data, other.data)) {
             return false;
+        }
         if (isCompressed == null) {
-            if (other.isCompressed != null)
+            if (other.isCompressed != null) {
                 return false;
-        } else if (!isCompressed.equals(other.isCompressed))
+            }
+        }
+        else if (!isCompressed.equals(other.isCompressed)) {
             return false;
+        }
         return true;
     }
 }
