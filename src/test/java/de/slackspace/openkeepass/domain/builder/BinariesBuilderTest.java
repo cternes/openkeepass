@@ -1,14 +1,17 @@
 package de.slackspace.openkeepass.domain.builder;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.Binaries;
 import de.slackspace.openkeepass.domain.BinariesBuilder;
 import de.slackspace.openkeepass.domain.Binary;
 import de.slackspace.openkeepass.domain.BinaryBuilder;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class BinariesBuilderTest {
 
@@ -19,7 +22,7 @@ public class BinariesBuilderTest {
 
         Binaries binaries = new BinariesBuilder().addBinary(binaryOne).addBinary(binaryTwo).build();
 
-        Assert.assertEquals(2, binaries.getBinaries().size());
+        assertThat(binaries.getBinaries().size(), is(2));
     }
 
     @Test
@@ -33,10 +36,11 @@ public class BinariesBuilderTest {
 
         Binaries binaries = new BinariesBuilder().addBinary(binaryOne).addBinary(binaryTwo).build();
 
-        Assert.assertEquals(idOne, binaries.getBinaryById(idOne).getId());
-        Assert.assertEquals(isCompressedOne, binaries.getBinaryById(idOne).isCompressed());
-        Assert.assertEquals(idTwo, binaries.getBinaryById(idTwo).getId());
-        Assert.assertEquals(isCompressedTwo, binaries.getBinaryById(idTwo).isCompressed());
+        assertThat(binaries.getBinaryById(idOne).getId(), is(idOne));
+        assertThat(binaries.getBinaryById(idOne).isCompressed(), is(isCompressedOne));
+
+        assertThat(binaries.getBinaryById(idTwo).getId(), is(idTwo));
+        assertThat(binaries.getBinaryById(idTwo).isCompressed(), is(isCompressedTwo));
     }
 
     @Test
@@ -45,10 +49,10 @@ public class BinariesBuilderTest {
         binaryList.add(createBinary(9, true));
 
         Binaries binaries = new BinariesBuilder().binaries(binaryList).build();
-        Assert.assertEquals(1, binaries.getBinaries().size());
+        assertThat(binaries.getBinaries().size(), is(1));
 
         Binaries binariesClone = new BinariesBuilder(binaries).build();
-        Assert.assertEquals(1, binariesClone.getBinaries().size());
+        assertThat(binariesClone.getBinaries().size(), is(1));
     }
 
     private Binary createBinary(int id, boolean isCompressed) {

@@ -1,36 +1,38 @@
 package de.slackspace.openkeepass.domain.builder;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import org.junit.Test;
+
 import de.slackspace.openkeepass.domain.Binary;
 import de.slackspace.openkeepass.domain.BinaryBuilder;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class BinaryBuilderTest {
 
     @Test
     public void shouldBuildBinary() {
         int id = 5;
-        boolean isCompressed = true;
+        boolean isCompressed = false;
         byte[] data = new byte[4];
 
         Binary binary = new BinaryBuilder().id(id).isCompressed(isCompressed).data(data).build();
 
-        Assert.assertEquals(id, binary.getId());
-        Assert.assertEquals(isCompressed, binary.isCompressed());
-        Assert.assertEquals(data, binary.getData());
+        assertThat(binary.getId(), is(id));
+        assertThat(binary.isCompressed(), is(isCompressed));
+        assertThat(binary.getData(), is(data));
     }
 
     @Test
     public void shouldBuildBinaryFromExistingBinary() {
         int id = 5;
-        boolean isCompressed = true;
+        boolean isCompressed = false;
         byte[] data = new byte[4];
 
         Binary binary = new BinaryBuilder().id(id).isCompressed(isCompressed).data(data).build();
-        Binary binaryClone = new BinaryBuilder(binary).build();
 
-        Assert.assertEquals(id, binaryClone.getId());
-        Assert.assertEquals(isCompressed, binaryClone.isCompressed());
-        Assert.assertEquals(data, binaryClone.getData());
+        assertThat(binary.getId(), is(id));
+        assertThat(binary.isCompressed(), is(isCompressed));
+        assertThat(binary.getData(), is(data));
     }
 }

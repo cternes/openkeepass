@@ -1,7 +1,12 @@
 package de.slackspace.openkeepass.domain.enricher;
 
-import javax.xml.bind.DatatypeConverter;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.ArrayList;
+
+import org.junit.Test;
+import org.spongycastle.pqc.math.linearalgebra.ByteUtils;
 
 import de.slackspace.openkeepass.domain.Attachment;
 import de.slackspace.openkeepass.domain.Binaries;
@@ -17,8 +22,6 @@ import de.slackspace.openkeepass.domain.KeePassFileBuilder;
 import de.slackspace.openkeepass.domain.Meta;
 import de.slackspace.openkeepass.domain.MetaBuilder;
 import de.slackspace.openkeepass.processor.BinaryEnricher;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class BinaryEnricherTest {
 
@@ -26,9 +29,9 @@ public class BinaryEnricherTest {
     public void shouldAddAttachmentDataAndMaintainBinaryId() {
         int attachmentId = 5;
         String attachmentKey = "test.txt";
-        byte[] attachmentData = DatatypeConverter.parseBase64Binary("H4sIAAAAAAAAAwtJrSgBAPkIuZsEAAAA");
+        byte[] attachmentData = ByteUtils.fromHexString("FF00EE");
 
-        Binary binary = new BinaryBuilder().id(attachmentId).isCompressed(true).data(attachmentData).build();
+        Binary binary = new BinaryBuilder().id(attachmentId).isCompressed(false).data(attachmentData).build();
 
         ArrayList<Binary> binaryList = new ArrayList<Binary>();
         binaryList.add(binary);
@@ -45,9 +48,11 @@ public class BinaryEnricherTest {
         BinaryEnricher enricher = new BinaryEnricher();
         KeePassFile enrichedKeePassFile = enricher.enrichNodesWithBinaryData(keePassFile);
 
-        Attachment attachment = enrichedKeePassFile.getRoot().getGroups().get(0).getEntries().get(0).getAttachments().get(0);
-        Assert.assertEquals("attachment id doesn't match", attachmentId, attachment.getRef());
-        Assert.assertEquals("attachment key doesn't match", attachmentKey, attachment.getKey());
-        Assert.assertEquals("attachment data doesn't match", attachmentData, attachment.getData());
+        Attachment attachment =
+                enrichedKeePassFile.getRoot().getGroups().get(0).getEntries().get(0).getAttachments().get(0);
+
+        assertThat(attachment.getRef(), is(attachmentId));
+        assertThat(attachment.getKey(), is(attachmentKey));
+        assertThat(attachment.getData(), is(attachmentData));
     }
 }
