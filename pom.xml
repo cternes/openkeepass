@@ -24,9 +24,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sonar.java.source>1.6</sonar.java.source>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
+        <sonar.java.source>1.7</sonar.java.source>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
         <spongycastle.version>1.54.0.0</spongycastle.version>
         <junit.version>4.12</junit.version>
         <equalsverifier.version>1.7.8</equalsverifier.version>
