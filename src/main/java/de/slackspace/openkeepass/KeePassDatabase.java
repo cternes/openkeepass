@@ -7,7 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import de.slackspace.openkeepass.api.KeePassDatabaseReader;
 import de.slackspace.openkeepass.api.KeePassDatabaseWriter;
@@ -66,8 +66,6 @@ import de.slackspace.openkeepass.util.StreamUtils;
  */
 public class KeePassDatabase {
 
-    private static final String UTF_8 = "UTF-8";
-    private static final String MSG_UTF8_NOT_SUPPORTED = "The encoding UTF-8 is not supported";
     private static final String MSG_EMPTY_MASTER_KEY = "The password for the database must not be null. Please provide a valid password.";
 
     private KeePassHeader keepassHeader = new KeePassHeader();
@@ -158,14 +156,10 @@ public class KeePassDatabase {
             throw new IllegalArgumentException(MSG_EMPTY_MASTER_KEY);
         }
 
-        try {
-            byte[] passwordBytes = password.getBytes(UTF_8);
-            byte[] hashedPassword = Sha256.hash(passwordBytes);
+        byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
+        byte[] hashedPassword = Sha256.hash(passwordBytes);
 
-            return new KeePassDatabaseReader(keepassHeader).decryptAndParseDatabase(hashedPassword, keepassFile);
-        } catch (UnsupportedEncodingException e) {
-            throw new UnsupportedOperationException(MSG_UTF8_NOT_SUPPORTED, e);
-        }
+        return new KeePassDatabaseReader(keepassHeader).decryptAndParseDatabase(hashedPassword, keepassFile);
     }
 
     /**
@@ -230,15 +224,12 @@ public class KeePassDatabase {
             throw new IllegalArgumentException("You must provide a non-empty KeePass keyfile stream.");
         }
 
-        try {
-            byte[] passwordBytes = password.getBytes(UTF_8);
-            byte[] hashedPassword = Sha256.hash(passwordBytes);
-            byte[] protectedBuffer = new KeyFileReader().readKeyFile(keyFileStream);
+        byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
+        byte[] hashedPassword = Sha256.hash(passwordBytes);
+        byte[] protectedBuffer = new KeyFileReader().readKeyFile(keyFileStream);
 
-            return new KeePassDatabaseReader(keepassHeader).decryptAndParseDatabase(ByteUtils.concat(hashedPassword, protectedBuffer), keepassFile);
-        } catch (UnsupportedEncodingException e) {
-            throw new UnsupportedOperationException(MSG_UTF8_NOT_SUPPORTED, e);
-        }
+        return new KeePassDatabaseReader(keepassHeader)
+                .decryptAndParseDatabase(ByteUtils.concat(hashedPassword, protectedBuffer), keepassFile);
     }
 
     /**

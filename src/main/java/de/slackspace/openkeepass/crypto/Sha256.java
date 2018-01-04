@@ -1,6 +1,6 @@
 package de.slackspace.openkeepass.crypto;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -14,11 +14,7 @@ public class Sha256 {
             throw new IllegalArgumentException("Text must not be null");
         }
 
-        try {
-            return hash(text.getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new UnsupportedOperationException("The encoding 'UTF-8' is not supported", e);
-        }
+        return hash(text.getBytes(StandardCharsets.UTF_8));
     }
 
     public static byte[] hash(byte[] bytes) {

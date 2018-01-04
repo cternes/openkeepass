@@ -3,7 +3,7 @@ package de.slackspace.openkeepass.api;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPOutputStream;
 
 import de.slackspace.openkeepass.crypto.CryptoInformation;
@@ -23,8 +23,6 @@ import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
 
 public class KeePassDatabaseWriter {
-
-    private static final String UTF_8 = "UTF-8";
 
     public void writeKeePassFile(KeePassFile keePassFile, String password, OutputStream stream) {
         try {
@@ -57,8 +55,8 @@ public class KeePassDatabaseWriter {
         }
     }
 
-    private byte[] hashPassword(String password) throws UnsupportedEncodingException {
-        byte[] passwordBytes = password.getBytes(UTF_8);
+    private byte[] hashPassword(String password) {
+        byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
         return Sha256.hash(passwordBytes);
     }
 
