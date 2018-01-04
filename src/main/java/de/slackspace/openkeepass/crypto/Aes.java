@@ -66,13 +66,9 @@ public class Aes {
             throw new UnsupportedOperationException("The specified algorithm is unknown", e);
         } catch (NoSuchPaddingException e) {
             throw new UnsupportedOperationException("The specified padding is unknown", e);
-        } catch (InvalidKeyException e) {
-            throw createCryptoException(e);
-        } catch (InvalidAlgorithmParameterException e) {
-            throw createCryptoException(e);
-        } catch (IllegalBlockSizeException e) {
-            throw createCryptoException(e);
-        } catch (BadPaddingException e) {
+        }
+        catch (InvalidKeyException | InvalidAlgorithmParameterException | IllegalBlockSizeException
+                | BadPaddingException e) {
             throw createCryptoException(e);
         }
     }
