@@ -21,4 +21,18 @@ public final class StringUtils {
         return sb.toString();
     }
 
+    public static String convertToUUIDString(String value) {
+        if (value == null || value.contains("-") || value.length() != 32) {
+            return value;
+        }
+
+        StringBuilder sb = new StringBuilder(value);
+        char dash = '-';
+        sb.insert(8, dash);
+        sb.insert(13, dash);
+        sb.insert(18, dash);
+        sb.insert(23, dash);
+
+        return sb.toString();
+    }
 }

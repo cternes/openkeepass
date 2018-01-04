@@ -1,6 +1,7 @@
 package de.slackspace.openkeepass.util;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
@@ -33,5 +34,26 @@ public class StringUtilsTest {
         String result = StringUtils.join(null, ";");
 
         assertThat(result, is(""));
+    }
+
+    @Test
+    public void whenInputIsRawUUIDShouldReturnValidUUID() {
+        String uuid = StringUtils.convertToUUIDString("28A8836D5642534BB46B34F87E078729");
+
+        assertThat(uuid, is("28A8836D-5642-534B-B46B-34F87E078729"));
+    }
+
+    @Test
+    public void whenInputIsNullShouldReturnNull() {
+        String uuid = StringUtils.convertToUUIDString(null);
+
+        assertThat(uuid, is(nullValue()));
+    }
+
+    @Test
+    public void whenInputIsNotAtCorrectLengthShouldReturnInputValue() {
+        String uuid = StringUtils.convertToUUIDString("abc");
+
+        assertThat(uuid, is("abc"));
     }
 }
