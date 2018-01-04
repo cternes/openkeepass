@@ -80,24 +80,12 @@ public class Binary {
     }
 
     private byte[] decompressData() {
-        GZIPInputStream gzipInputStream = null;
-        try {
-            gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(data));
+        try (GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(data))) {
             byte[] decompressed = StreamUtils.toByteArray(gzipInputStream);
             return decompressed;
         }
         catch (IOException e) {
             throw new AttachmentUnreadableException("Could not read attachment from resource with id '" + id + "'", e);
-        }
-        finally {
-            try {
-                if (gzipInputStream != null) {
-                    gzipInputStream.close();
-                }
-            }
-            catch (IOException e) {
-                // Ignore
-            }
         }
     }
 
@@ -106,11 +94,11 @@ public class Binary {
             return null;
         }
 
-        try {
-            ByteArrayOutputStream streamToZip = new ByteArrayOutputStream();
-            GZIPOutputStream gzipOutputStream;
-            gzipOutputStream = new GZIPOutputStream(streamToZip);
+        try (ByteArrayOutputStream streamToZip = new ByteArrayOutputStream();
+                GZIPOutputStream gzipOutputStream = new GZIPOutputStream(streamToZip);) {
             gzipOutputStream.write(binaryContract.getData());
+
+            // this is necessary even if auto-close is in place!
             gzipOutputStream.close();
             return streamToZip.toByteArray();
         }

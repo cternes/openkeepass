@@ -35,23 +35,16 @@ public class KeePassDatabaseWriter {
             byte[] hashedPassword = hashPassword(password);
 
             byte[] keePassFilePayload = marshallXml(keePassFile, header);
-            ByteArrayOutputStream streamToZip = compressStream(keePassFilePayload);
-            ByteArrayOutputStream streamToHashBlock = hashBlockStream(streamToZip);
-            ByteArrayOutputStream streamToEncrypt = combineHeaderAndContent(header, streamToHashBlock);
-            byte[] encryptedDatabase = encryptStream(header, hashedPassword, streamToEncrypt);
 
-            // Write database to stream
-            stream.write(encryptedDatabase);
+            try (ByteArrayOutputStream streamToZip = compressStream(keePassFilePayload);
+                    ByteArrayOutputStream streamToHashBlock = hashBlockStream(streamToZip);
+                    ByteArrayOutputStream streamToEncrypt = combineHeaderAndContent(header, streamToHashBlock);) {
+                byte[] encryptedDatabase = encryptStream(header, hashedPassword, streamToEncrypt);
+                // Write database to stream
+                stream.write(encryptedDatabase);
+            }
         } catch (IOException e) {
             throw new KeePassDatabaseUnwriteableException("Could not write database file", e);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    // Ignore
-                }
-            }
         }
     }
 
@@ -77,9 +70,11 @@ public class KeePassDatabaseWriter {
 
     private ByteArrayOutputStream hashBlockStream(ByteArrayOutputStream streamToUnzip) throws IOException {
         ByteArrayOutputStream streamToHashBlock = new ByteArrayOutputStream();
-        HashedBlockOutputStream hashBlockOutputStream = new HashedBlockOutputStream(streamToHashBlock);
-        hashBlockOutputStream.write(streamToUnzip.toByteArray());
-        hashBlockOutputStream.close();
+
+        try (HashedBlockOutputStream hashBlockOutputStream = new HashedBlockOutputStream(streamToHashBlock);) {
+            hashBlockOutputStream.write(streamToUnzip.toByteArray());
+        }
+
         return streamToHashBlock;
     }
 
@@ -94,9 +89,11 @@ public class KeePassDatabaseWriter {
 
     private ByteArrayOutputStream compressStream(byte[] keePassFilePayload) throws IOException {
         ByteArrayOutputStream streamToZip = new ByteArrayOutputStream();
-        GZIPOutputStream gzipOutputStream = new GZIPOutputStream(streamToZip);
-        gzipOutputStream.write(keePassFilePayload);
-        gzipOutputStream.close();
+
+        try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(streamToZip);) {
+            gzipOutputStream.write(keePassFilePayload);
+        }
+
         return streamToZip;
     }
 

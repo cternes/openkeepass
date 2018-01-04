@@ -92,21 +92,14 @@ public class IconEnricher {
             return null;
         }
 
-        InputStream inputStream = getClass().getResourceAsStream(ICONS + iconId + PNG);
-        if (inputStream == null) {
-            return null;
-        }
+        try (InputStream inputStream = getClass().getResourceAsStream(ICONS + iconId + PNG)) {
+            if (inputStream == null) {
+                return null;
+            }
 
-        try {
             return StreamUtils.toByteArray(inputStream);
         } catch (IOException e) {
             throw new IconUnreadableException("Could not read icon data from resource '" + ICONS + iconId + PNG + "'", e);
-        } finally {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                // Ignore
-            }
         }
     }
 }

@@ -8,7 +8,7 @@ import de.slackspace.openkeepass.crypto.Sha256;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.StreamUtils;
 
-public class HashedBlockInputStream extends InputStream {
+public class HashedBlockInputStream extends InputStream implements AutoCloseable {
 
     private static final int EOF = -1;
     private static final String MSG_INVALID_DATA_FORMAT = "Invalid data format";

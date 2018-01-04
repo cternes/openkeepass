@@ -31,9 +31,10 @@ public class StreamUtils {
     }
 
     public static byte[] toByteArray(InputStream input) throws IOException {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        copyLarge(input, output, new byte[BUFFER_SIZE]);
-        return output.toByteArray();
+        try (ByteArrayOutputStream output = new ByteArrayOutputStream()) {
+            copyLarge(input, output, new byte[BUFFER_SIZE]);
+            return output.toByteArray();
+        }
     }
 
     private static long copyLarge(InputStream input, OutputStream output, byte[] buffer) throws IOException {

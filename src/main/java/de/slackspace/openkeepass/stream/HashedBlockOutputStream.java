@@ -5,7 +5,7 @@ import java.io.OutputStream;
 
 import de.slackspace.openkeepass.crypto.Sha256;
 
-public class HashedBlockOutputStream extends OutputStream {
+public class HashedBlockOutputStream extends OutputStream implements AutoCloseable {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 1024;
 
