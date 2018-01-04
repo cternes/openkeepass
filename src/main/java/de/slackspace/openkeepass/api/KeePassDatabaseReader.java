@@ -16,9 +16,8 @@ import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.parser.SimpleXmlParser;
-import de.slackspace.openkeepass.processor.BinaryEnricher;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
-import de.slackspace.openkeepass.processor.IconEnricher;
+import de.slackspace.openkeepass.processor.Enricher;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.util.SafeInputStream;
@@ -45,7 +44,8 @@ public class KeePassDatabaseReader {
             ProtectedStringCrypto protectedStringCrypto = getProtectedStringCrypto();
 
             return parseDatabase(decompressed, protectedStringCrypto);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new KeePassDatabaseUnreadableException("Could not open database file", e);
         }
     }
@@ -57,17 +57,22 @@ public class KeePassDatabaseReader {
 
     private KeePassFile parseDatabase(byte[] decompressed, ProtectedStringCrypto protectedStringCrypto) {
         KeePassFile unprocessedKeepassFile = keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed));
-        new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(protectedStringCrypto), unprocessedKeepassFile);
+        new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(protectedStringCrypto),
+                unprocessedKeepassFile);
 
-        KeePassFile iconEnrichedKeepassFile = new IconEnricher().enrichNodesWithIconData(unprocessedKeepassFile);
-        return new BinaryEnricher().enrichNodesWithBinaryData(iconEnrichedKeepassFile);
+        return new Enricher(unprocessedKeepassFile)
+                .enrichIcons()
+                .enrichAttachments()
+                .enrichReferences()
+                .process();
     }
 
     private ProtectedStringCrypto getProtectedStringCrypto() {
         ProtectedStringCrypto protectedStringCrypto;
         if (keepassHeader.getCrsAlgorithm().equals(CrsAlgorithm.Salsa20)) {
             protectedStringCrypto = Salsa20.createInstance(keepassHeader.getProtectedStreamKey());
-        } else {
+        }
+        else {
             throw new UnsupportedOperationException("Only Salsa20 is supported as CrsAlgorithm at the moment!");
         }
         return protectedStringCrypto;
@@ -96,15 +101,18 @@ public class KeePassDatabaseReader {
 
         // Compare startBytes
         if (!Arrays.equals(keepassHeader.getStreamStartBytes(), startBytes)) {
-            throw new KeePassDatabaseUnreadableException("The keepass database file seems to be corrupt or cannot be decrypted.");
+            throw new KeePassDatabaseUnreadableException(
+                    "The keepass database file seems to be corrupt or cannot be decrypted.");
         }
 
         return decryptedStream;
     }
 
     private byte[] decryptStream(byte[] key, byte[] keepassFile) throws IOException {
-        CryptoInformation cryptoInformation = new CryptoInformation(KeePassHeader.VERSION_SIGNATURE_LENGTH, keepassHeader.getMasterSeed(),
-                keepassHeader.getTransformSeed(), keepassHeader.getEncryptionIV(), keepassHeader.getTransformRounds(), keepassHeader.getHeaderSize());
+        CryptoInformation cryptoInformation =
+                new CryptoInformation(KeePassHeader.VERSION_SIGNATURE_LENGTH, keepassHeader.getMasterSeed(),
+                        keepassHeader.getTransformSeed(), keepassHeader.getEncryptionIV(),
+                        keepassHeader.getTransformRounds(), keepassHeader.getHeaderSize());
         return decrypter.decryptDatabase(key, cryptoInformation, keepassFile);
     }
 }

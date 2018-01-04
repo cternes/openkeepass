@@ -3,6 +3,7 @@ package de.slackspace.openkeepass.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
@@ -17,7 +18,7 @@ import de.slackspace.openkeepass.parser.TagParser;
  */
 @Root(strict = false, name = "Entry")
 @Order(elements = {"UUID", "IconID", "CustomIconUUID", "ForegroundColor",
-    "BackgroundColor", "Tags", "String", "Times", "History"})
+        "BackgroundColor", "Tags", "String", "Times", "History"})
 public class Entry implements KeePassFileElement {
 
     private static final String USER_NAME = "UserName";
@@ -26,6 +27,8 @@ public class Entry implements KeePassFileElement {
     private static final String PASSWORD = "Password";
     private static final String TITLE = "Title";
     private static final List<String> PROPERTY_KEYS = new ArrayList<String>();
+
+    public static Pattern REFERENCE_PATTERN = Pattern.compile("^\\{REF:(.)@I:([0-9a-zA-Z]*)\\}");
 
     static {
         PROPERTY_KEYS.add(USER_NAME);
@@ -48,6 +51,8 @@ public class Entry implements KeePassFileElement {
 
     @ElementList(name = "String", inline = true)
     private List<Property> properties = new ArrayList<Property>();
+
+    private List<Property> referencedProperties = new ArrayList<Property>();
 
     @Element(name = "History", required = false)
     private History history;
@@ -129,6 +134,10 @@ public class Entry implements KeePassFileElement {
         return properties;
     }
 
+    public List<Property> getReferencedProperties() {
+        return referencedProperties;
+    }
+
     public List<Property> getCustomProperties() {
         List<Property> customProperties = new ArrayList<Property>();
 
@@ -191,11 +200,34 @@ public class Entry implements KeePassFileElement {
 
     private String getValueFromProperty(String name) {
         Property property = getPropertyByName(name);
-        if (property != null) {
-            return property.getValue();
+        if (property == null) {
+            return null;
         }
 
-        return null;
+        String value = property.getValue();
+
+        if (isUUIDReference(value)) {
+            return getReferencedProperty(name, value);
+        }
+
+        return value;
+    }
+
+    private String getReferencedProperty(String name, String value) {
+        Property referencedProperty = getPropertyByNameFromList(name, referencedProperties);
+        if (referencedProperty == null) {
+            return value;
+        }
+
+        return referencedProperty.getValue();
+    }
+
+    private boolean isUUIDReference(String value) {
+        if (value == null || value.isEmpty()) {
+            return false;
+        }
+
+        return Entry.REFERENCE_PATTERN.matcher(value).matches();
     }
 
     /**
@@ -205,7 +237,11 @@ public class Entry implements KeePassFileElement {
      * @return the property if found, null otherwise
      */
     public Property getPropertyByName(String name) {
-        for (Property property : properties) {
+        return getPropertyByNameFromList(name, properties);
+    }
+
+    private Property getPropertyByNameFromList(String name, List<Property> list) {
+        for (Property property : list) {
             if (property.getKey().equalsIgnoreCase(name)) {
                 return property;
             }

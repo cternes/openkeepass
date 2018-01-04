@@ -360,4 +360,22 @@ public class KeepassDatabaseReaderTest {
 
         assertThat(image.getData(), equalTo(originalByteArray));
     }
+
+    @Test
+    public void whenGettingEntryWithReferencesShouldReturnReferencedValues() throws FileNotFoundException {
+        FileInputStream file = new FileInputStream(ResourceUtils.getResource("DatabaseWithReferences.kdbx"));
+
+        KeePassDatabase reader = KeePassDatabase.getInstance(file);
+        KeePassFile database = reader.openDatabase("abcdefg");
+
+        Entry entryA = database.getEntryByTitle("ReferenceToA");
+        assertThat(entryA.getUsername(), is("testA"));
+        assertThat(entryA.getPassword(), is("passwdA"));
+        assertThat(entryA.getUrl(), is("http://google.com"));
+        assertThat(entryA.getNotes(), is("Just a sample note"));
+
+        Entry entryB = database.getEntryByTitle("AnotherReferenceToA");
+        assertThat(entryB.getUsername(), is("passwdA"));
+        assertThat(entryB.getPassword(), is("http://google.com"));
+    }
 }
