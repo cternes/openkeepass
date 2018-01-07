@@ -16,7 +16,7 @@ public class Binaries {
     @ElementList(name = "Binary", inline = true, required = false)
     private List<Binary> binaryList = new ArrayList<Binary>();
 
-    Binaries() {
+    public Binaries() {
     }
 
     public Binaries(BinariesContract binariesContract) {
@@ -30,6 +30,18 @@ public class Binaries {
      */
     public List<Binary> getBinaries() {
         return binaryList;
+    }
+
+    public Binaries setBinaries(List<Binary> binaries) {
+        this.binaryList = binaries;
+
+        return this;
+    }
+
+    public Binaries addBinary(Binary binary) {
+        this.binaryList.add(binary);
+
+        return this;
     }
 
     /**

@@ -54,7 +54,10 @@ public class Meta {
     @Element(name = "Binaries", required = false)
     private Binaries binaries;
 
-    Meta() {
+    public Meta() {}
+
+    public Meta(String databaseName) {
+        this.databaseName = databaseName;
     }
 
     public Meta(MetaContract metaContract) {
@@ -77,52 +80,130 @@ public class Meta {
         return databaseName;
     }
 
+    public Meta setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+
+        return this;
+    }
+
     public String getDatabaseDescription() {
         return databaseDescription;
+    }
+
+    public Meta setDatabaseDescription(String databaseDescription) {
+        this.databaseDescription = databaseDescription;
+
+        return this;
     }
 
     public String getGenerator() {
         return generator;
     }
 
+    public Meta setGenerator(String generator) {
+        this.generator = generator;
+
+        return this;
+    }
+
     public Calendar getDatabaseNameChanged() {
         return databaseNameChanged;
+    }
+
+    public Meta setDatabaseNameChanged(Calendar databaseNameChanged) {
+        this.databaseNameChanged = databaseNameChanged;
+
+        return this;
     }
 
     public Calendar getDatabaseDescriptionChanged() {
         return databaseDescriptionChanged;
     }
 
+    public Meta setDatabaseDescriptionChanged(Calendar databaseDescriptionChanged) {
+        this.databaseDescriptionChanged = databaseDescriptionChanged;
+
+        return this;
+    }
+
     public int getMaintenanceHistoryDays() {
         return maintenanceHistoryDays;
+    }
+
+    public Meta setMaintenanceHistoryDays(int maintenanceHistoryDays) {
+        this.maintenanceHistoryDays = maintenanceHistoryDays;
+
+        return this;
     }
 
     public UUID getRecycleBinUuid() {
         return recycleBinUuid;
     }
 
+    public Meta setRecycleBinUuid(UUID recycleBinUuid) {
+        this.recycleBinUuid = recycleBinUuid;
+
+        return this;
+    }
+
     public Calendar getRecycleBinChanged() {
         return recycleBinChanged;
+    }
+
+    public Meta setRecycleBinChanged(Calendar recycleBinChanged) {
+        this.recycleBinChanged = recycleBinChanged;
+
+        return this;
     }
 
     public long getHistoryMaxItems() {
         return historyMaxItems;
     }
 
+    public Meta setHistoryMaxItems(long historyMaxItems) {
+        this.historyMaxItems = historyMaxItems;
+
+        return this;
+    }
+
     public long getHistoryMaxSize() {
         return historyMaxSize;
+    }
+
+    public Meta setHistoryMaxSize(long historyMaxSize) {
+        this.historyMaxSize = historyMaxSize;
+
+        return this;
     }
 
     public boolean getRecycleBinEnabled() {
         return recycleBinEnabled;
     }
 
+    public Meta setRecycleBinEnabled(boolean recycleBinEnabled) {
+        this.recycleBinEnabled = recycleBinEnabled;
+
+        return this;
+    }
+
     public CustomIcons getCustomIcons() {
         return customIcons;
     }
 
+    public Meta setCustomIcons(CustomIcons customIcons) {
+        this.customIcons = customIcons;
+
+        return this;
+    }
+
     public Binaries getBinaries() {
         return binaries;
+    }
+
+    public Meta setBinaries(Binaries binaries) {
+        this.binaries = binaries;
+
+        return this;
     }
 
     @Override

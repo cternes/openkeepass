@@ -43,8 +43,13 @@ public class Group implements KeePassFileElement {
     @ElementList(name = "Group", inline = true, required = false)
     private List<Group> groups = new ArrayList<Group>();
 
-    Group() {
+    public Group() {
         uuid = UUID.randomUUID();
+    }
+
+    public Group(String name) {
+        this();
+        this.name = name;
     }
 
     public Group(GroupContract groupContract) {
@@ -77,6 +82,12 @@ public class Group implements KeePassFileElement {
         return name;
     }
 
+    public Group setName(String name) {
+        this.name = name;
+
+        return this;
+    }
+
     /**
      * Retrieves all subgroups of this group.
      *
@@ -84,6 +95,17 @@ public class Group implements KeePassFileElement {
      */
     public List<Group> getGroups() {
         return groups;
+    }
+
+    public Group addGroup(Group group) {
+        this.groups.add(group);
+        return this;
+    }
+
+    public Group setGroups(List<Group> groups) {
+        this.groups = groups;
+
+        return this;
     }
 
     /**
@@ -94,6 +116,17 @@ public class Group implements KeePassFileElement {
      */
     public List<Entry> getEntries() {
         return entries;
+    }
+
+    public Group addEntry(Entry entry) {
+        this.entries.add(entry);
+        return this;
+    }
+
+    public Group setEntries(List<Entry> entries) {
+        this.entries = entries;
+
+        return this;
     }
 
     /**
@@ -126,6 +159,12 @@ public class Group implements KeePassFileElement {
         return iconId;
     }
 
+    public Group setIconId(int iconId) {
+        this.iconId = iconId;
+
+        return this;
+    }
+
     /**
      * Returns the custom icon of this group.
      *
@@ -133,6 +172,12 @@ public class Group implements KeePassFileElement {
      */
     public UUID getCustomIconUuid() {
         return customIconUUID;
+    }
+
+    public Group setCustomIconUuid(UUID customIconUUID) {
+        this.customIconUUID = customIconUUID;
+
+        return this;
     }
 
     /**
@@ -147,6 +192,12 @@ public class Group implements KeePassFileElement {
 
     public Times getTimes() {
         return times;
+    }
+
+    public Group setTimes(Times times) {
+        this.times = times;
+
+        return this;
     }
 
     /**

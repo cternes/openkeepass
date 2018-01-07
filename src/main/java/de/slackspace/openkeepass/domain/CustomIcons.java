@@ -17,7 +17,7 @@ public class CustomIcons {
     @ElementList(name = "Icon", inline = true, required = false)
     private List<CustomIcon> customIconList = new ArrayList<CustomIcon>();
 
-    CustomIcons() {
+    public CustomIcons() {
     }
 
     public CustomIcons(CustomIconsContract customIconsContract) {
@@ -31,6 +31,18 @@ public class CustomIcons {
      */
     public List<CustomIcon> getIcons() {
         return customIconList;
+    }
+
+    public CustomIcons setIcons(List<CustomIcon> icons) {
+        this.customIconList = icons;
+
+        return this;
+    }
+
+    public CustomIcons addIcon(CustomIcon icon) {
+        this.customIconList.add(icon);
+
+        return this;
     }
 
     /**

@@ -63,6 +63,8 @@ public class Entry implements KeePassFileElement {
     @Element(name = "Tags", required = false)
     private String tags;
 
+    private List<String> tagList = new ArrayList<String>();
+
     @Element(name = "ForegroundColor", required = false)
     private String foregroundColor;
 
@@ -74,8 +76,17 @@ public class Entry implements KeePassFileElement {
 
     private TagParser tagParser = new TagParser();
 
-    Entry() {
+    public Entry() {
         this.uuid = UUID.randomUUID();
+    }
+
+    public Entry(String title) {
+        this();
+        setTitle(title);
+    }
+
+    public Entry(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public Entry(EntryContract entryContract) {
@@ -112,6 +123,12 @@ public class Entry implements KeePassFileElement {
         return iconId;
     }
 
+    public Entry setIconId(int iconId) {
+        this.iconId = iconId;
+
+        return this;
+    }
+
     /**
      * Retrieves the custom icon of this group.
      *
@@ -119,6 +136,12 @@ public class Entry implements KeePassFileElement {
      */
     public UUID getCustomIconUuid() {
         return customIconUUID;
+    }
+
+    public Entry setCustomIconUuid(UUID customIconUUID) {
+        this.customIconUUID = customIconUUID;
+
+        return this;
     }
 
     /**
@@ -132,6 +155,12 @@ public class Entry implements KeePassFileElement {
 
     public List<Property> getProperties() {
         return properties;
+    }
+
+    public Entry setProperties(List<Property> properties) {
+        this.properties = properties;
+
+        return this;
     }
 
     public List<Property> getReferencedProperties() {
@@ -154,20 +183,50 @@ public class Entry implements KeePassFileElement {
         return getValueFromProperty(TITLE);
     }
 
+    public Entry setTitle(String title) {
+        setValue(false, TITLE, title);
+
+        return this;
+    }
+
     public String getPassword() {
         return getValueFromProperty(PASSWORD);
+    }
+
+    public Entry setPassword(String password) {
+        setValue(true, PASSWORD, password);
+
+        return this;
     }
 
     public String getUrl() {
         return getValueFromProperty(URL);
     }
 
+    public Entry setUrl(String url) {
+        setValue(false, URL, url);
+
+        return this;
+    }
+
     public String getNotes() {
         return getValueFromProperty(NOTES);
     }
 
+    public Entry setNotes(String notes) {
+        setValue(false, NOTES, notes);
+
+        return this;
+    }
+
     public String getUsername() {
         return getValueFromProperty(USER_NAME);
+    }
+
+    public Entry setUsername(String username) {
+        setValue(false, USER_NAME, username);
+
+        return this;
     }
 
     public boolean isTitleProtected() {
@@ -182,8 +241,26 @@ public class Entry implements KeePassFileElement {
         return times;
     }
 
+    public Entry setTimes(Times times) {
+        this.times = times;
+
+        return this;
+    }
+
     public List<Attachment> getAttachments() {
         return attachments;
+    }
+
+    public Entry setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
+
+        return this;
+    }
+
+    public Entry addAttachment(Attachment attachment) {
+        this.attachments.add(attachment);
+
+        return this;
     }
 
     private void setValue(boolean isProtected, String propertyName, String propertyValue) {
@@ -254,6 +331,12 @@ public class Entry implements KeePassFileElement {
         return history;
     }
 
+    public Entry setHistory(History history) {
+        this.history = history;
+
+        return this;
+    }
+
     public List<String> getTags() {
         if (tags != null) {
             return tagParser.fromTagString(tags);
@@ -262,12 +345,31 @@ public class Entry implements KeePassFileElement {
         return null;
     }
 
+    public Entry addTag(String tag) {
+        this.tagList.add(tag);
+        this.tags = tagParser.toTagString(tagList);
+
+        return this;
+    }
+
     public String getForegroundColor() {
         return foregroundColor;
     }
 
+    public Entry setForegroundColor(String foregroundColor) {
+        this.foregroundColor = foregroundColor;
+
+        return this;
+    }
+
     public String getBackgroundColor() {
         return backgroundColor;
+    }
+
+    public Entry setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
+
+        return this;
     }
 
     @Override
@@ -345,6 +447,16 @@ public class Entry implements KeePassFileElement {
     public String toString() {
         return "Entry [uuid=" + uuid + ", getTitle()=" + getTitle() + ", getPassword()=" + getPassword()
                 + ", getUsername()=" + getUsername() + "]";
+    }
+
+    public UUID getCustomIconUUID() {
+        return customIconUUID;
+    }
+
+    public Entry setCustomIconUUID(UUID customIconUUID) {
+        this.customIconUUID = customIconUUID;
+
+        return this;
     }
 
 }

@@ -33,12 +33,22 @@ public class Binary {
 
     Binary() {}
 
+    public Binary(int id, byte[] data) {
+        this(id, data, true);
+    }
+
+    public Binary(int id, byte[] data, boolean isCompressed) {
+        this.id = id;
+        this.isCompressed = isCompressed;
+        setData(data, isCompressed);
+    }
+
     public Binary(BinaryContract binaryContract) {
         this.id = binaryContract.getId();
         this.isCompressed = binaryContract.isCompressed();
 
         if (isCompressed) {
-            this.data = compressData(binaryContract);
+            this.data = compressData(binaryContract.getData());
         }
         else {
             this.data = binaryContract.getData();
@@ -52,6 +62,12 @@ public class Binary {
      */
     public int getId() {
         return id;
+    }
+
+    public Binary setId(int id) {
+        this.id = id;
+
+        return this;
     }
 
     /**
@@ -79,6 +95,17 @@ public class Binary {
         return data;
     }
 
+    public Binary setData(byte[] data, boolean isCompressed) {
+        if (isCompressed) {
+            this.data = compressData(data);
+        }
+        else {
+            this.data = data;
+        }
+
+        return this;
+    }
+
     private byte[] decompressData() {
         try (GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(data))) {
             byte[] decompressed = StreamUtils.toByteArray(gzipInputStream);
@@ -89,14 +116,14 @@ public class Binary {
         }
     }
 
-    private byte[] compressData(BinaryContract binaryContract) {
-        if (binaryContract.getData() == null) {
+    private byte[] compressData(byte[] data) {
+        if (data == null) {
             return null;
         }
 
         try (ByteArrayOutputStream streamToZip = new ByteArrayOutputStream();
                 GZIPOutputStream gzipOutputStream = new GZIPOutputStream(streamToZip);) {
-            gzipOutputStream.write(binaryContract.getData());
+            gzipOutputStream.write(data);
 
             // this is necessary even if auto-close is in place!
             gzipOutputStream.close();
@@ -104,7 +131,7 @@ public class Binary {
         }
         catch (IOException e) {
             throw new AttachmentUnwriteableException(
-                    "Could not compress attachment with id '" + binaryContract.getId() + "'");
+                    "Could not compress attachment with id '" + this.id + "'");
         }
     }
 

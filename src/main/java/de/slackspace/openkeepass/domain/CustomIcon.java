@@ -19,7 +19,13 @@ public class CustomIcon {
     @Element(name = "Data")
     private byte[] data;
 
-    CustomIcon() {
+    public CustomIcon() {
+        this.uuid = UUID.randomUUID();
+    }
+
+    public CustomIcon(UUID uuid, byte[] data) {
+        this.uuid = uuid;
+        this.data = data;
     }
 
     public CustomIcon(CustomIconContract customIconContract) {
@@ -36,6 +42,12 @@ public class CustomIcon {
         return uuid;
     }
 
+    public CustomIcon setUuid(UUID uuid) {
+        this.uuid = uuid;
+
+        return this;
+    }
+
     /**
      * Returns the raw image data as bytes.
      *
@@ -43,6 +55,12 @@ public class CustomIcon {
      */
     public byte[] getData() {
         return data;
+    }
+
+    public CustomIcon setData(byte[] data) {
+        this.data = data;
+
+        return this;
     }
 
     @Override

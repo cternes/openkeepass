@@ -23,27 +23,18 @@ import de.slackspace.openkeepass.KeePassDatabase;
 import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.domain.Attachment;
 import de.slackspace.openkeepass.domain.Binaries;
-import de.slackspace.openkeepass.domain.BinariesBuilder;
 import de.slackspace.openkeepass.domain.Binary;
-import de.slackspace.openkeepass.domain.BinaryBuilder;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.CustomIcon;
-import de.slackspace.openkeepass.domain.CustomIconBuilder;
 import de.slackspace.openkeepass.domain.CustomIcons;
-import de.slackspace.openkeepass.domain.CustomIconsBuilder;
 import de.slackspace.openkeepass.domain.Entry;
-import de.slackspace.openkeepass.domain.EntryBuilder;
 import de.slackspace.openkeepass.domain.Group;
-import de.slackspace.openkeepass.domain.GroupBuilder;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassFileBuilder;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.domain.Meta;
-import de.slackspace.openkeepass.domain.MetaBuilder;
 import de.slackspace.openkeepass.domain.Times;
-import de.slackspace.openkeepass.domain.TimesBuilder;
-import de.slackspace.openkeepass.domain.zipper.GroupZipper;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.parser.SimpleXmlParser;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
@@ -94,8 +85,9 @@ public class KeepassDatabaseWriterTest {
     @Test
     public void shouldCreateNewDatabaseFile() throws IOException {
         Calendar creationDate = CalendarHandler.createCalendar(2016, 5, 1);
-        Times times = new TimesBuilder().usageCount(5).creationTime(creationDate).build();
-        Entry entryOne = new EntryBuilder("First entry").username("Carl").password("Carls secret").times(times).build();
+        Times times = new Times().setUsageCount(5).setCreationTime(creationDate);
+
+        Entry entryOne = new Entry("First entry").setUsername("Carl").setPassword("Carls secret").setTimes(times);
 
         KeePassFile keePassFile = new KeePassFileBuilder("testDB").addTopEntries(entryOne).build();
 
@@ -119,13 +111,12 @@ public class KeepassDatabaseWriterTest {
          * Root | |-- First entry (E) |-- Banking (G) | |-- Internet (G) | |-- Shopping (G) |-- Second entry (E)
          *
          */
-        Group root = new GroupBuilder().addEntry(new EntryBuilder("First entry").build())
-                .addGroup(new GroupBuilder("Banking").build())
-                .addGroup(
-                        new GroupBuilder("Internet").addGroup(
-                                new GroupBuilder("Shopping").addEntry(new EntryBuilder("Second entry").build()).build())
-                                .build())
-                .build();
+
+        Group root = new Group()
+                .addEntry(new Entry("First entry"))
+                .addGroup(new Group("Banking"))
+                .addGroup(new Group("Internet").addGroup(
+                        new Group("Shopping").addEntry(new Entry("Second entry"))));
 
         KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB").addTopGroups(root).build();
 
@@ -150,13 +141,10 @@ public class KeepassDatabaseWriterTest {
         KeePassFile database = keePassDb.openDatabase(password);
 
         Group group = database.getGroupByName("test");
-        Group modifiedGroup = new GroupBuilder(group).name("test2").build();
-
-        GroupZipper zipper = new GroupZipper(database).down().right().right().right().right().down();
-        KeePassFile modifiedDatabase = zipper.replace(modifiedGroup).close();
+        group.setName("test2");
 
         String dbFilename = tempFolder.newFile("fullBlownDatabaseModified.kdbx").getPath();
-        KeePassDatabase.write(modifiedDatabase, password, new FileOutputStream(dbFilename));
+        KeePassDatabase.write(database, password, new FileOutputStream(dbFilename));
         KeePassFile databaseReadFromHdd = KeePassDatabase.getInstance(dbFilename).openDatabase(password);
 
         Assert.assertNotNull("Banking", databaseReadFromHdd.getGroupByName("test2"));
@@ -172,15 +160,14 @@ public class KeepassDatabaseWriterTest {
         KeePassFile database = KeePassDatabase.getInstance(originalDbFile).openDatabase(password);
 
         // change db name
-        Meta meta = new MetaBuilder(database.getMeta()).databaseName("differentName").build();
+        database.getMeta().setDatabaseName("differentName");
 
         // change general node
-        GroupZipper zipper = new GroupZipper(database).down();
-        Group renamedNode = new GroupBuilder(zipper.getNode()).name("Misc").build();
-        KeePassFile modifiedKeepassFile = zipper.replace(renamedNode).replaceMeta(meta).close();
+        Group general = database.getGroupByName("General");
+        general.setName("Misc");
 
         // write
-        KeePassDatabase.write(modifiedKeepassFile, password, modifiedDbFile);
+        KeePassDatabase.write(database, password, modifiedDbFile);
 
         // read and assert
         KeePassFile readModifiedDb = KeePassDatabase.getInstance(modifiedDbFile).openDatabase(password);
@@ -197,12 +184,12 @@ public class KeepassDatabaseWriterTest {
         byte[] customPng = DatatypeConverter.parseBase64Binary(base64Icon);
 
         // build database
-        CustomIcon customIcon = new CustomIconBuilder().uuid(iconUuid).data(customPng).build();
-        CustomIcons customIcons = new CustomIconsBuilder().addIcon(customIcon).build();
+        CustomIcon customIcon = new CustomIcon(iconUuid, customPng);
+        CustomIcons customIcons = new CustomIcons().addIcon(customIcon);
 
-        Meta meta = new MetaBuilder("iconTest").customIcons(customIcons).build();
-        Entry entry1 = new EntryBuilder("1").customIconUuid(iconUuid).build();
-        Group groupA = new GroupBuilder("A").customIconUuid(iconUuid).addEntry(entry1).build();
+        Meta meta = new Meta("iconTest").setCustomIcons(customIcons);
+        Entry entry1 = new Entry("1").setCustomIconUuid(iconUuid);
+        Group groupA = new Group("A").setCustomIconUuid(iconUuid).addEntry(entry1);
 
         KeePassFile keePassFile = new KeePassFileBuilder(meta).addTopGroups(groupA).build();
 
@@ -227,12 +214,13 @@ public class KeepassDatabaseWriterTest {
         String attachmentKey = "dummy.png";
         int attachmentId = 0;
 
-        Binary binary = new BinaryBuilder().id(attachmentId).isCompressed(true).data(imageData).build();
-        Binaries binaries = new BinariesBuilder().addBinary(binary).build();
+        Binary binary = new Binary(attachmentId, imageData, true);
+        Binaries binaries = new Binaries().addBinary(binary);
 
-        Meta meta = new MetaBuilder("attachmentTest").binaries(binaries).build();
-        Entry entry = new EntryBuilder("1").addAttachment(attachmentKey, attachmentId).build();
-        Group group = new GroupBuilder("A").addEntry(entry).build();
+        Meta meta = new Meta("attachmentTest").setBinaries(binaries);
+
+        Entry entry = new Entry("1").addAttachment(new Attachment(attachmentKey, attachmentId));
+        Group group = new Group("A").addEntry(entry);
 
         KeePassFile keePassFile = new KeePassFileBuilder(meta).addTopGroups(group).build();
 
@@ -256,11 +244,12 @@ public class KeepassDatabaseWriterTest {
         // open DB
         final KeePassFile keePassFile =
                 KeePassDatabase.getInstance(ResourceUtils.getResource("testDatabase.kdbx")).openDatabase("abcdefg");
-        Group generalGroup = keePassFile.getGroupByName("General");
 
         // add entry
-        Entry entry = new EntryBuilder(UUID.randomUUID()).title("title").password("password").build();
-        new GroupBuilder(generalGroup).addEntry(entry).build();
+        Group generalGroup = keePassFile.getGroupByName("General");
+
+        Entry entry = new Entry(UUID.randomUUID()).setTitle("title").setPassword("password");
+        generalGroup.addEntry(entry);
 
         // compare password in current DB
         Assert.assertEquals(entry.getPassword(), generalGroup.getEntryByTitle("title").getPassword());
@@ -288,9 +277,9 @@ public class KeepassDatabaseWriterTest {
     @Test
     public void shouldWriteDatabaseWithTags() throws IOException {
         // build database
-        Meta meta = new MetaBuilder("tagTest").build();
-        Entry entry1 = new EntryBuilder("1").addTag("x").addTag("y").build();
-        Group groupA = new GroupBuilder("A").addEntry(entry1).build();
+        Meta meta = new Meta("tagTest");
+        Entry entry1 = new Entry("1").addTag("x").addTag("y");
+        Group groupA = new Group("A").addEntry(entry1);
 
         KeePassFile keePassFile = new KeePassFileBuilder(meta).addTopGroups(groupA).build();
 
@@ -309,9 +298,9 @@ public class KeepassDatabaseWriterTest {
     @Test
     public void shouldWriteDatabaseWithColors() throws IOException {
         // build database
-        Meta meta = new MetaBuilder("colorTest").build();
-        Entry entry1 = new EntryBuilder("1").foregroundColor("#FFFFFF").backgroundColor("#000000").build();
-        Group groupA = new GroupBuilder("A").addEntry(entry1).build();
+        Meta meta = new Meta("colorTest");
+        Entry entry1 = new Entry("1").setForegroundColor("#FFFFFF").setBackgroundColor("#000000");
+        Group groupA = new Group("A").addEntry(entry1);
 
         KeePassFile keePassFile = new KeePassFileBuilder(meta).addTopGroups(groupA).build();
 

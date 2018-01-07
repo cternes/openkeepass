@@ -34,7 +34,7 @@ public class Times {
     @Element(name = "LocationChanged", type = GregorianCalendar.class, required = false)
     private Calendar locationChanged;
 
-    Times() {
+    public Times() {
         // default no-args constructor
     }
 
@@ -74,6 +74,48 @@ public class Times {
 
     public Calendar getLocationChanged() {
         return locationChanged;
+    }
+
+    public Times setLastModificationTime(Calendar lastModificationTime) {
+        this.lastModificationTime = lastModificationTime;
+
+        return this;
+    }
+
+    public Times setCreationTime(Calendar creationTime) {
+        this.creationTime = creationTime;
+
+        return this;
+    }
+
+    public Times setLastAccessTime(Calendar lastAccessTime) {
+        this.lastAccessTime = lastAccessTime;
+
+        return this;
+    }
+
+    public Times setExpiryTime(Calendar expiryTime) {
+        this.expiryTime = expiryTime;
+
+        return this;
+    }
+
+    public Times setExpires(Boolean expires) {
+        this.expires = expires;
+
+        return this;
+    }
+
+    public Times setUsageCount(int usageCount) {
+        this.usageCount = usageCount;
+
+        return this;
+    }
+
+    public Times setLocationChanged(Calendar locationChanged) {
+        this.locationChanged = locationChanged;
+
+        return this;
     }
 
     @Override

@@ -41,6 +41,12 @@ public class KeePassFile implements KeePassFileElement {
         return meta;
     }
 
+    public KeePassFile setMeta(Meta meta) {
+        this.meta = meta;
+
+        return this;
+    }
+
     /**
      * Retrieves the root group of a KeePass database.
      *

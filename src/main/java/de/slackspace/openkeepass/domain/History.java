@@ -16,6 +16,18 @@ public class History {
         return entries;
     }
 
+    public History setHistoricEntries(List<Entry> entries) {
+        this.entries = entries;
+
+        return this;
+    }
+
+    public History addHistoricEntry(Entry entry) {
+        this.entries.add(entry);
+
+        return this;
+    }
+
     @Override
     public final int hashCode() {
         final int prime = 31;
