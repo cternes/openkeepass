@@ -1,15 +1,20 @@
 package de.slackspace.openkeepass.domain.enricher;
 
-import de.slackspace.openkeepass.domain.*;
-import de.slackspace.openkeepass.processor.IconEnricher;
+import java.util.UUID;
+
+import javax.xml.bind.DatatypeConverter;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.xml.bind.DatatypeConverter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import de.slackspace.openkeepass.domain.CustomIcon;
+import de.slackspace.openkeepass.domain.CustomIcons;
+import de.slackspace.openkeepass.domain.Entry;
+import de.slackspace.openkeepass.domain.Group;
+import de.slackspace.openkeepass.domain.KeePassFile;
+import de.slackspace.openkeepass.domain.KeePassFileBuilder;
+import de.slackspace.openkeepass.domain.Meta;
+import de.slackspace.openkeepass.processor.IconEnricher;
 
 public class IconEnricherTest {
 
@@ -19,18 +24,14 @@ public class IconEnricherTest {
         byte[] transparentPng = DatatypeConverter
                 .parseBase64Binary("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVQYV2NgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII=");
 
-        CustomIcon customIcon = new CustomIconBuilder().uuid(iconUuid).data(transparentPng).build();
+        CustomIcon customIcon = new CustomIcon(iconUuid, transparentPng);
+        CustomIcons customIcons = new CustomIcons().addIcon(customIcon);
 
-        List<CustomIcon> customIconList = new ArrayList<CustomIcon>();
-        customIconList.add(customIcon);
+        Meta meta = new Meta("iconTest").setCustomIcons(customIcons);
 
-        CustomIcons customIcons = new CustomIconsBuilder().customIcons(customIconList).build();
+        Entry entry1 = new Entry("1").setCustomIconUuid(iconUuid);
 
-        Meta meta = new MetaBuilder("iconTest").customIcons(customIcons).build();
-
-        Entry entry1 = new EntryBuilder("1").customIconUuid(iconUuid).build();
-
-        Group groupA = new GroupBuilder("A").customIconUuid(iconUuid).addEntry(entry1).build();
+        Group groupA = new Group("A").setCustomIconUuid(iconUuid).addEntry(entry1);
 
         KeePassFile keePassFile = new KeePassFileBuilder(meta).addTopGroups(groupA).build();
         IconEnricher enricher = new IconEnricher();

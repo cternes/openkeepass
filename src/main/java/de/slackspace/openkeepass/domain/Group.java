@@ -190,6 +190,12 @@ public class Group implements KeePassFileElement {
         return iconData;
     }
 
+    public Group setIconData(byte[] iconData) {
+        this.iconData = iconData;
+
+        return this;
+    }
+
     public Times getTimes() {
         return times;
     }

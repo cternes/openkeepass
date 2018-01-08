@@ -1,7 +1,6 @@
 package de.slackspace.openkeepass.processor;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import de.slackspace.openkeepass.domain.Attachment;
@@ -11,7 +10,6 @@ import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.EntryBuilder;
 import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.KeePassFile;
-import de.slackspace.openkeepass.domain.zipper.GroupZipper;
 
 /**
  * Adds the raw attachment data of all nodes in a KeePass file to the nodes
@@ -32,16 +30,12 @@ public class BinaryEnricher {
      */
     public KeePassFile enrichNodesWithBinaryData(KeePassFile keePassFile) {
         Binaries binaryLibrary = keePassFile.getMeta().getBinaries();
-        GroupZipper zipper = new GroupZipper(keePassFile);
-        Iterator<Group> iter = zipper.iterator();
 
-        while (iter.hasNext()) {
-            Group group = iter.next();
-
+        for (Group group : keePassFile.getGroups()) {
             enrichEntriesWithBinaryData(binaryLibrary, group);
         }
 
-        return zipper.close();
+        return keePassFile;
     }
 
     private void enrichEntriesWithBinaryData(Binaries binaryLibrary, Group group) {

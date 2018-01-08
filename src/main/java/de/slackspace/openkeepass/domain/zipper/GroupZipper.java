@@ -14,19 +14,20 @@ import de.slackspace.openkeepass.domain.KeePassFileBuilder;
 import de.slackspace.openkeepass.domain.Meta;
 
 /**
- * A zipper is used to navigate through a tree structure of {@link Group}
- * objects.
+ * A zipper is used to navigate through a tree structure of {@link Group} objects.
  * <p>
- * It is kind of an iterator with a pointer to the current element. The current
- * element can be found with {@link #getNode()} method.
+ * It is kind of an iterator with a pointer to the current element. The current element can be found with
+ * {@link #getNode()} method.
  * <p>
- * Navigation through the tree is possible with the methods {@link #down()}
- * {@link #up()} {@link #left()} {@link #right()}.
+ * Navigation through the tree is possible with the methods {@link #down()} {@link #up()} {@link #left()}
+ * {@link #right()}.
  * <p>
- * The tree can also be modified by using the {@link #replace(Group)} method to
- * replace a node with another one.
+ * The tree can also be modified by using the {@link #replace(Group)} method to replace a node with another one.
+ *
+ * @deprecated use the modification methods of {@link Group} and {@link Entry} directly instead
  *
  */
+@Deprecated(since = "1.0.0", forRemoval = true)
 public class GroupZipper {
 
     private Meta meta;

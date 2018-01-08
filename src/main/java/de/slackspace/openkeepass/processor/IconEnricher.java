@@ -3,7 +3,6 @@ package de.slackspace.openkeepass.processor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,9 +11,7 @@ import de.slackspace.openkeepass.domain.CustomIcons;
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.EntryBuilder;
 import de.slackspace.openkeepass.domain.Group;
-import de.slackspace.openkeepass.domain.GroupBuilder;
 import de.slackspace.openkeepass.domain.KeePassFile;
-import de.slackspace.openkeepass.domain.zipper.GroupZipper;
 import de.slackspace.openkeepass.exception.IconUnreadableException;
 import de.slackspace.openkeepass.util.StreamUtils;
 
@@ -41,20 +38,14 @@ public class IconEnricher {
      */
     public KeePassFile enrichNodesWithIconData(KeePassFile keePassFile) {
         CustomIcons iconLibrary = keePassFile.getMeta().getCustomIcons();
-        GroupZipper zipper = new GroupZipper(keePassFile);
-        Iterator<Group> iter = zipper.iterator();
-
-        while (iter.hasNext()) {
-            Group group = iter.next();
-
+        
+        for (Group group : keePassFile.getGroups()) {
             byte[] iconData = getIconData(group.getCustomIconUuid(), group.getIconId(), iconLibrary);
-            Group groupWithIcon = new GroupBuilder(group).iconData(iconData).build();
-            zipper.replace(groupWithIcon);
-
+            group.setIconData(iconData);
             enrichEntriesWithIcons(iconLibrary, group);
         }
 
-        return zipper.close();
+        return keePassFile;
     }
 
     private void enrichEntriesWithIcons(CustomIcons iconLibrary, Group group) {

@@ -1,6 +1,5 @@
 package de.slackspace.openkeepass.processor;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -9,28 +8,30 @@ import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.Property;
-import de.slackspace.openkeepass.domain.zipper.GroupZipper;
 import de.slackspace.openkeepass.util.StringUtils;
 
+/**
+ * Resolves references to referenced values all entries in a KeePass file. This makes it possible to call {@link Entry}
+ * methods even for references to retrieve the referenced data.
+ * <p>
+ * <b>Important:</b> Only references by UUID are currently supported!
+ * </p>
+ *
+ */
 public class ReferencesEnricher {
 
     /**
-     * Iterates through all nodes of the given KeePass file and replace the nodes with enriched attachment data nodes.
+     * Iterates through all entries of the given KeePass file and resolve reference values by UUID.
      *
      * @param keePassFile the KeePass file which should be iterated
      * @return an enriched KeePass file
      */
     public KeePassFile enrichNodesWithReferences(KeePassFile keePassFile) {
-        GroupZipper zipper = new GroupZipper(keePassFile);
-        Iterator<Group> iter = zipper.iterator();
-
-        while (iter.hasNext()) {
-            Group group = iter.next();
-
+        for (Group group : keePassFile.getGroups()) {
             enrichEntriesWithReferences(group, keePassFile);
         }
 
-        return zipper.close();
+        return keePassFile;
     }
 
     private void enrichEntriesWithReferences(Group group, KeePassFile keePassFile) {
