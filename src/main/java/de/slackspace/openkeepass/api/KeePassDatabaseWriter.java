@@ -14,7 +14,6 @@ import de.slackspace.openkeepass.crypto.Salsa20;
 import de.slackspace.openkeepass.crypto.Sha256;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
-import de.slackspace.openkeepass.domain.zipper.GroupZipper;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.parser.SimpleXmlParser;
@@ -79,10 +78,12 @@ public class KeePassDatabaseWriter {
     }
 
     private byte[] marshallXml(KeePassFile keePassFile, KeePassHeader header) {
-        KeePassFile clonedKeePassFile = new GroupZipper(keePassFile).cloneKeePassFile();
+        // clone entries to avoid side effects of writing
+        keePassFile.cloneEntries();
 
         ProtectedStringCrypto protectedStringCrypto = Salsa20.createInstance(header.getProtectedStreamKey());
-        new ProtectedValueProcessor().processProtectedValues(new EncryptionStrategy(protectedStringCrypto), clonedKeePassFile);
+        new ProtectedValueProcessor().processProtectedValues(new EncryptionStrategy(protectedStringCrypto),
+                keePassFile);
 
         return new KeePassDatabaseXmlParser(new SimpleXmlParser()).toXml(keePassFile).toByteArray();
     }

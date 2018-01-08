@@ -1,14 +1,11 @@
 package de.slackspace.openkeepass.domain;
 
-import de.slackspace.openkeepass.domain.zipper.GroupZipper;
-
 /**
  * A builder to create {@link KeePassFile}s.
  * <p>
  * Can be used to create a completely new {@link KeePassFile} or to modify an
  * existing one.
  * <p>
- * To modify an existing one use the {@link GroupZipper}.
  *
  */
 public class KeePassFileBuilder implements KeePassFileContract {

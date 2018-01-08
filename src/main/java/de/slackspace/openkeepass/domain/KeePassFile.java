@@ -326,4 +326,18 @@ public class KeePassFile implements KeePassFileElement {
             return null;
         }
     }
+
+    public void cloneEntries() {
+        for (Group group : getGroups()) {
+            List<Entry> entries = group.getEntries();
+
+            List<Entry> clonedEntries = new ArrayList<>();
+            for (Entry entry : entries) {
+                Entry clone = new EntryBuilder(entry).build();
+                clonedEntries.add(clone);
+            }
+
+            group.setEntries(clonedEntries);
+        }
+    }
 }
