@@ -1,12 +1,6 @@
 language: java
   		  
-addons:
-  apt:
-    packages:
-      - openjdk-6-jdk
-
 jdk:
-- openjdk6
 - openjdk7
 - oraclejdk8
   		  
@@ -19,4 +13,4 @@ install:
 - mvn -version
 - mvn clean package install -DskipTests -Dgpg.skip
 script:		  
-- mvn test		
+- mvn test
