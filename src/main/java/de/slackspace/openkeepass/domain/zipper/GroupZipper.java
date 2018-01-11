@@ -27,7 +27,7 @@ import de.slackspace.openkeepass.domain.Meta;
  * @deprecated use the modification methods of {@link Group} and {@link Entry} directly instead
  *
  */
-@Deprecated(since = "1.0.0", forRemoval = true)
+@Deprecated
 public class GroupZipper {
 
     private Meta meta;
