@@ -35,7 +35,8 @@ import de.slackspace.openkeepass.util.StreamUtils;
  *
  * <pre>
  * // open database
- * KeePassFile database = KeePassDatabase.getInstance("keePassDatabasePath").openDatabase("secret");
+ * KeePassFile database = KeePassDatabase.getInstance("keePassDatabasePath")
+ *      .openDatabase("secret");
  *
  * // get password entries
  * List&lt;Entry&gt; entries = database.getEntries();
@@ -48,14 +49,18 @@ import de.slackspace.openkeepass.util.StreamUtils;
  * A typical write use-case should use the following idiom:
  *
  * <pre>
- * // build an entry
- * Entry entryOne = new EntryBuilder("First entry").username("Carl").password("secret").build();
+ * // create an entry
+ * Entry entry = new Entry("First entry")
+ *      .setUsername("Carl")
+ *      .setPassword("secret");
  *
- * // build more entries or groups as you like
+ * // create more entries or groups as you like
  * ...
  *
  * // build KeePass model
- * KeePassFile keePassFile = new KeePassFileBuilder("testDB").addTopEntries(entryOne).build();
+ * KeePassFile keePassFile = new KeePassFileBuilder("testDB")
+ *      .addTopEntries(entryOne)
+ *      .build();
  *
  * // write KeePass database file
  * KeePassDatabase.write(keePassFile, "secret", new FileOutputStream("keePassDatabasePath"));
@@ -214,7 +219,7 @@ public class KeePassDatabase {
         byte[] protectedBuffer = new KeyFileReader().readKeyFile(keyFileStream);
 
         return new KeePassDatabaseReader(keepassHeader)
-                .decryptAndParseDatabase(ByteUtils.concat(hashedPassword, protectedBuffer), keepassFile);
+                        .decryptAndParseDatabase(ByteUtils.concat(hashedPassword, protectedBuffer), keepassFile);
     }
 
     /**

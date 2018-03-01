@@ -2,6 +2,7 @@ package de.slackspace.openkeepass.api;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.io.FileInputStream;
@@ -14,7 +15,6 @@ import java.util.UUID;
 
 import javax.xml.bind.DatatypeConverter;
 
-import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -47,7 +47,7 @@ import de.slackspace.openkeepass.util.StreamUtils;
 public class KeepassDatabaseWriterTest {
 
     private byte[] protectedStreamKey =
-            ByteUtils.hexStringToByteArray("ec77a2169769734c5d26e5341401f8d7b11052058f8455d314879075d0b7e257");
+                    ByteUtils.hexStringToByteArray("ec77a2169769734c5d26e5341401f8d7b11052058f8455d314879075d0b7e257");
 
     @Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -57,7 +57,7 @@ public class KeepassDatabaseWriterTest {
         FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("testDatabase_decrypted.xml"));
         KeePassFile keePassFile = new KeePassDatabaseXmlParser(new SimpleXmlParser()).fromXml(fileInputStream);
         new ProtectedValueProcessor().processProtectedValues(
-                new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), keePassFile);
+                        new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), keePassFile);
 
         String writeDatabase = tempFolder.newFile("writeDatabase.kdbx").getPath();
 
@@ -67,19 +67,19 @@ public class KeepassDatabaseWriterTest {
         KeePassDatabase database = KeePassDatabase.getInstance(writeDatabase);
         KeePassHeader header = database.getHeader();
 
-        Assert.assertEquals(CompressionAlgorithm.Gzip, header.getCompression());
-        Assert.assertEquals(CrsAlgorithm.Salsa20, header.getCrsAlgorithm());
-        Assert.assertEquals(8000, header.getTransformRounds());
+        assertThat(header.getCompression(), is(CompressionAlgorithm.Gzip));
+        assertThat(header.getCrsAlgorithm(), is(CrsAlgorithm.Salsa20));
+        assertThat(header.getTransformRounds(), is(8000L));
 
         KeePassFile openDatabase = database.openDatabase("abcdefg");
 
         Entry sampleEntry = openDatabase.getEntryByTitle("Sample Entry");
-        Assert.assertEquals("User Name", sampleEntry.getUsername());
-        Assert.assertEquals("Password", sampleEntry.getPassword());
+        assertThat(sampleEntry.getUsername(), is("User Name"));
+        assertThat(sampleEntry.getPassword(), is("Password"));
 
         Entry sampleEntryTwo = openDatabase.getEntryByTitle("Sample Entry #2");
-        Assert.assertEquals("Michael321", sampleEntryTwo.getUsername());
-        Assert.assertEquals("12345", sampleEntryTwo.getPassword());
+        assertThat(sampleEntryTwo.getUsername(), is("Michael321"));
+        assertThat(sampleEntryTwo.getPassword(), is("12345"));
     }
 
     @Test
@@ -98,9 +98,9 @@ public class KeepassDatabaseWriterTest {
         KeePassFile database = keePassDb.openDatabase("abc");
         Entry entryByTitle = database.getEntryByTitle("First entry");
 
-        Assert.assertEquals(entryOne.getTitle(), entryByTitle.getTitle());
-        Assert.assertEquals(5, entryOne.getTimes().getUsageCount());
-        Assert.assertEquals(creationDate, entryOne.getTimes().getCreationTime());
+        assertThat(entryByTitle.getTitle(), is(entryOne.getTitle()));
+        assertThat(entryOne.getTimes().getUsageCount(), is(5));
+        assertThat(entryOne.getTimes().getCreationTime(), is(creationDate));
     }
 
     @Test
@@ -113,10 +113,10 @@ public class KeepassDatabaseWriterTest {
          */
 
         Group root = new Group()
-                .addEntry(new Entry("First entry"))
-                .addGroup(new Group("Banking"))
-                .addGroup(new Group("Internet").addGroup(
-                        new Group("Shopping").addEntry(new Entry("Second entry"))));
+                        .addEntry(new Entry("First entry"))
+                        .addGroup(new Group("Banking"))
+                        .addGroup(new Group("Internet").addGroup(
+                                        new Group("Shopping").addEntry(new Entry("Second entry"))));
 
         KeePassFile keePassFile = new KeePassFileBuilder("writeTreeDB").addTopGroups(root).build();
 
@@ -126,12 +126,11 @@ public class KeepassDatabaseWriterTest {
         KeePassDatabase keePassDb = KeePassDatabase.getInstance(dbFilename);
         KeePassFile database = keePassDb.openDatabase("abc");
 
-        Assert.assertEquals("Banking", database.getTopGroups().get(0).getName());
-        Assert.assertEquals("Internet", database.getTopGroups().get(1).getName());
-        Assert.assertEquals("First entry", database.getTopEntries().get(0).getTitle());
-        Assert.assertEquals("Shopping", database.getTopGroups().get(1).getGroups().get(0).getName());
-        Assert.assertEquals("Second entry",
-                database.getTopGroups().get(1).getGroups().get(0).getEntries().get(0).getTitle());
+        assertThat(database.getTopGroups().get(0).getName(), is("Banking"));
+        assertThat(database.getTopGroups().get(1).getName(), is("Internet"));
+        assertThat(database.getTopEntries().get(0).getTitle(), is("First entry"));
+        assertThat(database.getTopGroups().get(1).getGroups().get(0).getName(), is("Shopping"));
+        assertThat(database.getTopGroups().get(1).getGroups().get(0).getEntries().get(0).getTitle(), is("Second entry"));
     }
 
     @Test
@@ -147,8 +146,9 @@ public class KeepassDatabaseWriterTest {
         KeePassDatabase.write(database, password, new FileOutputStream(dbFilename));
         KeePassFile databaseReadFromHdd = KeePassDatabase.getInstance(dbFilename).openDatabase(password);
 
-        Assert.assertNotNull("Banking", databaseReadFromHdd.getGroupByName("test2"));
-        Assert.assertEquals(2, databaseReadFromHdd.getGroupByName("test2").getEntries().size());
+        Group groupByName = databaseReadFromHdd.getGroupByName("test2");
+        assertThat(groupByName, is(notNullValue()));
+        assertThat(groupByName.getEntries().size(), is(2));
     }
 
     @Test
@@ -171,14 +171,14 @@ public class KeepassDatabaseWriterTest {
 
         // read and assert
         KeePassFile readModifiedDb = KeePassDatabase.getInstance(modifiedDbFile).openDatabase(password);
-        Assert.assertEquals("differentName", readModifiedDb.getMeta().getDatabaseName());
-        Assert.assertEquals("Misc", readModifiedDb.getTopGroups().get(0).getName());
+        assertThat(readModifiedDb.getMeta().getDatabaseName(), is("differentName"));
+        assertThat(readModifiedDb.getTopGroups().get(0).getName(), is("Misc"));
     }
 
     @Test
     public void shouldWriteDatabaseWithCustomIcon() throws IOException {
         String base64Icon =
-                "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAB+FBMVEUAAAA/mUPidDHiLi5Cn0XkNTPmeUrkdUg/m0Q0pEfcpSbwaVdKskg+lUP4zA/iLi3msSHkOjVAmETdJSjtYFE/lkPnRj3sWUs8kkLeqCVIq0fxvhXqUkbVmSjwa1n1yBLepyX1xxP0xRXqUkboST9KukpHpUbuvRrzrhF/ljbwaljuZFM4jELaoSdLtElJrUj1xxP6zwzfqSU4i0HYnydMtUlIqUfywxb60AxZqEXaoifgMCXptR9MtklHpEY2iUHWnSjvvRr70QujkC+pUC/90glMuEnlOjVMt0j70QriLS1LtEnnRj3qUUXfIidOjsxAhcZFo0bjNDH0xxNLr0dIrUdmntVTkMoyfL8jcLBRuErhJyrgKyb4zA/5zg3tYFBBmUTmQTnhMinruBzvvhnxwxZ/st+Ktt5zp9hqota2vtK6y9FemNBblc9HiMiTtMbFtsM6gcPV2r6dwroseLrMrbQrdLGdyKoobKbo3Zh+ynrgVllZulTsXE3rV0pIqUf42UVUo0JyjEHoS0HmsiHRGR/lmRz/1hjqnxjvpRWfwtOhusaz0LRGf7FEfbDVmqHXlJeW0pbXq5bec3fX0nTnzmuJuWvhoFFhm0FtrziBsjaAaDCYWC+uSi6jQS3FsSfLJiTirCOkuCG1KiG+wSC+GBvgyhTszQ64Z77KAAAARXRSTlMAIQRDLyUgCwsE6ebm5ubg2dLR0byXl4FDQzU1NDEuLSUgC+vr6urq6ubb29vb2tra2tG8vLu7u7uXl5eXgYGBgYGBLiUALabIAAABsElEQVQoz12S9VPjQBxHt8VaOA6HE+AOzv1wd7pJk5I2adpCC7RUcHd3d3fXf5PvLkxheD++z+yb7GSRlwD/+Hj/APQCZWxM5M+goF+RMbHK594v+tPoiN1uHxkt+xzt9+R9wnRTZZQpXQ0T5uP1IQxToyOAZiQu5HEpjeA4SWIoksRxNiGC1tRZJ4LNxgHgnU5nJZBDvuDdl8lzQRBsQ+s9PZt7s7Pz8wsL39/DkIfZ4xlB2Gqsq62ta9oxVlVrNZpihFRpGO9fzQw1ms0NDWZz07iGkJmIFH8xxkc3a/WWlubmFkv9AB2SEpDvKxbjidN2faseaNV3zoHXvv7wMODJdkOHAegweAfFPx4G67KluxzottCU9n8CUqXzcIQdXOytAHqXxomvykhEKN9EFutG22p//0rbNvHVxiJywa8yS2KDfV1dfbu31H8jF1RHiTKtWYeHxUvq3bn0pyjCRaiRU6aDO+gb3aEfEeVNsDgm8zzLy9egPa7Qt8TSJdwhjplk06HH43ZNJ3s91KKCHQ5x4sw1fRGYDZ0n1L4FKb9/BP5JLYxToheoFCVxz57PPS8UhhEpLBVeAAAAAElFTkSuQmCC";
+                        "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAB+FBMVEUAAAA/mUPidDHiLi5Cn0XkNTPmeUrkdUg/m0Q0pEfcpSbwaVdKskg+lUP4zA/iLi3msSHkOjVAmETdJSjtYFE/lkPnRj3sWUs8kkLeqCVIq0fxvhXqUkbVmSjwa1n1yBLepyX1xxP0xRXqUkboST9KukpHpUbuvRrzrhF/ljbwaljuZFM4jELaoSdLtElJrUj1xxP6zwzfqSU4i0HYnydMtUlIqUfywxb60AxZqEXaoifgMCXptR9MtklHpEY2iUHWnSjvvRr70QujkC+pUC/90glMuEnlOjVMt0j70QriLS1LtEnnRj3qUUXfIidOjsxAhcZFo0bjNDH0xxNLr0dIrUdmntVTkMoyfL8jcLBRuErhJyrgKyb4zA/5zg3tYFBBmUTmQTnhMinruBzvvhnxwxZ/st+Ktt5zp9hqota2vtK6y9FemNBblc9HiMiTtMbFtsM6gcPV2r6dwroseLrMrbQrdLGdyKoobKbo3Zh+ynrgVllZulTsXE3rV0pIqUf42UVUo0JyjEHoS0HmsiHRGR/lmRz/1hjqnxjvpRWfwtOhusaz0LRGf7FEfbDVmqHXlJeW0pbXq5bec3fX0nTnzmuJuWvhoFFhm0FtrziBsjaAaDCYWC+uSi6jQS3FsSfLJiTirCOkuCG1KiG+wSC+GBvgyhTszQ64Z77KAAAARXRSTlMAIQRDLyUgCwsE6ebm5ubg2dLR0byXl4FDQzU1NDEuLSUgC+vr6urq6ubb29vb2tra2tG8vLu7u7uXl5eXgYGBgYGBLiUALabIAAABsElEQVQoz12S9VPjQBxHt8VaOA6HE+AOzv1wd7pJk5I2adpCC7RUcHd3d3fXf5PvLkxheD++z+yb7GSRlwD/+Hj/APQCZWxM5M+goF+RMbHK594v+tPoiN1uHxkt+xzt9+R9wnRTZZQpXQ0T5uP1IQxToyOAZiQu5HEpjeA4SWIoksRxNiGC1tRZJ4LNxgHgnU5nJZBDvuDdl8lzQRBsQ+s9PZt7s7Pz8wsL39/DkIfZ4xlB2Gqsq62ta9oxVlVrNZpihFRpGO9fzQw1ms0NDWZz07iGkJmIFH8xxkc3a/WWlubmFkv9AB2SEpDvKxbjidN2faseaNV3zoHXvv7wMODJdkOHAegweAfFPx4G67KluxzottCU9n8CUqXzcIQdXOytAHqXxomvykhEKN9EFutG22p//0rbNvHVxiJywa8yS2KDfV1dfbu31H8jF1RHiTKtWYeHxUvq3bn0pyjCRaiRU6aDO+gb3aEfEeVNsDgm8zzLy9egPa7Qt8TSJdwhjplk06HH43ZNJ3s91KKCHQ5x4sw1fRGYDZ0n1L4FKb9/BP5JLYxToheoFCVxz57PPS8UhhEpLBVeAAAAAElFTkSuQmCC";
 
         UUID iconUuid = UUID.randomUUID();
         byte[] customPng = DatatypeConverter.parseBase64Binary(base64Icon);
@@ -199,11 +199,12 @@ public class KeepassDatabaseWriterTest {
 
         // read and assert
         KeePassFile readDb = KeePassDatabase.getInstance(dbFilename).openDatabase("abcdefg");
-        Assert.assertEquals("iconTest", readDb.getMeta().getDatabaseName());
-        Assert.assertEquals(iconUuid, readDb.getGroupByName("A").getCustomIconUuid());
-        Assert.assertEquals(base64Icon, DatatypeConverter.printBase64Binary(readDb.getGroupByName("A").getIconData()));
-        Assert.assertEquals(iconUuid, readDb.getEntryByTitle("1").getCustomIconUuid());
-        Assert.assertEquals(base64Icon, DatatypeConverter.printBase64Binary(readDb.getEntryByTitle("1").getIconData()));
+
+        assertThat(readDb.getMeta().getDatabaseName(), is("iconTest"));
+        assertThat(readDb.getGroupByName("A").getCustomIconUuid(), is(iconUuid));
+        assertThat(DatatypeConverter.printBase64Binary(readDb.getGroupByName("A").getIconData()), is(base64Icon));
+        assertThat(readDb.getEntryByTitle("1").getCustomIconUuid(), is(iconUuid));
+        assertThat(DatatypeConverter.printBase64Binary(readDb.getEntryByTitle("1").getIconData()), is(base64Icon));
     }
 
     @Test
@@ -230,7 +231,7 @@ public class KeepassDatabaseWriterTest {
 
         // read and assert
         KeePassFile readDb = KeePassDatabase.getInstance(dbFilename).openDatabase("abcdefg");
-        Assert.assertEquals("attachmentTest", readDb.getMeta().getDatabaseName());
+        assertThat(readDb.getMeta().getDatabaseName(), is("attachmentTest"));
         List<Attachment> attachments = readDb.getEntryByTitle("1").getAttachments();
 
         assertThat(attachments.size(), is(1));
@@ -243,7 +244,7 @@ public class KeepassDatabaseWriterTest {
     public void shouldEnsureThatEntriesAreNotModifiedDuringWriting() throws IOException {
         // open DB
         final KeePassFile keePassFile =
-                KeePassDatabase.getInstance(ResourceUtils.getResource("testDatabase.kdbx")).openDatabase("abcdefg");
+                        KeePassDatabase.getInstance(ResourceUtils.getResource("testDatabase.kdbx")).openDatabase("abcdefg");
 
         // add entry
         Group generalGroup = keePassFile.getGroupByName("General");
@@ -252,7 +253,7 @@ public class KeepassDatabaseWriterTest {
         generalGroup.addEntry(entry);
 
         // compare password in current DB
-        Assert.assertEquals(entry.getPassword(), generalGroup.getEntryByTitle("title").getPassword());
+        assertThat(generalGroup.getEntryByTitle("title").getPassword(), is(entry.getPassword()));
 
         // get origin passwords
         List<String> originPasswords = new ArrayList<String>();
@@ -313,8 +314,7 @@ public class KeepassDatabaseWriterTest {
         assertThat(readDb.getMeta().getDatabaseName(), is("colorTest"));
 
         Entry entry = readDb.getEntryByTitle("1");
-        Assert.assertEquals("#FFFFFF", entry.getForegroundColor());
-        Assert.assertEquals("#000000", entry.getBackgroundColor());
+        assertThat(entry.getForegroundColor(), is("#FFFFFF"));
+        assertThat(entry.getBackgroundColor(), is("#000000"));
     }
-
 }
