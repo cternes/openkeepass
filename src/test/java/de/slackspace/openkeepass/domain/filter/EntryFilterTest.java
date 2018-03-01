@@ -1,15 +1,15 @@
 package de.slackspace.openkeepass.domain.filter;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.Entry;
 import de.slackspace.openkeepass.domain.EntryBuilder;
-import de.slackspace.openkeepass.domain.filter.Filter;
-import de.slackspace.openkeepass.domain.filter.ListFilter;
 
 public class EntryFilterTest {
 
@@ -18,6 +18,7 @@ public class EntryFilterTest {
         List<Entry> entries = createEntries();
 
         List<Entry> results = ListFilter.filter(entries, new Filter<Entry>() {
+            @Override
             public boolean matches(Entry item) {
                 if (item.getTitle().equalsIgnoreCase("test")) {
                     return true;
@@ -27,8 +28,8 @@ public class EntryFilterTest {
             };
         });
 
-        Assert.assertEquals(1, results.size());
-        Assert.assertEquals("test", results.get(0).getTitle());
+        assertThat(results.size(), is(1));
+        assertThat(results.get(0).getTitle(), is("test"));
     }
 
     private List<Entry> createEntries() {

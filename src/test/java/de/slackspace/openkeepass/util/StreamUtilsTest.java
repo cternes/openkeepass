@@ -1,9 +1,11 @@
 package de.slackspace.openkeepass.util;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class StreamUtilsTest {
@@ -16,9 +18,9 @@ public class StreamUtilsTest {
         byte[] buffer = new byte[3];
         int read = StreamUtils.read(stream, buffer);
 
-        Assert.assertEquals(3, read);
-        Assert.assertEquals(3, buffer.length);
-        Assert.assertEquals("af66b1", ByteUtils.toHexString(buffer));
+        assertThat(read, is(3));
+        assertThat(buffer.length, is(3));
+        assertThat(ByteUtils.toHexString(buffer), is("af66b1"));
     }
 
     @Test
@@ -27,12 +29,12 @@ public class StreamUtilsTest {
         ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
 
         int read = StreamUtils.read(stream, null);
-        Assert.assertEquals(-1, read);
+        assertThat(read, is(-1));
     }
 
     @Test
     public void shouldNotCrashOnNullStreamInput() throws IOException {
         int read = StreamUtils.read(null, new byte[3]);
-        Assert.assertEquals(-1, read);
+        assertThat(read, is(-1));
     }
 }

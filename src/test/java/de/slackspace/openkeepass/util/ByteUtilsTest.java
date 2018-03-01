@@ -1,6 +1,7 @@
 package de.slackspace.openkeepass.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,7 +18,7 @@ public class ByteUtilsTest {
         byte[] bytes = ByteUtils.uuidToBytes(uuid);
         UUID uuid2 = ByteUtils.bytesToUUID(bytes);
 
-        assertEquals(uuid, uuid2);
+        assertThat(uuid, is(uuid2));
     }
 
     @Test
@@ -28,6 +29,6 @@ public class ByteUtilsTest {
 
         int readInt = ByteUtils.readInt(inputStream);
 
-        assertEquals(200, readInt);
+        assertThat(200, is(readInt));
     }
 }

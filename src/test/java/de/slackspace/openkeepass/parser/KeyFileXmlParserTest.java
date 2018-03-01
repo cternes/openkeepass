@@ -1,9 +1,11 @@
 package de.slackspace.openkeepass.parser;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.domain.KeyFile;
@@ -20,6 +22,6 @@ public class KeyFileXmlParserTest {
         SimpleXmlParser parser = new SimpleXmlParser();
         KeyFile keyFile = new KeyFileXmlParser(parser).fromXml(keyFileContent);
 
-        Assert.assertEquals("RP+rYNZL4lrGtDMBPzOuctlh3NAutSG5KGsT38C+qPQ=", keyFile.getKey().getData());
+        assertThat(keyFile.getKey().getData(), is("RP+rYNZL4lrGtDMBPzOuctlh3NAutSG5KGsT38C+qPQ="));
     }
 }
