@@ -1,6 +1,7 @@
 package de.slackspace.openkeepass.stream;
 
-import static org.junit.Assert.assertArrayEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -51,6 +52,6 @@ public class HashedBlockOutputStreamTest {
         hashedBlockInputStream.close();
 
         byte[] out = decoded.toByteArray();
-        assertArrayEquals(orig, out);
+        assertThat(out, is(orig));
     }
 }
