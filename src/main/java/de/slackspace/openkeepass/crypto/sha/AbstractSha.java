@@ -6,6 +6,12 @@ import java.security.NoSuchAlgorithmException;
 
 public abstract class AbstractSha {
 
+    private MessageDigest md;
+
+    public AbstractSha(MessageDigest md) {
+        this.md = md;
+    }
+
     public byte[] hash(String text) {
         if (text == null) {
             throw new IllegalArgumentException("Text must not be null");
@@ -27,12 +33,15 @@ public abstract class AbstractSha {
             throw new IllegalArgumentException("Bytes must not be null");
         }
 
-        MessageDigest md = getDigestInstance(getShaAlgorithm());
         md.update(bytes, offset, length);
         return md.digest();
     }
 
-    private MessageDigest getDigestInstance(ShaAlgorithm algorithm) {
+    public void update(byte[] bytes) {
+        md.update(bytes);
+    }
+
+    protected static MessageDigest getDigestInstance(ShaAlgorithm algorithm) {
         try {
             return MessageDigest.getInstance(algorithm.getName());
         }
@@ -41,6 +50,4 @@ public abstract class AbstractSha {
                     String.format("The algorithm '%s' is not supported", algorithm.getName()), e);
         }
     }
-
-    protected abstract ShaAlgorithm getShaAlgorithm();
 }
