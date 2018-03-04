@@ -37,8 +37,10 @@ public abstract class AbstractSha {
         return md.digest();
     }
 
-    public void update(byte[] bytes) {
+    public AbstractSha update(byte[] bytes) {
         md.update(bytes);
+
+        return this;
     }
 
     protected static MessageDigest getDigestInstance(ShaAlgorithm algorithm) {
