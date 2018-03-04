@@ -3,7 +3,7 @@ package de.slackspace.openkeepass.stream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import de.slackspace.openkeepass.crypto.Sha256;
+import de.slackspace.openkeepass.crypto.sha.Sha256;
 
 public class HashedBlockOutputStream extends OutputStream implements AutoCloseable {
 
@@ -70,7 +70,7 @@ public class HashedBlockOutputStream extends OutputStream implements AutoCloseab
         bufferIndex++;
 
         if (bufferPos > 0) {
-            byte[] hash = Sha256.hash(buffer, 0, bufferPos);
+            byte[] hash = Sha256.getInstance().hash(buffer, 0, bufferPos);
             baseStream.write(hash);
 
         } else {

@@ -58,6 +58,7 @@ public class KeePassHeader {
     private byte[] masterSeed;
     private byte[] transformSeed;
     private byte[] protectedStreamKey;
+    private byte[] hmacKey;
     private CompressionAlgorithm compressionAlgorithm;
     private long transformRounds;
     private CrsAlgorithm crsAlgorithm;

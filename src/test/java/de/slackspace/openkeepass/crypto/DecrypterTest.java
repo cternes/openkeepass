@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import de.slackspace.openkeepass.crypto.sha.Sha256;
 import de.slackspace.openkeepass.domain.CompressionAlgorithm;
 import de.slackspace.openkeepass.domain.CrsAlgorithm;
 import de.slackspace.openkeepass.domain.KeePassHeader;
@@ -16,7 +17,7 @@ public class DecrypterTest {
     public void shouldEncryptAndDecryptDatabase() throws IOException {
         String password = "abcdefg";
         byte[] passwordBytes = password.getBytes("UTF-8");
-        byte[] hashedPassword = Sha256.hash(passwordBytes);
+        byte[] hashedPassword = Sha256.getInstance().hash(passwordBytes);
 
         KeePassHeader keepassHeader = new KeePassHeader();
         keepassHeader.setValue(KeePassHeader.MASTER_SEED, ByteUtils.hexStringToByteArray("35ac8b529bc4f6e44194bccd0537fcb433a30bcb847e63156262c4df99c528ca")); // master

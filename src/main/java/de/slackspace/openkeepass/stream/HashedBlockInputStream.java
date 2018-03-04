@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import de.slackspace.openkeepass.crypto.Sha256;
+import de.slackspace.openkeepass.crypto.sha.Sha256;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.StreamUtils;
 
@@ -121,7 +121,7 @@ public class HashedBlockInputStream extends InputStream implements AutoCloseable
     }
 
     private void computeAndCompareHash(byte[] storedHash) throws IOException {
-        byte[] computedHash = Sha256.hash(buffer);
+        byte[] computedHash = Sha256.getInstance().hash(buffer);
         if (computedHash == null || computedHash.length != HASH_SIZE) {
             throw new IOException("Hash wrong size");
         }

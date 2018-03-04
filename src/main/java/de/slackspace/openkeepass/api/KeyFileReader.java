@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.slackspace.openkeepass.crypto.Sha256;
+import de.slackspace.openkeepass.crypto.sha.Sha256;
 import de.slackspace.openkeepass.domain.KeyFileBytes;
 import de.slackspace.openkeepass.exception.KeyFileUnreadableException;
 import de.slackspace.openkeepass.parser.KeyFileBinaryParser;
@@ -52,7 +52,7 @@ public class KeyFileReader {
 
     private byte[] hashKeyFileIfNecessary(byte[] protectedBuffer) {
         if (protectedBuffer.length != 32) {
-            return Sha256.hash(protectedBuffer);
+            return Sha256.getInstance().hash(protectedBuffer);
         }
 
         return protectedBuffer;

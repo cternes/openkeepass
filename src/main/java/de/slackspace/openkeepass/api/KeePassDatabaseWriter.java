@@ -11,7 +11,7 @@ import de.slackspace.openkeepass.crypto.Decrypter;
 import de.slackspace.openkeepass.crypto.ProtectedStringCrypto;
 import de.slackspace.openkeepass.crypto.RandomGenerator;
 import de.slackspace.openkeepass.crypto.Salsa20;
-import de.slackspace.openkeepass.crypto.Sha256;
+import de.slackspace.openkeepass.crypto.sha.Sha256;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
@@ -49,7 +49,7 @@ public class KeePassDatabaseWriter {
 
     private byte[] hashPassword(String password) {
         byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
-        return Sha256.hash(passwordBytes);
+        return Sha256.getInstance().hash(passwordBytes);
     }
 
     private byte[] encryptStream(KeePassHeader header, byte[] hashedPassword, ByteArrayOutputStream streamToEncrypt) throws IOException {

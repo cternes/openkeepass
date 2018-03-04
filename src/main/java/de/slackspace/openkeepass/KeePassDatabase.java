@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 import de.slackspace.openkeepass.api.KeePassDatabaseReader;
 import de.slackspace.openkeepass.api.KeePassDatabaseWriter;
 import de.slackspace.openkeepass.api.KeyFileReader;
-import de.slackspace.openkeepass.crypto.Sha256;
+import de.slackspace.openkeepass.crypto.sha.Sha256;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
@@ -155,7 +155,7 @@ public class KeePassDatabase {
         }
 
         byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
-        byte[] hashedPassword = Sha256.hash(passwordBytes);
+        byte[] hashedPassword = Sha256.getInstance().hash(passwordBytes);
 
         return new KeePassDatabaseReader(keepassHeader).decryptAndParseDatabase(hashedPassword, keepassFile);
     }
@@ -215,7 +215,7 @@ public class KeePassDatabase {
         }
 
         byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
-        byte[] hashedPassword = Sha256.hash(passwordBytes);
+        byte[] hashedPassword = Sha256.getInstance().hash(passwordBytes);
         byte[] protectedBuffer = new KeyFileReader().readKeyFile(keyFileStream);
 
         return new KeePassDatabaseReader(keepassHeader)

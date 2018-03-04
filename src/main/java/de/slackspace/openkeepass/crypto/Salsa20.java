@@ -8,6 +8,8 @@ import org.spongycastle.crypto.params.ParametersWithIV;
 import org.spongycastle.util.encoders.Base64;
 import org.spongycastle.util.encoders.Hex;
 
+import de.slackspace.openkeepass.crypto.sha.Sha256;
+
 public class Salsa20 implements ProtectedStringCrypto {
 
     private static final String SALSA20_ALGORITHM = "SALSA20";
@@ -16,7 +18,7 @@ public class Salsa20 implements ProtectedStringCrypto {
     private Salsa20Engine salsa20Engine;
 
     private void initialize(byte[] protectedStreamKey) {
-        byte[] salsaKey = Sha256.hash(protectedStreamKey);
+        byte[] salsaKey = Sha256.getInstance().hash(protectedStreamKey);
 
         try {
             salsa20Engine = new Salsa20Engine();
