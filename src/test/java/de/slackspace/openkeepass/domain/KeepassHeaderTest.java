@@ -1,5 +1,9 @@
 package de.slackspace.openkeepass.domain;
 
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
@@ -128,13 +132,31 @@ public class KeepassHeaderTest {
         header.checkVersionSupport(rawFile);
         header.read(rawFile);
         
-        VariantDictionary kdfParameters = header.getKdfParameters();
-        Assert.assertArrayEquals(ByteUtils.hexStringToByteArray("ef636ddf8c29444b91f7a9a403e30a0c"), kdfParameters.getByteArray("$UUID"));
-        Assert.assertEquals(19, kdfParameters.getInt("V"));
-        Assert.assertEquals(2, kdfParameters.getLong("I"));
-        Assert.assertEquals(2, kdfParameters.getInt("P"));
-        Assert.assertEquals(1048576, kdfParameters.getLong("M"));
-        Assert.assertArrayEquals(ByteUtils.hexStringToByteArray("7ea16ccbf5f48cb5f77b01a9192123164c5f5f5245a10e5f9c848f47f0c93a4c"), kdfParameters.getByteArray("S"));
+        KdfDictionary kdfParameters = header.getKdfParameters();
+        assertThat(kdfParameters.getUUID(), is(ByteUtils.hexStringToByteArray("ef636ddf8c29444b91f7a9a403e30a0c")));
+        assertThat(kdfParameters.getVersion(), is(19));
+        assertThat(kdfParameters.getIterations(), is(2L));
+        assertThat(kdfParameters.getParallelism(), is(2));
+        assertThat(kdfParameters.getMemory(), is(1048576L));
+        assertThat(kdfParameters.getSalt(),
+                is(ByteUtils.hexStringToByteArray("7ea16ccbf5f48cb5f77b01a9192123164c5f5f5245a10e5f9c848f47f0c93a4c")));
     }
     
+    @Test
+    public void whenV4FormatIsUsedShouldProvideHMacKey() throws IOException {
+        // arrange
+        KeePassHeader header = new KeePassHeader(new RandomGenerator());
+        FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("DatabaseWithV4Format.kdbx"));
+        byte[] rawFile = StreamUtils.toByteArray(fileInputStream);
+
+        header.checkVersionSupport(rawFile);
+        header.read(rawFile);
+
+        // act
+        byte[] hmac = header.getHMACKey("123");
+
+        // assert
+        assertThat(hmac, is(ByteUtils.hexStringToByteArray(
+                "46cd61eead3beaf0df1085e2e7b76e969d137e4b7510b86cf144b91129c108391e68100600b59a230e0f2e95ce34decdb0982ce515a822840ad17eadbc1e6220")));
+    }
 }

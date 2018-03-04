@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
+import de.slackspace.openkeepass.crypto.Argon2;
+import de.slackspace.openkeepass.crypto.sha.Sha256;
+import de.slackspace.openkeepass.crypto.sha.Sha512;
 import de.slackspace.openkeepass.exception.KeePassHeaderUnreadableException;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.SafeInputStream;
@@ -63,7 +66,7 @@ public class KeePassHeader {
     private long transformRounds;
     private CrsAlgorithm crsAlgorithm;
     private int fileFormatVersion;
-    private VariantDictionary variantDictionary;
+    private KdfDictionary variantDictionary;
     
     public KeePassHeader() {
         // empty constructor
@@ -399,10 +402,10 @@ public class KeePassHeader {
     }
     
     private void setKdfParameters(byte[] value) {
-        variantDictionary = new VariantDictionary(value);
+        variantDictionary = new KdfDictionary(value);
     }
     
-    public VariantDictionary getKdfParameters() {
+    public KdfDictionary getKdfParameters() {
         return variantDictionary;
     }
 
@@ -430,6 +433,25 @@ public class KeePassHeader {
     
     public int getFileFormatVersion() {
         return fileFormatVersion;
+    }
+
+    public byte[] getHMACKey(String password) {
+        if (hmacKey == null) {
+            hmacKey = computeHMACKey(password);
+        }
+
+        return hmacKey;
+    }
+
+    private byte[] computeHMACKey(String password) {
+        byte[] hashedPassword = Sha256.getInstance().hash(password);
+        byte[] key = Sha256.getInstance().hash(hashedPassword);
+
+        byte[] transformedKey = Argon2.transformKey(key, getKdfParameters());
+
+        return Sha512.getInstance().update(getMasterSeed())
+                .update(transformedKey)
+                .hash(new byte[] {1});
     }
 
     private ByteBuffer wrapInBuffer(byte[] value) {
