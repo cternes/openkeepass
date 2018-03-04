@@ -21,7 +21,7 @@ public class VariantDictionary {
     private static final int STRING = 0x18;
     private static final int BYTE_ARRAY = 0x42;
 
-    private Map<String, Object> map = new HashMap<String, Object>();
+    private Map<String, Object> map = new HashMap<>();
 
     public VariantDictionary(byte[] bytes) {
         ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN);
