@@ -31,6 +31,9 @@
         <junit.version>4.12</junit.version>
         <equalsverifier.version>1.7.8</equalsverifier.version>
         <simplexml.version>2.7.1</simplexml.version>
+        <jaxb.version>2.3.0</jaxb.version>
+        <jargon2-api.version>1.0.1</jargon2-api.version>
+        <jargon2-native.version>1.1.0</jargon2-native.version>
     </properties>
 
     <scm>
@@ -52,6 +55,16 @@
             <version>${simplexml.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.kosprov.jargon2</groupId>
+            <artifactId>jargon2-api</artifactId>
+            <version>${jargon2-api.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.kosprov.jargon2</groupId>
+            <artifactId>jargon2-native-ri-backend</artifactId>
+            <version>${jargon2-native.version}</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
@@ -64,11 +77,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-    			<groupId>javax.xml.bind</groupId>
-    			<artifactId>jaxb-api</artifactId>
-	   	 	<version>2.3.0</version>
-	   	 	<scope>test</scope>
-		</dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${jaxb.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
