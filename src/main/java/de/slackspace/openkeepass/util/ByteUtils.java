@@ -47,6 +47,22 @@ public class ByteUtils {
         return buffer.getInt();
     }
 
+    public static byte[] intAsBytes(int value) {
+        ByteBuffer buffer = ByteBuffer.wrap(new byte[4]);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        buffer.putInt(value);
+
+        return buffer.array();
+    }
+
+    public static byte[] longAsBytes(long value) {
+        ByteBuffer buffer = ByteBuffer.wrap(new byte[8]);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
+        buffer.putLong(value);
+
+        return buffer.array();
+    }
+
     public static UUID bytesToUUID(byte[] bytes) {
         ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
         long mostSigBits = byteBuffer.getLong();
