@@ -23,7 +23,7 @@ import de.slackspace.openkeepass.domain.Group;
 import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.Times;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
-import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
+import de.slackspace.openkeepass.processor.NullProtectionStrategy;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.ResourceUtils;
 
@@ -139,9 +139,9 @@ public class KeePassDatabaseXmlParserTest {
 
     private KeePassFile parseKeePassXml() throws FileNotFoundException {
         FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("testDatabase_decrypted.xml"));
-        KeePassFile keePassFile = new KeePassDatabaseXmlParser(new SimpleXmlParser()).fromXml(fileInputStream);
-
-        new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), keePassFile);
+        DecryptionStrategy strategy = new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey));
+        KeePassFile keePassFile =
+                new KeePassDatabaseXmlParser(new SimpleXmlParser()).fromXml(fileInputStream, strategy);
 
         return keePassFile;
     }
@@ -151,7 +151,7 @@ public class KeePassDatabaseXmlParserTest {
         // Read decrypted and write again
         FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("testDatabase_decrypted.xml"));
         KeePassDatabaseXmlParser parser = new KeePassDatabaseXmlParser(new SimpleXmlParser());
-        KeePassFile keePassFile = parser.fromXml(fileInputStream);
+        KeePassFile keePassFile = parser.fromXml(fileInputStream, new NullProtectionStrategy());
 
         String testDatabase_decrypted2 = tempFolder.newFile("testDatabase_decrypted2.xml").getPath();
 
@@ -161,8 +161,8 @@ public class KeePassDatabaseXmlParserTest {
 
         // Read written file
         FileInputStream writtenInputStream = new FileInputStream(testDatabase_decrypted2);
-        KeePassFile writtenKeePassFile = parser.fromXml(writtenInputStream);
-        new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), writtenKeePassFile);
+        DecryptionStrategy strategy = new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey));
+        KeePassFile writtenKeePassFile = parser.fromXml(writtenInputStream, strategy);
 
         Assert.assertEquals("Password", writtenKeePassFile.getEntryByTitle("Sample Entry").getPassword());
     }

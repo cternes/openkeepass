@@ -3,12 +3,14 @@ package de.slackspace.openkeepass.domain;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.processor.NullProtectionStrategy;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class BinariesTest {
 
@@ -46,7 +48,8 @@ public class BinariesTest {
 
         String xml = "<Binaries><Binary ID='5' Compressed='False'>AAAAAAAAAAAAAA==</Binary></Binaries>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        Binaries binariesUnmarshall = new SimpleXmlParser().fromXml(inputStream, Binaries.class);
+        Binaries binariesUnmarshall =
+                new SimpleXmlParser().fromXml(inputStream, new NullProtectionStrategy(), Binaries.class);
 
         Assert.assertEquals(binaries.getBinaries().size(), binariesUnmarshall.getBinaries().size());
         Assert.assertArrayEquals(binaries.getBinaries().get(0).getData(), binariesUnmarshall.getBinaries().get(0).getData());

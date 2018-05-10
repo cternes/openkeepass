@@ -35,7 +35,7 @@ public class KeyFileXmlParser implements KeyFileParser {
     public KeyFile fromXml(byte[] inputBytes) {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(inputBytes);
-            return parser.fromXml(inputStream, KeyFile.class);
+            return parser.fromXml(inputStream, null, KeyFile.class);
         } catch (KeePassDatabaseUnreadableException e) {
             return new KeyFile(false);
         }

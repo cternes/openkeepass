@@ -3,12 +3,14 @@ package de.slackspace.openkeepass.domain;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.processor.NullProtectionStrategy;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class AttachmentTest {
 
@@ -32,7 +34,8 @@ public class AttachmentTest {
 
         String xml = "<Binary><Key>test.txt</Key><Value Ref='3'/></Binary>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        Attachment attachmentUnmarshalled = new SimpleXmlParser().fromXml(inputStream, Attachment.class);
+        Attachment attachmentUnmarshalled =
+                new SimpleXmlParser().fromXml(inputStream, new NullProtectionStrategy(), Attachment.class);
 
         Assert.assertEquals(attachment.getKey(), attachmentUnmarshalled.getKey());
         Assert.assertEquals(attachment.getRef(), attachmentUnmarshalled.getRef());

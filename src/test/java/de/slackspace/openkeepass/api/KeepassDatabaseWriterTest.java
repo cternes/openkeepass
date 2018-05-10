@@ -47,7 +47,6 @@ import de.slackspace.openkeepass.domain.zipper.GroupZipper;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
 import de.slackspace.openkeepass.parser.SimpleXmlParser;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
-import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.CalendarHandler;
 import de.slackspace.openkeepass.util.ResourceUtils;
@@ -64,9 +63,9 @@ public class KeepassDatabaseWriterTest {
     @Test
     public void whenWritingDatabaseFileShouldBeAbleToReadItAlso() throws IOException {
         FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("testDatabase_decrypted.xml"));
-        KeePassFile keePassFile = new KeePassDatabaseXmlParser(new SimpleXmlParser()).fromXml(fileInputStream);
-        new ProtectedValueProcessor().processProtectedValues(
-                new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey)), keePassFile);
+        DecryptionStrategy strategy = new DecryptionStrategy(Salsa20.createInstance(protectedStreamKey));
+        KeePassFile keePassFile =
+                new KeePassDatabaseXmlParser(new SimpleXmlParser()).fromXml(fileInputStream, strategy);
 
         String writeDatabase = tempFolder.newFile("writeDatabase.kdbx").getPath();
 

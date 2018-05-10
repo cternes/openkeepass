@@ -3,10 +3,12 @@ package de.slackspace.openkeepass.domain;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import de.slackspace.openkeepass.parser.SimpleXmlParser;
-import de.slackspace.openkeepass.util.XmlStringCleaner;
 import org.junit.Assert;
 import org.junit.Test;
+
+import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.processor.NullProtectionStrategy;
+import de.slackspace.openkeepass.util.XmlStringCleaner;
 
 public class AttachmentValueTest {
 
@@ -26,7 +28,8 @@ public class AttachmentValueTest {
 
         String xml = "<Value Ref='3' />";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        AttachmentValue attachmentValueUnmarshalled = new SimpleXmlParser().fromXml(inputStream, AttachmentValue.class);
+        AttachmentValue attachmentValueUnmarshalled =
+                new SimpleXmlParser().fromXml(inputStream, new NullProtectionStrategy(), AttachmentValue.class);
 
         Assert.assertEquals(attachmentValue.getRef(), attachmentValueUnmarshalled.getRef());
     }

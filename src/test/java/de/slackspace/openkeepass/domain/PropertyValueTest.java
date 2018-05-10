@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.processor.NullProtectionStrategy;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 
 public class PropertyValueTest {
@@ -27,7 +28,8 @@ public class PropertyValueTest {
 
         String xml = "<propertyValue Protected='False'>TestValue</propertyValue>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        PropertyValue propertyValueUnmarshalled = new SimpleXmlParser().fromXml(inputStream, PropertyValue.class);
+        PropertyValue propertyValueUnmarshalled =
+                new SimpleXmlParser().fromXml(inputStream, new NullProtectionStrategy(), PropertyValue.class);
 
         Assert.assertEquals(propertyValue.getValue(), propertyValueUnmarshalled.getValue());
     }

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 import de.slackspace.openkeepass.domain.KeePassFile;
+import de.slackspace.openkeepass.processor.ProtectionStrategy;
 
 public class KeePassDatabaseXmlParser {
 
@@ -13,8 +14,8 @@ public class KeePassDatabaseXmlParser {
         this.parser = parser;
     }
     
-    public KeePassFile fromXml(InputStream inputStream) {
-        return parser.fromXml(inputStream, KeePassFile.class);
+    public KeePassFile fromXml(InputStream inputStream, ProtectionStrategy protectionStrategy) {
+        return parser.fromXml(inputStream, protectionStrategy, KeePassFile.class);
     }
 
     public ByteArrayOutputStream toXml(KeePassFile keePassFile) {
