@@ -6,6 +6,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import de.slackspace.openkeepass.crypto.sha.Sha256;
+import de.slackspace.openkeepass.domain.KeePassHeader;
+import de.slackspace.openkeepass.stream.HmacBlockInputStream;
 import de.slackspace.openkeepass.util.SafeInputStream;
 import de.slackspace.openkeepass.util.StreamUtils;
 
@@ -14,26 +16,41 @@ public class Decrypter {
     public byte[] decryptDatabase(byte[] password, CryptoInformation cryptoInformation, byte[] database) throws IOException {
         byte[] aesKey = createAesKey(password, cryptoInformation);
 
-        return processDatabaseEncryption(false, database, cryptoInformation, aesKey);
+        return processDatabaseEncryption(false, password, database, cryptoInformation, aesKey);
     }
 
     public byte[] encryptDatabase(byte[] password, CryptoInformation cryptoInformation, byte[] database) throws IOException {
         byte[] aesKey = createAesKey(password, cryptoInformation);
 
-        return processDatabaseEncryption(true, database, cryptoInformation, aesKey);
+        return processDatabaseEncryption(true, password, database, cryptoInformation, aesKey);
     }
 
-    private byte[] processDatabaseEncryption(boolean encrypt, byte[] database, CryptoInformation cryptoInformation, byte[] aesKey) throws IOException {
+    private byte[] processDatabaseEncryption(boolean encrypt, byte[] password, byte[] database,
+            CryptoInformation cryptoInformation, byte[] aesKey) throws IOException {
         if (cryptoInformation.isV4Format()) {
-            return processDatabaseEncryptionV4Format(database, cryptoInformation, aesKey);
+            return processDatabaseEncryptionV4Format(encrypt, password, database, cryptoInformation, aesKey);
         }
 
         return processDatabaseEncryptionV3Format(encrypt, database, cryptoInformation, aesKey);
     }
 
-    private byte[] processDatabaseEncryptionV4Format(byte[] database, CryptoInformation cryptoInformation,
-            byte[] aesKey) {
-        return Aes.decrypt(aesKey, cryptoInformation.getEncryptionIV(), database);
+    private byte[] processDatabaseEncryptionV4Format(boolean encrypt, byte[] password, byte[] database,
+            CryptoInformation cryptoInformation,
+            byte[] aesKey) throws IOException {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(database);
+        inputStream.skip(KeePassHeader.VERSION_SIGNATURE_LENGTH + cryptoInformation.getHeaderSize());
+        inputStream.skip(64);
+
+        byte[] hmacKey = cryptoInformation.getHMACKey(password);
+        HmacBlockInputStream hmacBlockInputStream = new HmacBlockInputStream(hmacKey, inputStream);
+
+        byte[] hmacBytes = StreamUtils.toByteArray(hmacBlockInputStream);
+
+        if (encrypt) {
+            Aes.encrypt(aesKey, cryptoInformation.getEncryptionIV(), hmacBytes);
+        }
+
+        return Aes.decrypt(aesKey, cryptoInformation.getEncryptionIV(), hmacBytes);
     }
 
     private byte[] processDatabaseEncryptionV3Format(boolean encrypt, byte[] database,
@@ -49,7 +66,7 @@ public class Decrypter {
             processedPayload = Aes.encrypt(aesKey, cryptoInformation.getEncryptionIV(), payload);
         }
         else {
-            processedPayload = processDatabaseEncryptionV4Format(payload, cryptoInformation, aesKey);
+            processedPayload = Aes.decrypt(aesKey, cryptoInformation.getEncryptionIV(), payload);
         }
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
