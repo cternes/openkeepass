@@ -1,42 +1,41 @@
 package de.slackspace.openkeepass.crypto;
 
+import de.slackspace.openkeepass.domain.KdfDictionary;
+import de.slackspace.openkeepass.domain.KeePassHeader;
+
 public class CryptoInformation {
-
-    private int versionSignatureLength;
-
-    private byte[] masterSeed;
-
-    private byte[] transformSeed;
-
-    private long transformRounds;
-
-    private int headerSize;
 
     private byte[] encryptionIv;
 
-    public CryptoInformation(int versionSignatureLength, byte[] masterSeed, byte[] transformSeed, byte[] encryptionIv, long transformRounds, int headerSize) {
-        this.versionSignatureLength = versionSignatureLength;
-        this.masterSeed = masterSeed;
-        this.transformSeed = transformSeed;
-        this.encryptionIv = encryptionIv;
-        this.transformRounds = transformRounds;
-        this.headerSize = headerSize;
+    private KeePassHeader header;
+
+    public CryptoInformation(KeePassHeader header) {
+        this.header = header;
+        this.encryptionIv = header.getEncryptionIV();
+    }
+
+    public boolean isV4Format() {
+        return header.isV4Format();
+    }
+
+    public byte[] getHMACKey(byte[] hashedPassword) {
+        return header.getHMACKey(hashedPassword);
     }
 
     public byte[] getMasterSeed() {
-        return masterSeed;
+        return header.getMasterSeed();
     }
 
     public byte[] getTransformSeed() {
-        return transformSeed;
+        return header.getTransformSeed();
     }
 
     public long getTransformRounds() {
-        return transformRounds;
+        return header.getTransformRounds();
     }
 
     public int getHeaderSize() {
-        return headerSize;
+        return header.getHeaderSize();
     }
 
     public byte[] getEncryptionIV() {
@@ -44,7 +43,11 @@ public class CryptoInformation {
     }
 
     public int getVersionSignatureLength() {
-        return versionSignatureLength;
+        return KeePassHeader.VERSION_SIGNATURE_LENGTH;
+    }
+
+    public KdfDictionary getKdfParameters() {
+        return header.getKdfParameters();
     }
 
 }
