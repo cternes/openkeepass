@@ -14,6 +14,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.crypto.RandomGenerator;
+import de.slackspace.openkeepass.crypto.sha.Sha256;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.ResourceUtils;
 import de.slackspace.openkeepass.util.StreamUtils;
@@ -80,7 +81,7 @@ public class KeepassHeaderTest {
     }
 
     @Test
-    public void whenGetBytesIsCalledShouldReturnHeaderBytesCorrectly() {
+    public void whenGetBytesIsCalledShouldReturnHeaderBytesCorrectly() throws IOException {
         KeePassHeader header = new KeePassHeader();
         header.setValue(KeePassHeader.MASTER_SEED, ByteUtils.hexStringToByteArray("35ac8b529bc4f6e44194bccd0537fcb433a30bcb847e63156262c4df99c528ca"));
         header.setValue(KeePassHeader.TRANSFORM_SEED, ByteUtils.hexStringToByteArray("0d52d93efc5493ae6623f0d5d69bb76bd976bb717f4ee67abbe43528ebfbb646"));
@@ -95,6 +96,9 @@ public class KeepassHeaderTest {
         Assert.assertEquals(
                 "03d9a29a67fb4bb50000030002100031c1f2e6bf714350be5805216afc5aff0304000100000004200035ac8b529bc4f6e44194bccd0537fcb433a30bcb847e63156262c4df99c528ca0520000d52d93efc5493ae6623f0d5d69bb76bd976bb717f4ee67abbe43528ebfbb646060800401f0000000000000710002c605455f181fbc9462aefb817852b37082000ec77a2169769734c5d26e5341401f8d7b11052058f8455d314879075d0b7e25709200069d788d9b01ea1facd1c0bf0187e7d74e4aa07b20d464f3d23d0b2dc2f059ff80a0400020000000004000d0a0d0a",
                 ByteUtils.toHexString(header.getBytes()));
+
+        header.checkVersionSupport(header.getBytes());
+        header.read(header.getBytes());
         Assert.assertEquals(210, header.getHeaderSize());
     }
 
@@ -115,8 +119,10 @@ public class KeepassHeaderTest {
     
     @Test(expected = UnsupportedOperationException.class)
     public void whenVersionIsNotSupportedShouldThrowException() throws IOException {
+        // arrange
         KeePassHeader header = new KeePassHeader(new RandomGenerator());
         
+        // act
         // unsupported format --> e.g. v5
         byte[] rawHeader = ByteUtils.hexStringToByteArray("03D9A29A67FB4BB501000500");
         
@@ -125,13 +131,16 @@ public class KeepassHeaderTest {
     
     @Test
     public void whenKdfParameterAreProvidedShouldReadKdfParameters() throws IOException {
+        // arrange
         KeePassHeader header = new KeePassHeader(new RandomGenerator());
         FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("DatabaseWithV4Format.kdbx"));
         byte[] rawFile = StreamUtils.toByteArray(fileInputStream);
         
+        // act
         header.checkVersionSupport(rawFile);
         header.read(rawFile);
         
+        // assert
         KdfDictionary kdfParameters = header.getKdfParameters();
         assertThat(kdfParameters.getUUID(), is(ByteUtils.hexStringToByteArray("ef636ddf8c29444b91f7a9a403e30a0c")));
         assertThat(kdfParameters.getVersion(), is(19));
@@ -145,15 +154,17 @@ public class KeepassHeaderTest {
     @Test
     public void whenV4FormatIsUsedShouldProvideHMacKey() throws IOException {
         // arrange
-        KeePassHeader header = new KeePassHeader(new RandomGenerator());
+        KeePassHeader header = new KeePassHeader();
         FileInputStream fileInputStream = new FileInputStream(ResourceUtils.getResource("DatabaseWithV4Format.kdbx"));
         byte[] rawFile = StreamUtils.toByteArray(fileInputStream);
 
         header.checkVersionSupport(rawFile);
         header.read(rawFile);
 
+        byte[] hashedPassword = Sha256.getInstance().hash("123");
+
         // act
-        byte[] hmac = header.getHMACKey("123");
+        byte[] hmac = header.getHMACKey(hashedPassword);
 
         // assert
         assertThat(hmac, is(ByteUtils.hexStringToByteArray(

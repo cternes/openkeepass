@@ -67,6 +67,7 @@ public class KeePassHeader {
     private CrsAlgorithm crsAlgorithm;
     private int fileFormatVersion;
     private KdfDictionary variantDictionary;
+    private int headerSize;
     
     public KeePassHeader() {
         // empty constructor
@@ -150,6 +151,7 @@ public class KeePassHeader {
         int signaturePart1 = ByteUtils.toUnsignedInt(signatureBuffer.getInt());
         int signaturePart2 = ByteUtils.toUnsignedInt(signatureBuffer.getInt());
         int version = signatureBuffer.getInt();
+
         this.fileFormatVersion = version;
 
         if (signaturePart1 == DATABASE_V2_FILE_SIGNATURE_1_INT && signaturePart2 == DATABASE_V2_FILE_SIGNATURE_2_INT) {
@@ -215,6 +217,7 @@ public class KeePassHeader {
                 }
 
                 if (fieldId == 0) {
+                    headerSize = inputStream.getNumBytesRead();
                     break;
                 }
             } catch (IOException e) {
@@ -305,6 +308,10 @@ public class KeePassHeader {
     }
 
     private byte[] getInnerRandomStreamId() {
+        if (crsAlgorithm == null) {
+            return null;
+        }
+
         int intValue = CrsAlgorithm.getIntValue(crsAlgorithm);
         return wrapInBuffer(intValue);
     }
@@ -410,41 +417,26 @@ public class KeePassHeader {
     }
 
     public int getHeaderSize() {
-        int size = 0;
-
-        // Add size of values
-        for (int i = 2; i < 11; i++) {
-            byte[] value = getValue(i);
-
-            if (value != null) {
-                size += value.length + SIZE_OF_FIELD_LENGTH_BUFFER;
-            }
-        }
-
-        // Add size of header end
-        size += getEndOfHeader().length;
-
-        return size;
+        return headerSize;
     }
 
     public byte[] getProtectedStreamKey() {
         return protectedStreamKey;
     }
     
-    public int getFileFormatVersion() {
-        return fileFormatVersion;
-    }
-
-    public byte[] getHMACKey(String password) {
+    public byte[] getHMACKey(byte[] hashedPassword) {
         if (hmacKey == null) {
-            hmacKey = computeHMACKey(password);
+            hmacKey = computeHMACKey(hashedPassword);
         }
 
         return hmacKey;
     }
 
-    private byte[] computeHMACKey(String password) {
-        byte[] hashedPassword = Sha256.getInstance().hash(password);
+    public boolean isV4Format() {
+        return fileFormatVersion >= DATABASE_V4_FILE_VERSION_INT;
+    }
+
+    private byte[] computeHMACKey(byte[] hashedPassword) {
         byte[] key = Sha256.getInstance().hash(hashedPassword);
 
         byte[] transformedKey = Argon2.transformKey(key, getKdfParameters());

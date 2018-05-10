@@ -6,6 +6,7 @@ import java.io.InputStream;
 public class SafeInputStream extends InputStream {
 
     private InputStream inputStream;
+    private int numBytesRead = 0;
 
     public SafeInputStream(InputStream inputStream) {
         this.inputStream = inputStream;
@@ -24,6 +25,7 @@ public class SafeInputStream extends InputStream {
      */
     public void readSafe(byte[] buf) throws IOException {
         int readBytes = inputStream.read(buf);
+        numBytesRead = numBytesRead + readBytes;
 
         if (readBytes == -1) {
             throw new IOException("Could not read any bytes from stream");
@@ -50,7 +52,12 @@ public class SafeInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
+        numBytesRead = numBytesRead + 1;
         return inputStream.read();
+    }
+
+    public int getNumBytesRead() {
+        return numBytesRead;
     }
 
 }
