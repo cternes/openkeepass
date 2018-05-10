@@ -352,4 +352,18 @@ public class KeepassDatabaseReaderTest {
         assertThat(entryB.getUsername(), is("passwdA"));
         assertThat(entryB.getPassword(), is("http://google.com"));
     }
+
+    @Test
+    public void whenReadingV4FormatWithAesShouldDecryptProperly() throws FileNotFoundException {
+        // arrange
+        FileInputStream file = new FileInputStream(ResourceUtils.getResource("DatabaseWithV4Format.kdbx"));
+        KeePassDatabase reader = KeePassDatabase.getInstance(file);
+
+        // act
+        KeePassFile database = reader.openDatabase("123");
+
+        // assert
+        Entry entry = database.getEntryByTitle("Sample Entry");
+        assertThat(entry.getTitle(), is("Sample Entry"));
+    }
 }

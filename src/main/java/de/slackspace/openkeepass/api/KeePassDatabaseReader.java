@@ -1,6 +1,7 @@
 package de.slackspace.openkeepass.api;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.zip.GZIPInputStream;
@@ -36,18 +37,54 @@ public class KeePassDatabaseReader {
 
     public KeePassFile decryptAndParseDatabase(byte[] key, byte[] keepassFile) {
         try {
-            byte[] aesDecryptedDbFile = decryptStream(key, keepassFile);
-            SafeInputStream decryptedStream = skipMetadata(aesDecryptedDbFile);
-            byte[] hashedBlockBytes = unHashBlockStream(decryptedStream);
+            if (keepassHeader.isV4Format()) {
+                return handleV4Format(key, keepassFile);
+            }
 
-            byte[] decompressed = decompressStream(hashedBlockBytes);
-            ProtectedStringCrypto protectedStringCrypto = getProtectedStringCrypto();
-
-            return parseDatabase(decompressed, protectedStringCrypto);
+            return handleV3Format(key, keepassFile);
         }
         catch (IOException e) {
             throw new KeePassDatabaseUnreadableException("Could not open database file", e);
         }
+    }
+
+    private KeePassFile handleV3Format(byte[] key, byte[] keepassFile) throws IOException {
+        byte[] aesDecryptedDbFile = decryptStream(key, keepassFile, keepassHeader);
+        SafeInputStream decryptedStream = skipMetadata(aesDecryptedDbFile);
+        byte[] hashedBlockBytes = unHashBlockStream(decryptedStream);
+
+        byte[] decompressed = decompressStream(hashedBlockBytes);
+
+        ProtectedStringCrypto protectedStringCrypto = getProtectedStringCrypto();
+
+        return parseDatabase(decompressed, protectedStringCrypto);
+    }
+
+    private KeePassFile handleV4Format(byte[] key, byte[] keepassFile) throws IOException {
+        byte[] aesDecryptedDbFile = decryptStream(key, keepassFile, keepassHeader);
+        byte[] decompressed = decompressStream(aesDecryptedDbFile);
+
+        keepassHeader.readInner(decompressed);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        int skipBytes = keepassHeader.getInnerHeaderSize();
+        output.write(decompressed, skipBytes, decompressed.length - skipBytes);
+
+        // TODO: implement
+        ProtectedStringCrypto protectedStringCrypto = new ProtectedStringCrypto() {
+
+            @Override
+            public String encrypt(String plainString) {
+                return null;
+            }
+
+            @Override
+            public String decrypt(String protectedString) {
+                return null;
+            }
+        };
+        // System.out.println("TEST:" + new String(output.toByteArray()));
+        return parseDatabase(output.toByteArray(), protectedStringCrypto);
     }
 
     private byte[] unHashBlockStream(SafeInputStream decryptedStream) throws IOException {
@@ -108,11 +145,8 @@ public class KeePassDatabaseReader {
         return decryptedStream;
     }
 
-    private byte[] decryptStream(byte[] key, byte[] keepassFile) throws IOException {
-        CryptoInformation cryptoInformation =
-                new CryptoInformation(KeePassHeader.VERSION_SIGNATURE_LENGTH, keepassHeader.getMasterSeed(),
-                        keepassHeader.getTransformSeed(), keepassHeader.getEncryptionIV(),
-                        keepassHeader.getTransformRounds(), keepassHeader.getHeaderSize());
+    private byte[] decryptStream(byte[] key, byte[] keepassFile, KeePassHeader header) throws IOException {
+        CryptoInformation cryptoInformation = new CryptoInformation(header);
         return decrypter.decryptDatabase(key, cryptoInformation, keepassFile);
     }
 }
