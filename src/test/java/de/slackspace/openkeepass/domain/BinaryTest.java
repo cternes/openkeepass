@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
+import de.slackspace.openkeepass.processor.NullProtectionStrategy;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -42,7 +43,8 @@ public class BinaryTest {
 
         String xml = "<Binary ID='5' Compressed='True'>H4sIAAAAAAAAAGNggAEAdmiK4woAAAA=</Binary>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        Binary binaryUnmarshall = new SimpleV3XmlParser().fromXml(inputStream, Binary.class);
+        Binary binaryUnmarshall =
+                new SimpleV3XmlParser().fromXml(inputStream, new NullProtectionStrategy(), Binary.class);
 
         Assert.assertArrayEquals(binary.getData(), binaryUnmarshall.getData());
         Assert.assertEquals(binary.getId(), binaryUnmarshall.getId());

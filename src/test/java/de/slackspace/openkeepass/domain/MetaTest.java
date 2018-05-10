@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
+import de.slackspace.openkeepass.processor.NullProtectionStrategy;
 import de.slackspace.openkeepass.util.CalendarHandler;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -58,7 +59,7 @@ public class MetaTest {
 
         String xml = "<meta><Generator>OpenKeePass</Generator><DatabaseName>SomeDb</DatabaseName><DatabaseDescription>some description</DatabaseDescription><DatabaseNameChanged>2016-01-16T00:00:00</DatabaseNameChanged><DatabaseDescriptionChanged>2016-01-15T00:00:00</DatabaseDescriptionChanged><MaintenanceHistoryDays>30</MaintenanceHistoryDays><RecycleBinUUID>h9T0QaXsTOCMqYKlB50o7w==</RecycleBinUUID><RecycleBinChanged>2016-01-17T00:00:00</RecycleBinChanged><RecycleBinEnabled>True</RecycleBinEnabled><HistoryMaxItems>10</HistoryMaxItems><HistoryMaxSize>20</HistoryMaxSize></meta>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        Meta metaUnmarshalled = new SimpleV3XmlParser().fromXml(inputStream, Meta.class);
+        Meta metaUnmarshalled = new SimpleV3XmlParser().fromXml(inputStream, new NullProtectionStrategy(), Meta.class);
 
         Assert.assertEquals(meta.getDatabaseDescription(), metaUnmarshalled.getDatabaseDescription());
         Assert.assertEquals(meta.getDatabaseName(), metaUnmarshalled.getDatabaseName());

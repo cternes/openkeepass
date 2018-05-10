@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
+import de.slackspace.openkeepass.processor.NullProtectionStrategy;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -33,7 +34,7 @@ public class AttachmentTest {
 
         String xml = "<Binary><Key>test.txt</Key><Value Ref='3'/></Binary>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        Attachment attachmentUnmarshalled = new SimpleV3XmlParser().fromXml(inputStream, Attachment.class);
+        Attachment attachmentUnmarshalled = new SimpleV3XmlParser().fromXml(inputStream, new NullProtectionStrategy(), Attachment.class);
 
         Assert.assertEquals(attachment.getKey(), attachmentUnmarshalled.getKey());
         Assert.assertEquals(attachment.getRef(), attachmentUnmarshalled.getRef());

@@ -354,6 +354,26 @@ public class KeepassDatabaseReaderTest {
     }
 
     @Test
+    public void whenReadingDatabaseFromKeeWebShouldDecryptPasswordsCorrectly() throws FileNotFoundException {
+        FileInputStream file = new FileInputStream(ResourceUtils.getResource("DatabaseFromKeeWeb.kdbx"));
+
+        KeePassDatabase reader = KeePassDatabase.getInstance(file);
+        KeePassFile database = reader.openDatabase("demo");
+
+        Entry entryA = database.getEntryByTitle("item");
+        assertThat(entryA.getUsername(), is("user"));
+        assertThat(entryA.getPassword(), is("password"));
+
+        Property customerProperty = entryA.getCustomProperties().get(0);
+        assertThat(customerProperty.getKey(), is("New Field"));
+        assertThat(customerProperty.getValue(), is("newpasswordfield"));
+
+        Entry entryB = database.getEntryByTitle("entry");
+        assertThat(entryB.getUsername(), is("erwerwe"));
+        assertThat(entryB.getPassword(), is("werwer"));
+    }
+
+    @Test
     public void whenReadingV4FormatWithAesShouldDecryptProperly() throws FileNotFoundException {
         // arrange
         FileInputStream file = new FileInputStream(ResourceUtils.getResource("DatabaseWithV4Format.kdbx"));
@@ -365,5 +385,7 @@ public class KeepassDatabaseReaderTest {
         // assert
         Entry entry = database.getEntryByTitle("Sample Entry");
         assertThat(entry.getTitle(), is("Sample Entry"));
+
+        // TODO: compare password!
     }
 }

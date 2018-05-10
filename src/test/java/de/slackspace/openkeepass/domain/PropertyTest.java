@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
+import de.slackspace.openkeepass.processor.NullProtectionStrategy;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -33,7 +34,8 @@ public class PropertyTest {
 
         String xml = "<String><Key>SomeKey</Key><Value Protected='False'>SomeValue</Value></String>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        Property propertyUnmarshalled = new SimpleV3XmlParser().fromXml(inputStream, Property.class);
+        Property propertyUnmarshalled =
+                new SimpleV3XmlParser().fromXml(inputStream, new NullProtectionStrategy(), Property.class);
 
         Assert.assertEquals(property.getKey(), propertyUnmarshalled.getKey());
         Assert.assertEquals(property.getValue(), propertyUnmarshalled.getValue());

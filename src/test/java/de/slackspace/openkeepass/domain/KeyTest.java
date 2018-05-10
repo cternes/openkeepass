@@ -7,6 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
+import de.slackspace.openkeepass.processor.NullProtectionStrategy;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 
 public class KeyTest {
@@ -27,7 +28,7 @@ public class KeyTest {
         String xml = "<Key><Data>someData</Data></Key>";
         
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        Key key = new SimpleV3XmlParser().fromXml(inputStream, Key.class);
+        Key key = new SimpleV3XmlParser().fromXml(inputStream, new NullProtectionStrategy(), Key.class);
 
         Assert.assertEquals("someData", key.getData());
     }

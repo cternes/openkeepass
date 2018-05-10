@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
+import de.slackspace.openkeepass.processor.NullProtectionStrategy;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -46,8 +47,8 @@ public class CustomIconsTest {
         
         String xml = "<customIcons><Icon><UUID>h9T0QaXsTOCMqYKlB50o7w==</UUID><Data>AAAAAAAAAAAAAA==</Data></Icon></customIcons>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        CustomIcons customIconsUnmarshall = new SimpleV3XmlParser().fromXml(inputStream, CustomIcons.class);
-        
+        CustomIcons customIconsUnmarshall =
+                new SimpleV3XmlParser().fromXml(inputStream, new NullProtectionStrategy(), CustomIcons.class);
         
         Assert.assertEquals(customIcons.getIcons().size(), customIconsUnmarshall.getIcons().size());
         Assert.assertArrayEquals(customIcons.getIcons().get(0).getData(), customIconsUnmarshall.getIcons().get(0).getData());

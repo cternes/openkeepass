@@ -20,7 +20,6 @@ import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
 import de.slackspace.openkeepass.parser.SimpleV4XmlParser;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
 import de.slackspace.openkeepass.processor.Enricher;
-import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.stream.HashedBlockInputStream;
 import de.slackspace.openkeepass.util.SafeInputStream;
 import de.slackspace.openkeepass.util.StreamUtils;
@@ -83,7 +82,7 @@ public class KeePassDatabaseReader {
                 return null;
             }
         };
-        // System.out.println("TEST:" + new String(output.toByteArray()));
+
         return parseDatabase(output.toByteArray(), protectedStringCrypto);
     }
 
@@ -93,9 +92,9 @@ public class KeePassDatabaseReader {
     }
 
     private KeePassFile parseDatabase(byte[] decompressed, ProtectedStringCrypto protectedStringCrypto) {
-        KeePassFile unprocessedKeepassFile = createXmlParser().fromXml(new ByteArrayInputStream(decompressed));
-        new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(protectedStringCrypto),
-                unprocessedKeepassFile);
+        DecryptionStrategy decryptionStrategy = new DecryptionStrategy(protectedStringCrypto);
+        KeePassFile unprocessedKeepassFile =
+                createXmlParser().fromXml(new ByteArrayInputStream(decompressed), decryptionStrategy);
 
         return new Enricher(unprocessedKeepassFile)
                 .enrichIcons()

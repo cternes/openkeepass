@@ -6,22 +6,28 @@ import java.util.GregorianCalendar;
 import java.util.UUID;
 
 import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.convert.Registry;
+import org.simpleframework.xml.convert.RegistryStrategy;
 import org.simpleframework.xml.core.Persister;
+import org.simpleframework.xml.strategy.Strategy;
 import org.simpleframework.xml.transform.RegistryMatcher;
 import org.simpleframework.xml.transform.Transform;
 
+import de.slackspace.openkeepass.domain.PropertyValue;
 import de.slackspace.openkeepass.domain.xml.adapter.BooleanSimpleXmlAdapter;
 import de.slackspace.openkeepass.domain.xml.adapter.ByteSimpleXmlAdapter;
+import de.slackspace.openkeepass.domain.xml.adapter.PropertyValueXmlAdapter;
 import de.slackspace.openkeepass.domain.xml.adapter.TreeStrategyWithoutArrayLength;
 import de.slackspace.openkeepass.domain.xml.adapter.UUIDSimpleXmlAdapter;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
+import de.slackspace.openkeepass.processor.ProtectionStrategy;
 
 public abstract class SimpleXmlParser implements XmlParser {
 
-    public <T> T fromXml(InputStream inputStream, Class<T> clazz) {
+    public <T> T fromXml(InputStream inputStream, ProtectionStrategy protectionStrategy, Class<T> clazz) {
         try {
-            Serializer serializer = createSerializer();
+            Serializer serializer = createSerializer(protectionStrategy);
             return serializer.read(clazz, inputStream);
         }
         catch (Exception e) {
@@ -45,19 +51,26 @@ public abstract class SimpleXmlParser implements XmlParser {
         }
         catch (Exception e) {
             throw new KeePassDatabaseUnwriteableException("Could not serialize object to xml", e);
-        }
+        } 
     }
 
-    private Serializer createSerializer() {
+    private Serializer createSerializer(ProtectionStrategy protectionStrategy) {
         RegistryMatcher matcher = new RegistryMatcher();
         matcher.bind(Boolean.class, BooleanSimpleXmlAdapter.class);
         matcher.bind(GregorianCalendar.class, getCalendarAdapter());
         matcher.bind(UUID.class, UUIDSimpleXmlAdapter.class);
         matcher.bind(byte[].class, ByteSimpleXmlAdapter.class);
         
-        TreeStrategyWithoutArrayLength strategy = new TreeStrategyWithoutArrayLength();
-        Serializer serializer = new Persister(strategy, matcher);
-        return serializer;
+        Registry registry = new Registry();
+        PropertyValueXmlAdapter converter = new PropertyValueXmlAdapter(protectionStrategy);
+        try {
+            registry.bind(PropertyValue.class, converter);
+            Strategy strategy = new RegistryStrategy(registry);
+            return new Persister(strategy, matcher);
+        }
+        catch (Exception e) {
+            throw new KeePassDatabaseUnreadableException("Could not register xml converter", e);
+        }
     }
 
     protected abstract Class<? extends Transform<?>> getCalendarAdapter();
