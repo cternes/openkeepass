@@ -170,4 +170,22 @@ public class KeepassHeaderTest {
         assertThat(hmac, is(ByteUtils.hexStringToByteArray(
                 "46cd61eead3beaf0df1085e2e7b76e969d137e4b7510b86cf144b91129c108391e68100600b59a230e0f2e95ce34decdb0982ce515a822840ad17eadbc1e6220")));
     }
+
+    @Test
+    public void whenV4FormatIsUsedShouldReadInnerHeader() throws IOException {
+        // arrange
+        KeePassHeader header = new KeePassHeader();
+
+        byte[] innerHeader = ByteUtils.hexStringToByteArray(
+                "0104000000030000000240000000b231d0a8152619ea18f8baaa850d168918d99402b7e73be403a9317110ae871859841d78d50352d6c6aabd8c4cfc751308da2d6d9e060ec70e1d4afdd2871dd70000000000");
+
+        // act
+        header.readInner(innerHeader);
+
+        // assert
+        assertThat(header.getCrsAlgorithm(), is(CrsAlgorithm.ChaCha20));
+        assertThat(header.getProtectedStreamKey(), is(ByteUtils.hexStringToByteArray(
+                "B231D0A8152619EA18F8BAAA850D168918D99402B7E73BE403A9317110AE871859841D78D50352D6C6AABD8C4CFC751308DA2D6D9E060EC70E1D4AFDD2871DD7")));
+        assertThat(header.getInnerHeaderSize(), is(83));
+    }
 }

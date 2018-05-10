@@ -39,7 +39,7 @@ public class Decrypter {
             byte[] aesKey) throws IOException {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(database);
         inputStream.skip(KeePassHeader.VERSION_SIGNATURE_LENGTH + cryptoInformation.getHeaderSize());
-        inputStream.skip(64);
+        inputStream.skip(64); // Header Hash & Stored HMAC
 
         byte[] hmacKey = cryptoInformation.getHMACKey(password);
         HmacBlockInputStream hmacBlockInputStream = new HmacBlockInputStream(hmacKey, inputStream);

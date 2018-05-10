@@ -68,6 +68,7 @@ public class KeePassHeader {
     private int fileFormatVersion;
     private KdfDictionary variantDictionary;
     private int headerSize;
+    private int innerHeaderSize;
     
     public KeePassHeader() {
         // empty constructor
@@ -224,6 +225,45 @@ public class KeePassHeader {
                 throw new KeePassHeaderUnreadableException("Could not read header input", e);
             }
         }
+    }
+
+    public void readInner(byte[] innerHeader) throws IOException {
+        SafeInputStream inputStream =
+                new SafeInputStream(new BufferedInputStream(new ByteArrayInputStream(innerHeader)));
+
+        while (true) {
+            int fieldId = inputStream.read();
+            byte[] fieldLength = new byte[4];
+            inputStream.readSafe(fieldLength);
+
+            ByteBuffer fieldLengthBuffer = ByteBuffer.wrap(fieldLength);
+            fieldLengthBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            int fieldLengthInt = ByteUtils.toUnsignedInt(fieldLengthBuffer.getInt());
+
+            byte[] value = new byte[fieldLengthInt];
+            inputStream.readSafe(value);
+
+            switch (fieldId) {
+                case 1:
+                    setInnerRandomStreamId(value);
+                    break;
+                case 2:
+                    setProtectedStreamKey(value);
+                    break;
+                case 3:
+                    // not implemented yet
+                    break;
+                default:
+                    break;
+            }
+
+            if (fieldId == 0) {
+                break;
+            }
+        }
+
+        innerHeaderSize = inputStream.getNumBytesRead();
+        inputStream.close();
     }
 
     /**
@@ -420,6 +460,10 @@ public class KeePassHeader {
         return headerSize;
     }
 
+    public int getInnerHeaderSize() {
+        return innerHeaderSize;
+    }
+
     public byte[] getProtectedStreamKey() {
         return protectedStreamKey;
     }
@@ -465,4 +509,5 @@ public class KeePassHeader {
         buffer.putLong(value);
         return buffer.array();
     }
+
 }
