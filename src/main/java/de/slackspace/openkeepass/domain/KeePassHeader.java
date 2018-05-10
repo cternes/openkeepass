@@ -67,7 +67,7 @@ public class KeePassHeader {
     private CrsAlgorithm crsAlgorithm;
     private int fileFormatVersion;
     private KdfDictionary variantDictionary;
-    private int headerSize;
+    private int headerSize = -1;
     private int innerHeaderSize;
     
     public KeePassHeader() {
@@ -457,7 +457,29 @@ public class KeePassHeader {
     }
 
     public int getHeaderSize() {
+        if (headerSize == -1) {
+            return calculateHeaderSize();
+        }
+
         return headerSize;
+    }
+
+    private int calculateHeaderSize() {
+        int size = 0;
+
+        // Add size of values
+        for (int i = 2; i < 11; i++) {
+            byte[] value = getValue(i);
+
+            if (value != null) {
+                size += value.length + SIZE_OF_FIELD_LENGTH_BUFFER;
+            }
+        }
+
+        // Add size of header end
+        size += getEndOfHeader().length;
+
+        return size;
     }
 
     public int getInnerHeaderSize() {
