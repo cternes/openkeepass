@@ -24,7 +24,22 @@ public class Decrypter {
     }
 
     private byte[] processDatabaseEncryption(boolean encrypt, byte[] database, CryptoInformation cryptoInformation, byte[] aesKey) throws IOException {
-        byte[] metaData = new byte[cryptoInformation.getVersionSignatureLength() + cryptoInformation.getHeaderSize()];
+        if (cryptoInformation.isV4Format()) {
+            return processDatabaseEncryptionV4Format(database, cryptoInformation, aesKey);
+        }
+
+        return processDatabaseEncryptionV3Format(encrypt, database, cryptoInformation, aesKey);
+    }
+
+    private byte[] processDatabaseEncryptionV4Format(byte[] database, CryptoInformation cryptoInformation,
+            byte[] aesKey) {
+        return Aes.decrypt(aesKey, cryptoInformation.getEncryptionIV(), database);
+    }
+
+    private byte[] processDatabaseEncryptionV3Format(boolean encrypt, byte[] database,
+            CryptoInformation cryptoInformation, byte[] aesKey) throws IOException {
+        byte[] metaData = new byte[cryptoInformation.getVersionSignatureLength() +
+                cryptoInformation.getHeaderSize()];
         SafeInputStream inputStream = new SafeInputStream(new BufferedInputStream(new ByteArrayInputStream(database)));
         inputStream.readSafe(metaData);
 
@@ -32,8 +47,9 @@ public class Decrypter {
         byte[] processedPayload;
         if (encrypt) {
             processedPayload = Aes.encrypt(aesKey, cryptoInformation.getEncryptionIV(), payload);
-        } else {
-            processedPayload = Aes.decrypt(aesKey, cryptoInformation.getEncryptionIV(), payload);
+        }
+        else {
+            processedPayload = processDatabaseEncryptionV4Format(payload, cryptoInformation, aesKey);
         }
 
         ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -45,8 +61,16 @@ public class Decrypter {
 
     private byte[] createAesKey(byte[] password, CryptoInformation cryptoInformation) {
         byte[] hashedPwd = Sha256.getInstance().hash(password);
+        if (cryptoInformation.isV4Format()) {
+            return createAesKeyV4Format(hashedPwd, cryptoInformation);
+        }
 
-        byte[] transformedPwd = Aes.transformKey(cryptoInformation.getTransformSeed(), hashedPwd, cryptoInformation.getTransformRounds());
+        return createAesKeyV3Format(hashedPwd, cryptoInformation);
+    }
+
+    private byte[] createAesKeyV3Format(byte[] password, CryptoInformation cryptoInformation) {
+        byte[] transformedPwd = Aes.transformKey(cryptoInformation.getTransformSeed(), password,
+                cryptoInformation.getTransformRounds());
         byte[] transformedHashedPwd = Sha256.getInstance().hash(transformedPwd);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -54,5 +78,11 @@ public class Decrypter {
         stream.write(transformedHashedPwd, 0, 32);
 
         return Sha256.getInstance().hash(stream.toByteArray());
+    }
+
+    private byte[] createAesKeyV4Format(byte[] password, CryptoInformation cryptoInformation) {
+        byte[] transformedKey = Argon2.transformKey(password, cryptoInformation.getKdfParameters());
+
+        return Sha256.getInstance().update(cryptoInformation.getMasterSeed()).hash(transformedKey);
     }
 }
