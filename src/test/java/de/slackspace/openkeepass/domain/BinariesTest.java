@@ -3,12 +3,13 @@ package de.slackspace.openkeepass.domain;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import org.junit.Assert;
+import org.junit.Test;
+
+import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class BinariesTest {
 
@@ -27,7 +28,7 @@ public class BinariesTest {
                 .build();
 
         Binaries binaries = new BinariesBuilder().addBinary(binary).build();
-        ByteArrayOutputStream bos = new SimpleXmlParser().toXml(binaries);
+        ByteArrayOutputStream bos = new SimpleV3XmlParser().toXml(binaries);
 
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
         Assert.assertEquals("<Binaries><Binary ID='5' Compressed='False'>AAAAAAAAAAAAAA==</Binary></Binaries>", xml);
@@ -46,7 +47,7 @@ public class BinariesTest {
 
         String xml = "<Binaries><Binary ID='5' Compressed='False'>AAAAAAAAAAAAAA==</Binary></Binaries>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        Binaries binariesUnmarshall = new SimpleXmlParser().fromXml(inputStream, Binaries.class);
+        Binaries binariesUnmarshall = new SimpleV3XmlParser().fromXml(inputStream, Binaries.class);
 
         Assert.assertEquals(binaries.getBinaries().size(), binariesUnmarshall.getBinaries().size());
         Assert.assertArrayEquals(binaries.getBinaries().get(0).getData(), binariesUnmarshall.getBinaries().get(0).getData());

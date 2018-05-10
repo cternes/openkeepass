@@ -6,7 +6,7 @@ import java.io.ByteArrayOutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 
 public class KeyFileTest {
@@ -17,7 +17,7 @@ public class KeyFileTest {
         key.setData("someData");
         KeyFile keyFile = new KeyFile(true, key);
       
-        ByteArrayOutputStream bos = new SimpleXmlParser().toXml(keyFile);
+        ByteArrayOutputStream bos = new SimpleV3XmlParser().toXml(keyFile);
 
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
         Assert.assertEquals("<KeyFile><Key><Data>someData</Data></Key></KeyFile>", xml);
@@ -28,7 +28,7 @@ public class KeyFileTest {
         String xml = "<KeyFile><Key><Data>RP+rYNZL4lrGtDMBPzOuctlh3NAutSG5KGsT38C+qPQ=</Data></Key></KeyFile>";
         
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        KeyFile keyFile = new SimpleXmlParser().fromXml(inputStream, KeyFile.class);
+        KeyFile keyFile = new SimpleV3XmlParser().fromXml(inputStream, KeyFile.class);
 
         Assert.assertEquals("RP+rYNZL4lrGtDMBPzOuctlh3NAutSG5KGsT38C+qPQ=", keyFile.getKey().getData());
     }

@@ -3,12 +3,13 @@ package de.slackspace.openkeepass.domain;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
-import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import org.junit.Assert;
+import org.junit.Test;
+
+import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
-import org.junit.Assert;
-import org.junit.Test;
 
 public class AttachmentTest {
 
@@ -20,7 +21,7 @@ public class AttachmentTest {
     @Test
     public void shouldMarshallObjectToXml() throws Exception {
         Attachment attachment = new Attachment("test.txt", 3);
-        ByteArrayOutputStream bos = new SimpleXmlParser().toXml(attachment);
+        ByteArrayOutputStream bos = new SimpleV3XmlParser().toXml(attachment);
 
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
         Assert.assertEquals("<Binary><Key>test.txt</Key><Value Ref='3'/></Binary>", xml);
@@ -32,7 +33,7 @@ public class AttachmentTest {
 
         String xml = "<Binary><Key>test.txt</Key><Value Ref='3'/></Binary>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        Attachment attachmentUnmarshalled = new SimpleXmlParser().fromXml(inputStream, Attachment.class);
+        Attachment attachmentUnmarshalled = new SimpleV3XmlParser().fromXml(inputStream, Attachment.class);
 
         Assert.assertEquals(attachment.getKey(), attachmentUnmarshalled.getKey());
         Assert.assertEquals(attachment.getRef(), attachmentUnmarshalled.getRef());

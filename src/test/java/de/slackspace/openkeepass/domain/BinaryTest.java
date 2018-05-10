@@ -6,7 +6,7 @@ import java.io.ByteArrayOutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -26,7 +26,7 @@ public class BinaryTest {
                 .isCompressed(true)
                 .build();
 
-        ByteArrayOutputStream bos = new SimpleXmlParser().toXml(binary);
+        ByteArrayOutputStream bos = new SimpleV3XmlParser().toXml(binary);
 
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
         Assert.assertEquals("<Binary ID='5' Compressed='True'>H4sIAAAAAAAAAGNggAEAdmiK4woAAAA=</Binary>", xml);
@@ -42,7 +42,7 @@ public class BinaryTest {
 
         String xml = "<Binary ID='5' Compressed='True'>H4sIAAAAAAAAAGNggAEAdmiK4woAAAA=</Binary>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        Binary binaryUnmarshall = new SimpleXmlParser().fromXml(inputStream, Binary.class);
+        Binary binaryUnmarshall = new SimpleV3XmlParser().fromXml(inputStream, Binary.class);
 
         Assert.assertArrayEquals(binary.getData(), binaryUnmarshall.getData());
         Assert.assertEquals(binary.getId(), binaryUnmarshall.getId());

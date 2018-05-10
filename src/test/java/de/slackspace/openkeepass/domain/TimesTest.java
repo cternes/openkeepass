@@ -6,7 +6,7 @@ import java.io.ByteArrayOutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
 import de.slackspace.openkeepass.util.CalendarHandler;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -31,7 +31,7 @@ public class TimesTest {
             .usageCount(23)
             .build();
 
-        ByteArrayOutputStream bos = new SimpleXmlParser().toXml(times);
+        ByteArrayOutputStream bos = new SimpleV3XmlParser().toXml(times);
         
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
         Assert.assertEquals("<times><LastModificationTime>2016-01-18T00:00:00</LastModificationTime><CreationTime>2016-01-15T00:00:00</CreationTime><LastAccessTime>2016-01-17T00:00:00</LastAccessTime><ExpiryTime>2016-01-16T00:00:00</ExpiryTime><Expires>True</Expires><UsageCount>23</UsageCount><LocationChanged>2016-01-19T00:00:00</LocationChanged></times>", xml);
@@ -51,7 +51,7 @@ public class TimesTest {
 
         String xml = "<times><LastModificationTime>2016-01-18T00:00:00</LastModificationTime><CreationTime>2016-01-15T00:00:00</CreationTime><LastAccessTime>2016-01-17T00:00:00</LastAccessTime><ExpiryTime>2016-01-16T00:00:00</ExpiryTime><Expires>True</Expires><UsageCount>23</UsageCount><LocationChanged>2016-01-19T00:00:00</LocationChanged></times>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        Times timesUnmarshalled = new SimpleXmlParser().fromXml(inputStream, Times.class);
+        Times timesUnmarshalled = new SimpleV3XmlParser().fromXml(inputStream, Times.class);
 
         Assert.assertEquals(times.getUsageCount(), timesUnmarshalled.getUsageCount());
         CalendarHandler.isEqual(times.getCreationTime(), timesUnmarshalled.getCreationTime());

@@ -11,15 +11,15 @@ import de.slackspace.openkeepass.exception.KeyFileUnreadableException;
 import de.slackspace.openkeepass.parser.KeyFileBinaryParser;
 import de.slackspace.openkeepass.parser.KeyFileParser;
 import de.slackspace.openkeepass.parser.KeyFileXmlParser;
-import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
 import de.slackspace.openkeepass.util.StreamUtils;
 
 public class KeyFileReader {
 
-    protected List<KeyFileParser> keyFileParsers = new ArrayList<KeyFileParser>();
+    protected List<KeyFileParser> keyFileParsers = new ArrayList<>();
 
     public KeyFileReader() {
-        keyFileParsers.add(new KeyFileXmlParser(new SimpleXmlParser()));
+        keyFileParsers.add(new KeyFileXmlParser(new SimpleV3XmlParser()));
         keyFileParsers.add(new KeyFileBinaryParser());
     }
 

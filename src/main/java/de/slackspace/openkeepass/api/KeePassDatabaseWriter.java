@@ -16,7 +16,7 @@ import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnwriteableException;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
-import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
 import de.slackspace.openkeepass.processor.EncryptionStrategy;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
@@ -84,7 +84,7 @@ public class KeePassDatabaseWriter {
         new ProtectedValueProcessor().processProtectedValues(new EncryptionStrategy(protectedStringCrypto),
                 keePassFile);
 
-        return new KeePassDatabaseXmlParser(new SimpleXmlParser()).toXml(keePassFile).toByteArray();
+        return new KeePassDatabaseXmlParser(new SimpleV3XmlParser()).toXml(keePassFile).toByteArray();
     }
 
     private ByteArrayOutputStream compressStream(byte[] keePassFilePayload) throws IOException {

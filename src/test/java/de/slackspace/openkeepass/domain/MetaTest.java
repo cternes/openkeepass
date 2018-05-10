@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
 
-import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
 import de.slackspace.openkeepass.util.CalendarHandler;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -35,7 +35,7 @@ public class MetaTest {
             .recycleBinUuid(UUID.fromString("87d4f441-a5ec-4ce0-8ca9-82a5079d28ef"))
             .build();
 
-        ByteArrayOutputStream bos = new SimpleXmlParser().toXml(meta);
+        ByteArrayOutputStream bos = new SimpleV3XmlParser().toXml(meta);
         
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
         Assert.assertEquals("<meta><Generator>OpenKeePass</Generator><DatabaseName>SomeDb</DatabaseName><DatabaseDescription>some description</DatabaseDescription><DatabaseNameChanged>2016-01-16T00:00:00</DatabaseNameChanged><DatabaseDescriptionChanged>2016-01-15T00:00:00</DatabaseDescriptionChanged><MaintenanceHistoryDays>30</MaintenanceHistoryDays><RecycleBinUUID>h9T0QaXsTOCMqYKlB50o7w==</RecycleBinUUID><RecycleBinChanged>2016-01-17T00:00:00</RecycleBinChanged><RecycleBinEnabled>True</RecycleBinEnabled><HistoryMaxItems>10</HistoryMaxItems><HistoryMaxSize>20</HistoryMaxSize></meta>", xml);
@@ -58,7 +58,7 @@ public class MetaTest {
 
         String xml = "<meta><Generator>OpenKeePass</Generator><DatabaseName>SomeDb</DatabaseName><DatabaseDescription>some description</DatabaseDescription><DatabaseNameChanged>2016-01-16T00:00:00</DatabaseNameChanged><DatabaseDescriptionChanged>2016-01-15T00:00:00</DatabaseDescriptionChanged><MaintenanceHistoryDays>30</MaintenanceHistoryDays><RecycleBinUUID>h9T0QaXsTOCMqYKlB50o7w==</RecycleBinUUID><RecycleBinChanged>2016-01-17T00:00:00</RecycleBinChanged><RecycleBinEnabled>True</RecycleBinEnabled><HistoryMaxItems>10</HistoryMaxItems><HistoryMaxSize>20</HistoryMaxSize></meta>";
         ByteArrayInputStream inputStream = new ByteArrayInputStream(xml.getBytes());
-        Meta metaUnmarshalled = new SimpleXmlParser().fromXml(inputStream, Meta.class);
+        Meta metaUnmarshalled = new SimpleV3XmlParser().fromXml(inputStream, Meta.class);
 
         Assert.assertEquals(meta.getDatabaseDescription(), metaUnmarshalled.getDatabaseDescription());
         Assert.assertEquals(meta.getDatabaseName(), metaUnmarshalled.getDatabaseName());

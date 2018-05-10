@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.spongycastle.util.encoders.Base64;
 
-import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
 import de.slackspace.openkeepass.util.ByteUtils;
 import de.slackspace.openkeepass.util.CalendarHandler;
 import de.slackspace.openkeepass.util.XmlStringCleaner;
@@ -64,7 +64,7 @@ public class KeePassFileTest {
 
         String rootUuid = Base64.toBase64String(ByteUtils.uuidToBytes(keePassFile.getRoot().getUuid()));
 
-        ByteArrayOutputStream bos = new SimpleXmlParser().toXml(keePassFile);
+        ByteArrayOutputStream bos = new SimpleV3XmlParser().toXml(keePassFile);
 
         String xml = XmlStringCleaner.cleanXmlString(new String(bos.toByteArray()));
         Assert.assertEquals(

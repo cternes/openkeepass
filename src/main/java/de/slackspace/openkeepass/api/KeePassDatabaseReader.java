@@ -16,7 +16,8 @@ import de.slackspace.openkeepass.domain.KeePassFile;
 import de.slackspace.openkeepass.domain.KeePassHeader;
 import de.slackspace.openkeepass.exception.KeePassDatabaseUnreadableException;
 import de.slackspace.openkeepass.parser.KeePassDatabaseXmlParser;
-import de.slackspace.openkeepass.parser.SimpleXmlParser;
+import de.slackspace.openkeepass.parser.SimpleV3XmlParser;
+import de.slackspace.openkeepass.parser.SimpleV4XmlParser;
 import de.slackspace.openkeepass.processor.DecryptionStrategy;
 import de.slackspace.openkeepass.processor.Enricher;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
@@ -27,7 +28,6 @@ import de.slackspace.openkeepass.util.StreamUtils;
 public class KeePassDatabaseReader {
 
     protected Decrypter decrypter = new Decrypter();
-    protected KeePassDatabaseXmlParser keePassDatabaseXmlParser = new KeePassDatabaseXmlParser(new SimpleXmlParser());
 
     private KeePassHeader keepassHeader;
 
@@ -93,7 +93,7 @@ public class KeePassDatabaseReader {
     }
 
     private KeePassFile parseDatabase(byte[] decompressed, ProtectedStringCrypto protectedStringCrypto) {
-        KeePassFile unprocessedKeepassFile = keePassDatabaseXmlParser.fromXml(new ByteArrayInputStream(decompressed));
+        KeePassFile unprocessedKeepassFile = createXmlParser().fromXml(new ByteArrayInputStream(decompressed));
         new ProtectedValueProcessor().processProtectedValues(new DecryptionStrategy(protectedStringCrypto),
                 unprocessedKeepassFile);
 
@@ -148,5 +148,13 @@ public class KeePassDatabaseReader {
     private byte[] decryptStream(byte[] key, byte[] keepassFile, KeePassHeader header) throws IOException {
         CryptoInformation cryptoInformation = new CryptoInformation(header);
         return decrypter.decryptDatabase(key, cryptoInformation, keepassFile);
+    }
+
+    private KeePassDatabaseXmlParser createXmlParser() {
+        if (keepassHeader.isV4Format()) {
+            return new KeePassDatabaseXmlParser(new SimpleV4XmlParser());
+        }
+
+        return new KeePassDatabaseXmlParser(new SimpleV3XmlParser());
     }
 }
