@@ -53,8 +53,7 @@ public class KeePassDatabaseWriter {
     }
 
     private byte[] encryptStream(KeePassHeader header, byte[] hashedPassword, ByteArrayOutputStream streamToEncrypt) throws IOException {
-        CryptoInformation cryptoInformation = new CryptoInformation(KeePassHeader.VERSION_SIGNATURE_LENGTH, header.getMasterSeed(), header.getTransformSeed(),
-                header.getEncryptionIV(), header.getTransformRounds(), header.getHeaderSize());
+        CryptoInformation cryptoInformation = new CryptoInformation(header);
 
         return new Decrypter().encryptDatabase(hashedPassword, cryptoInformation, streamToEncrypt.toByteArray());
     }
