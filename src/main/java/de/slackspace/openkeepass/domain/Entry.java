@@ -49,7 +49,7 @@ public class Entry implements KeePassFileElement {
     @Element(name = "CustomIconUUID", required = false)
     private UUID customIconUUID;
 
-    @ElementList(name = "String", inline = true)
+    @ElementList(name = "String", inline = true, required = false)
     private List<Property> properties = new ArrayList<Property>();
 
     private List<Property> referencedProperties = new ArrayList<Property>();

@@ -398,4 +398,16 @@ public class KeepassDatabaseReaderTest {
         assertThat(entryB.getUsername(), is("erwerwe"));
         assertThat(entryB.getPassword(), is("werwer"));
     }
+
+    @Test
+    public void whenReadingDatabaseFromKeepassDroidShouldIgnoreMissingProperties() throws FileNotFoundException {
+        FileInputStream file = new FileInputStream(ResourceUtils.getResource("DatabaseFromKeepassDroid.kdbx"));
+
+        KeePassDatabase reader = KeePassDatabase.getInstance(file);
+        KeePassFile database = reader.openDatabase("1");
+
+        Entry entry = database.getEntryByTitle("entry1");
+        assertThat(entry.getUsername(), is("aga"));
+        assertThat(entry.getPassword(), is("secret"));
+    }
 }
