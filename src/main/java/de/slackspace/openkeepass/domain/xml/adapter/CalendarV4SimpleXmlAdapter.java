@@ -23,9 +23,9 @@ public class CalendarV4SimpleXmlAdapter implements Transform<GregorianCalendar> 
         byte[] bytes = Base64.decode(value.getBytes());
         ByteBuffer buffer = ByteBuffer.wrap(bytes);
         long seconds = buffer.order(ByteOrder.LITTLE_ENDIAN).getLong();
-        
+
         long millis = convertToMilliseconds(seconds);
-        
+
         Calendar result = Calendar.getInstance();
         result.setTimeZone(TimeZone.getTimeZone("GMT"));
         result.setTimeInMillis(millis);
@@ -41,7 +41,7 @@ public class CalendarV4SimpleXmlAdapter implements Transform<GregorianCalendar> 
 
         long millis = convertFromMilliseconds(value.getTimeInMillis());
 
-        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        ByteBuffer buffer = ByteBuffer.allocate(8);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
         buffer.putLong(millis);
         byte[] bytes = Base64.encode(buffer.array());
