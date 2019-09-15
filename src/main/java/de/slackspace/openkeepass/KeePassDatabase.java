@@ -323,7 +323,7 @@ public class KeePassDatabase {
 
     /**
      * Encrypts a {@link KeePassFile} with the given password and writes it to
-     * the given stream.
+     * the given file location.
      * <p>
      * If the KeePassFile cannot be encrypted an exception will be thrown.
      *
@@ -334,14 +334,271 @@ public class KeePassDatabase {
      * @param stream
      *            the target stream where the output will be written
      * @see KeePassFile
-     *
      */
     public static void write(KeePassFile keePassFile, String password, OutputStream stream) {
         if (stream == null) {
             throw new IllegalArgumentException("You must provide a stream to write to.");
         }
 
-        new KeePassDatabaseWriter().writeKeePassFile(keePassFile, password, stream);
+        write(keePassFile, password, (InputStream) null, stream);
+    }
+
+    /**
+     * Encrypts a {@link KeePassFile} with the given password and writes it to
+     * the given file location.
+     * <p>
+     * If the KeePassFile cannot be encrypted an exception will be thrown.
+     *
+     * @param keePassFile
+     *            the keePass model which should be written
+     * @param password
+     *            the password to encrypt the database
+     * @param keyFile
+     *            the keyfile to encrypt the database as stream
+     * @param keePassDatabaseFile
+     *            the target location where the database file will be written
+     * @see KeePassFile
+     */
+    public static void write(KeePassFile keePassFile, String password, File keyFile, String keePassDatabaseFile) {
+        if (keePassDatabaseFile == null || keePassDatabaseFile.isEmpty()) {
+            throw new IllegalArgumentException("You must provide a non-empty path where the database should be written to.");
+        }
+
+        try {
+            InputStream keyFileStream = null;
+            try {
+                keyFileStream = new FileInputStream(keyFile);
+                write(keePassFile, password, keyFileStream, new FileOutputStream(keePassDatabaseFile));
+            } finally {
+                if (keyFileStream != null) {
+                    try {
+                        keyFileStream.close();
+                    } catch (IOException e) {
+                        // Ignore
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new KeePassDatabaseUnreadableException("Could not find database file", e);
+        }
+    }
+
+    /**
+     * Encrypts a {@link KeePassFile} with the given password and writes it to
+     * the given file location.
+     * <p>
+     * If the KeePassFile cannot be encrypted an exception will be thrown.
+     *
+     * @param keePassFile
+     *            the keePass model which should be written
+     * @param password
+     *            the password to encrypt the database
+     * @param keyFile
+     *            the keyfile to encrypt the database as stream
+     * @param stream
+     *            the target stream where the output will be written
+     * @see KeePassFile
+     */
+    public static void write(KeePassFile keePassFile, String password, File keyFile, OutputStream stream) {
+        if (stream == null) {
+            throw new IllegalArgumentException("You must provide a stream to write to.");
+        }
+
+        try {
+            InputStream keyFileStream = null;
+            try {
+                keyFileStream = new FileInputStream(keyFile);
+                write(keePassFile, password, keyFileStream, stream);
+            } finally {
+                if (keyFileStream != null) {
+                    try {
+                        keyFileStream.close();
+                    } catch (IOException e) {
+                        // Ignore
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new KeePassDatabaseUnreadableException("Could not find database file", e);
+        }
+    }
+
+    /**
+     * Encrypts a {@link KeePassFile} with the given password and writes it to
+     * the given file location.
+     * <p>
+     * If the KeePassFile cannot be encrypted an exception will be thrown.
+     *
+     * @param keePassFile
+     *            the keePass model which should be written
+     * @param password
+     *            the password to encrypt the database
+     * @param keyFileStream
+     *            the keyfile to encrypt the database as stream
+     * @param keePassDatabaseFile
+     *            the target location where the database file will be written
+     * @see KeePassFile
+     */
+    public static void write(KeePassFile keePassFile, String password, InputStream keyFileStream, String keePassDatabaseFile) {
+        if (keePassDatabaseFile == null || keePassDatabaseFile.isEmpty()) {
+            throw new IllegalArgumentException("You must provide a non-empty path where the database should be written to.");
+        }
+
+        try {
+            write(keePassFile, password, keyFileStream, new FileOutputStream(keePassDatabaseFile));
+        } catch (FileNotFoundException e) {
+            throw new KeePassDatabaseUnreadableException("Could not find database file", e);
+        }
+    }
+
+    /**
+     * Encrypts a {@link KeePassFile} with the given password and writes it to
+     * the given stream.
+     * <p>
+     * If the KeePassFile cannot be encrypted an exception will be thrown.
+     *
+     * @param keePassFile
+     *            the keePass model which should be written
+     * @param password
+     *            the password to encrypt the database
+     * @param keyFileStream
+     *            the keyfile to encrypt the database as stream
+     * @param stream
+     *            the target stream where the output will be written
+     * @see KeePassFile
+     *
+     */
+    public static void write(KeePassFile keePassFile, String password, InputStream keyFileStream, OutputStream stream) {
+        if (stream == null) {
+            throw new IllegalArgumentException("You must provide a stream to write to.");
+        }
+
+        new KeePassDatabaseWriter().writeKeePassFile(keePassFile, password, keyFileStream, stream);
+    }
+
+    /**
+     * Encrypts a {@link KeePassFile} with the given password and writes it to
+     * the given file location.
+     * <p>
+     * If the KeePassFile cannot be encrypted an exception will be thrown.
+     *
+     * @param keePassFile
+     *            the keePass model which should be written
+     * @param keyFile
+     *            the keyfile to encrypt the database as stream
+     * @param keePassDatabaseFile
+     *            the target location where the database file will be written
+     * @see KeePassFile
+     */
+    public static void write(KeePassFile keePassFile, File keyFile, String keePassDatabaseFile) {
+        if (keePassDatabaseFile == null || keePassDatabaseFile.isEmpty()) {
+            throw new IllegalArgumentException("You must provide a non-empty path where the database should be written to.");
+        }
+
+        try {
+            InputStream keyFileStream = null;
+            try {
+                keyFileStream = new FileInputStream(keyFile);
+                write(keePassFile, null, keyFileStream, new FileOutputStream(keePassDatabaseFile));
+            } finally {
+                if (keyFileStream != null) {
+                    try {
+                        keyFileStream.close();
+                    } catch (IOException e) {
+                        // Ignore
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new KeePassDatabaseUnreadableException("Could not find database file", e);
+        }
+    }
+
+    /**
+     * Encrypts a {@link KeePassFile} with the given password and writes it to
+     * the given file location.
+     * <p>
+     * If the KeePassFile cannot be encrypted an exception will be thrown.
+     *
+     * @param keePassFile
+     *            the keePass model which should be written
+     * @param keyFile
+     *            the keyfile to encrypt the database as stream
+     * @param stream
+     *            the target stream where the output will be written
+     * @see KeePassFile
+     */
+    public static void write(KeePassFile keePassFile, File keyFile, OutputStream stream) {
+        if (stream == null) {
+            throw new IllegalArgumentException("You must provide a stream to write to.");
+        }
+
+        try {
+            InputStream keyFileStream = null;
+            try {
+                keyFileStream = new FileInputStream(keyFile);
+                write(keePassFile, keyFileStream, stream);
+            } finally {
+                if (keyFileStream != null) {
+                    try {
+                        keyFileStream.close();
+                    } catch (IOException e) {
+                        // Ignore
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            throw new KeePassDatabaseUnreadableException("Could not find database file", e);
+        }
+    }
+
+    /**
+     * Encrypts a {@link KeePassFile} with the given password and writes it to
+     * the given file location.
+     * <p>
+     * If the KeePassFile cannot be encrypted an exception will be thrown.
+     *
+     * @param keePassFile
+     *            the keePass model which should be written
+     * @param keyFileStream
+     *            the keyfile to encrypt the database as stream
+     * @param keePassDatabaseFile
+     *            the target location where the database file will be written
+     * @see KeePassFile
+     */
+    public static void write(KeePassFile keePassFile, InputStream keyFileStream, String keePassDatabaseFile) {
+        if (keePassDatabaseFile == null || keePassDatabaseFile.isEmpty()) {
+            throw new IllegalArgumentException("You must provide a non-empty path where the database should be written to.");
+        }
+
+        try {
+            write(keePassFile, keyFileStream, new FileOutputStream(keePassDatabaseFile));
+        } catch (FileNotFoundException e) {
+            throw new KeePassDatabaseUnreadableException("Could not find database file", e);
+        }
+    }
+
+    /**
+     * Encrypts a {@link KeePassFile} with the given password and writes it to
+     * the given stream.
+     * <p>
+     * If the KeePassFile cannot be encrypted an exception will be thrown.
+     *
+     * @param keePassFile
+     *            the keePass model which should be written
+     * @param keyFileStream
+     *            the keyfile to encrypt the database as stream
+     * @param stream
+     *            the target stream where the output will be written
+     * @see KeePassFile
+     *
+     */
+    public static void write(KeePassFile keePassFile, InputStream keyFileStream, OutputStream stream) {
+        if (stream == null) {
+            throw new IllegalArgumentException("You must provide a stream to write to.");
+        }
+
+        write(keePassFile, null, keyFileStream, stream);
     }
 
 }

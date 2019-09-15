@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -103,6 +104,86 @@ public class KeepassDatabaseWriterTest {
 
         KeePassDatabase keePassDb = KeePassDatabase.getInstance(dbFilename);
         KeePassFile database = keePassDb.openDatabase("abc");
+        Entry entryByTitle = database.getEntryByTitle("First entry");
+
+        Assert.assertEquals(entryOne.getTitle(), entryByTitle.getTitle());
+        Assert.assertEquals(5, entryOne.getTimes().getUsageCount());
+        Assert.assertEquals(creationDate, entryOne.getTimes().getCreationTime());
+    }
+
+    @Test
+    public void shouldCreateNewDatabaseFileWithKeyStreamAndPassword() throws IOException {
+        Calendar creationDate = CalendarHandler.createCalendar(2016, 5, 1);
+        Times times = new TimesBuilder().usageCount(5).creationTime(creationDate).build();
+        Entry entryOne = new EntryBuilder("First entry").username("Carl").password("Carls secret").times(times).build();
+
+        KeePassFile keePassFile = new KeePassFileBuilder("testDB").addTopEntries(entryOne).build();
+
+        String dbFilename = tempFolder.newFile("writeNewDatabase.kdbx").getPath();
+        KeePassDatabase.write(keePassFile, "abc", getClass().getResourceAsStream("/DatabaseWithKeyfile.key"), new FileOutputStream(dbFilename));
+
+        KeePassDatabase keePassDb = KeePassDatabase.getInstance(dbFilename);
+        KeePassFile database = keePassDb.openDatabase("abc", getClass().getResourceAsStream("/DatabaseWithKeyfile.key"));
+        Entry entryByTitle = database.getEntryByTitle("First entry");
+
+        Assert.assertEquals(entryOne.getTitle(), entryByTitle.getTitle());
+        Assert.assertEquals(5, entryOne.getTimes().getUsageCount());
+        Assert.assertEquals(creationDate, entryOne.getTimes().getCreationTime());
+    }
+
+    @Test
+    public void shouldCreateNewDatabaseFileWithKeyFileAndPassword() throws IOException {
+        Calendar creationDate = CalendarHandler.createCalendar(2016, 5, 1);
+        Times times = new TimesBuilder().usageCount(5).creationTime(creationDate).build();
+        Entry entryOne = new EntryBuilder("First entry").username("Carl").password("Carls secret").times(times).build();
+
+        KeePassFile keePassFile = new KeePassFileBuilder("testDB").addTopEntries(entryOne).build();
+
+        String dbFilename = tempFolder.newFile("writeNewDatabase.kdbx").getPath();
+        KeePassDatabase.write(keePassFile, "abc", new File("src/test/resources/DatabaseWithKeyfile.key"), dbFilename);
+
+        KeePassDatabase keePassDb = KeePassDatabase.getInstance(dbFilename);
+        KeePassFile database = keePassDb.openDatabase("abc", new File("src/test/resources/DatabaseWithKeyfile.key"));
+        Entry entryByTitle = database.getEntryByTitle("First entry");
+
+        Assert.assertEquals(entryOne.getTitle(), entryByTitle.getTitle());
+        Assert.assertEquals(5, entryOne.getTimes().getUsageCount());
+        Assert.assertEquals(creationDate, entryOne.getTimes().getCreationTime());
+    }
+
+    @Test
+    public void shouldCreateNewDatabaseFileWithKeyStream() throws IOException {
+        Calendar creationDate = CalendarHandler.createCalendar(2016, 5, 1);
+        Times times = new TimesBuilder().usageCount(5).creationTime(creationDate).build();
+        Entry entryOne = new EntryBuilder("First entry").username("Carl").password("Carls secret").times(times).build();
+
+        KeePassFile keePassFile = new KeePassFileBuilder("testDB").addTopEntries(entryOne).build();
+
+        String dbFilename = tempFolder.newFile("writeNewDatabase.kdbx").getPath();
+        KeePassDatabase.write(keePassFile, getClass().getResourceAsStream("/DatabaseWithKeyfile.key"), new FileOutputStream(dbFilename));
+
+        KeePassDatabase keePassDb = KeePassDatabase.getInstance(dbFilename);
+        KeePassFile database = keePassDb.openDatabase(getClass().getResourceAsStream("/DatabaseWithKeyfile.key"));
+        Entry entryByTitle = database.getEntryByTitle("First entry");
+
+        Assert.assertEquals(entryOne.getTitle(), entryByTitle.getTitle());
+        Assert.assertEquals(5, entryOne.getTimes().getUsageCount());
+        Assert.assertEquals(creationDate, entryOne.getTimes().getCreationTime());
+    }
+
+    @Test
+    public void shouldCreateNewDatabaseFileWithKeyFile() throws IOException {
+        Calendar creationDate = CalendarHandler.createCalendar(2016, 5, 1);
+        Times times = new TimesBuilder().usageCount(5).creationTime(creationDate).build();
+        Entry entryOne = new EntryBuilder("First entry").username("Carl").password("Carls secret").times(times).build();
+
+        KeePassFile keePassFile = new KeePassFileBuilder("testDB").addTopEntries(entryOne).build();
+
+        String dbFilename = tempFolder.newFile("writeNewDatabase.kdbx").getPath();
+        KeePassDatabase.write(keePassFile, new File("src/test/resources/DatabaseWithKeyfile.key"), new FileOutputStream(dbFilename));
+
+        KeePassDatabase keePassDb = KeePassDatabase.getInstance(dbFilename);
+        KeePassFile database = keePassDb.openDatabase(new File("src/test/resources/DatabaseWithKeyfile.key"));
         Entry entryByTitle = database.getEntryByTitle("First entry");
 
         Assert.assertEquals(entryOne.getTitle(), entryByTitle.getTitle());
