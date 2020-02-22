@@ -1,3 +1,5 @@
+# **DEPRECATED** - unfortunately no longer actively maintained, because I don't have time
+
 [![Build Status](https://travis-ci.org/cternes/openkeepass.svg?branch=master)](https://travis-ci.org/cternes/openkeepass)
 
 openkeepass
