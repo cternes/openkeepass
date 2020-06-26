@@ -2,6 +2,7 @@ package de.slackspace.openkeepass.api;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.zip.GZIPOutputStream;
@@ -21,26 +22,35 @@ import de.slackspace.openkeepass.parser.SimpleXmlParser;
 import de.slackspace.openkeepass.processor.EncryptionStrategy;
 import de.slackspace.openkeepass.processor.ProtectedValueProcessor;
 import de.slackspace.openkeepass.stream.HashedBlockOutputStream;
+import de.slackspace.openkeepass.util.ByteUtils;
 
 public class KeePassDatabaseWriter {
 
     private static final String UTF_8 = "UTF-8";
 
     public void writeKeePassFile(KeePassFile keePassFile, String password, OutputStream stream) {
+        writeKeePassFile(keePassFile, password, null, stream);
+    }
+
+    public void writeKeePassFile(KeePassFile keePassFile, InputStream keyStream, OutputStream stream) {
+        writeKeePassFile(keePassFile, null, keyStream, stream);
+    }
+
+    public void writeKeePassFile(KeePassFile keePassFile, String password, InputStream keyStream, OutputStream stream) {
         try {
             if (!validateKeePassFile(keePassFile)) {
                 throw new KeePassDatabaseUnwriteableException(
-                        "The provided keePassFile is not valid. A valid keePassFile must contain of meta and root group and the root group must at least contain one group.");
+                    "The provided keePassFile is not valid. A valid keePassFile must contain of meta and root group and the root group must at least contain one group.");
             }
 
             KeePassHeader header = new KeePassHeader(new RandomGenerator());
-            byte[] hashedPassword = hashPassword(password);
+            byte[] keyHash = getKeyHash(password, keyStream);
 
             byte[] keePassFilePayload = marshallXml(keePassFile, header);
             ByteArrayOutputStream streamToZip = compressStream(keePassFilePayload);
             ByteArrayOutputStream streamToHashBlock = hashBlockStream(streamToZip);
             ByteArrayOutputStream streamToEncrypt = combineHeaderAndContent(header, streamToHashBlock);
-            byte[] encryptedDatabase = encryptStream(header, hashedPassword, streamToEncrypt);
+            byte[] encryptedDatabase = encryptStream(header, keyHash, streamToEncrypt);
 
             // Write database to stream
             stream.write(encryptedDatabase);
@@ -57,6 +67,18 @@ public class KeePassDatabaseWriter {
         }
     }
 
+    private byte[] getKeyHash(String password, InputStream keyFileStream) throws UnsupportedEncodingException {
+        byte[] hashedPassword = new byte[0];
+        if (password != null) {
+            hashedPassword = hashPassword(password);
+        }
+        byte[] protectedBuffer = new byte[0];
+        if (keyFileStream != null) {
+            protectedBuffer = new KeyFileReader().readKeyFile(keyFileStream);
+        }
+        return ByteUtils.concat(hashedPassword, protectedBuffer);
+    }
+
     private byte[] hashPassword(String password) throws UnsupportedEncodingException {
         byte[] passwordBytes = password.getBytes(UTF_8);
         return Sha256.hash(passwordBytes);
@@ -64,7 +86,7 @@ public class KeePassDatabaseWriter {
 
     private byte[] encryptStream(KeePassHeader header, byte[] hashedPassword, ByteArrayOutputStream streamToEncrypt) throws IOException {
         CryptoInformation cryptoInformation = new CryptoInformation(KeePassHeader.VERSION_SIGNATURE_LENGTH, header.getMasterSeed(), header.getTransformSeed(),
-                header.getEncryptionIV(), header.getTransformRounds(), header.getHeaderSize());
+            header.getEncryptionIV(), header.getTransformRounds(), header.getHeaderSize());
 
         return new Decrypter().encryptDatabase(hashedPassword, cryptoInformation, streamToEncrypt.toByteArray());
     }
