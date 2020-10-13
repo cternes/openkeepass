@@ -28,7 +28,7 @@
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>1.6</maven.compiler.target>
         <spongycastle.version>1.54.0.0</spongycastle.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <equalsverifier.version>1.7.8</equalsverifier.version>
         <simplexml.version>2.7.1</simplexml.version>
     </properties>
